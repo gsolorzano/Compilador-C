@@ -16,12 +16,12 @@ int main(int argc, char *argv[]){
     strcat( direccion,"/");
     strcat( direccion,argv[1]);
     fp = fopen(direccion, "r");
-    fo = fopen("output.txt","w");
+    fo = fopen("1.txt","w");
     if(fp == NULL){
         fprintf(stderr,"Error al encontrar el archivo");
         exit(1);
     }
-    system_goal(fp, fo, 1);
+    system_goal(fp, fo, 2);
     fclose(fp);
     fclose(fo);
     return 0;

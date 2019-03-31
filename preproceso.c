@@ -34,6 +34,7 @@ void buffer_char(char c){//Recibe un char para agregarlo al buffer y conformar p
 void scanner(void){
     int in_char, c;
     clear_buffer();
+    clear_buffer_2();
     if(feof(fp)){
         return;
     }
@@ -90,12 +91,10 @@ void scanner(void){
                                 in_char = fgetc(fp);
                                 buffer_char_2(in_char);
                                 if(in_char == '"'){//Se detecto un #include "archivo.c" por lo que se tiene que incluir
-                                    printf("\n");
                                     char direccion[200];
                                     getcwd(direccion, sizeof(direccion));
                                     strcat( direccion,"/");
-                                    strcat( direccion,token_buffer);
-                                    printf("\n");
+                                    strcat( direccion, token_buffer);
                                     FILE *inc = fopen(direccion, "r");
                                     if(inc == NULL){
                                         fprintf(stderr,"Error al encontrar el archivo");
@@ -106,38 +105,72 @@ void scanner(void){
                                         char nombre[100] = "\0";
                                         sprintf(nombre, "%d", contO);
                                         strcat(nombre,".txt");
-                                        FILE *out = fopen(nombre,"w");
-                                        system_goal(inc, out, contO++); //se llama de a analizar el archivo del include de conformar
+                                        FILE *out = fopen(nombre,"w+");
+                                        for(int i = 0; i<strlen(nombre);i++){
+                                            printf("%c", nombre[i]);
+                                        }
+                                        printf("\n");
+                                        system_goal(inc, out, contO+1);
+                                        fclose(inc);
+                                        fclose(out); //se llama de a analizar el archivo del include de conformar
                                         //recursiva pues puede tener otros include adentro
                                         //abrir el archivo temporal que genero la llamada recursiva para incluirlo en el archivo final
+                                        getcwd(direccion, sizeof(direccion));
+                                        strcat( direccion,"/");
+                                        strcat( direccion, nombre);
+                                        out = fopen(direccion,"r");
+                                        // while ((c = fgetc(out)) != EOF){
+                                        //     printf("%c", c);
+                                        // }
+                                        // rewind(out);
+                                        // while ((c = fgetc(out)) != EOF){
+                                        //     printf("%c", c);
+                                        // }
                                         FILE *temp = fopen("temp.txt","w");
-                                        if(out == NULL){
-                                            fprintf(stderr,"Error al encontrar el archivo");
-                                            exit(1);
-                                        }
-                                        else{
-                                            while ((c = fgetc(fo)) != EOF){
-                                                fputc(c, temp);
-                                            }
-                                            while ((c = fgetc(out)) != EOF){
-                                                fputc(c, temp);
+                                        // if(out == NULL){
+                                        //     fprintf(stderr,"Error al encontrar el archivo");
+                                        //     exit(1);
+                                        // }
+                                        //else{
+                                            // char c;
+                                            // fclose(fo);
+                                            // getcwd(direccion, sizeof(direccion));
+                                            // strcat( direccion,"/");
+                                            // strcat( direccion, "1.txt");
+                                            // fo = fopen(direccion, "r");
+                                            // //rewind(fo);
+                                            // while ((c = fgetc(fo)) != EOF){
+                                            //     printf("%c", c);
+                                            //     fputc(c, temp);
+                                            // }
+                                            // printf("\n");
+                                            char c1;
+                                            while ((c1 = fgetc(out)) != EOF){
+                                                printf("%c", c1);
+                                                fputc(c1, temp);
                                             }
                                             fo = temp;
                                             fclose(temp);
-                                        }
+                                        //}
                                     }
-                                    printf("%s\n", "si");
+
                                 }
                                 else{
                                     clear_buffer();
+                                    fprintf(fo, token_buffer_2);
+                                    continue;
                                 }
                             }
                             else{
                                 clear_buffer();
+                                fprintf(fo, token_buffer_2);
+                                continue;
                             }
                         }
                         else{
                             clear_buffer();
+                            fprintf(fo, token_buffer_2);
+                            continue;
                             printf("%s\n", "no");
                         }
                     }
@@ -148,6 +181,8 @@ void scanner(void){
                 }
                 else{//si no es un include se manda a escribir tal cual
                     printf("%s\n", "no");
+                    fprintf(fo, token_buffer_2);
+                    continue;
                 }
             }
             else{
@@ -228,6 +263,7 @@ void scanner(void){
     //     else{
     //         lexical_error(in_char);
     //     }
+    //fclose(fo);
     if(feof(fp)){
         return;
     }
