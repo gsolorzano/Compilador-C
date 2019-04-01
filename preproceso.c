@@ -4,12 +4,17 @@
 
 FILE *fp;
 FILE *fo;
+FILE *temp;
 int contO;
 
 extern char token_buffer[100] = "\0";
 char token_buffer_2[100] = "\0";
 char nombreI[100];
 char nombreO[100];
+char nombreT[100];
+char inc[100][100];
+int incCont = 0;
+char direccion[200];
 char incl[] = "include";
 char def[] = "define";
 
@@ -33,6 +38,157 @@ void buffer_char(char c){//Recibe un char para agregarlo al buffer y conformar p
     token_buffer[len+1] = '\0';
 }
 
+void incAux(){
+    for(int i = 0; i<incCont;i++){
+        printf("%d\n", i);
+        getcwd(direccion, sizeof(direccion));
+        strcat( direccion,"/");
+        strcat( direccion, inc[i]);
+        printf("%s\n", direccion);
+        FILE *inc = fopen(direccion, "r");
+        if(inc == NULL){
+            fprintf(stderr,"Error al encontrar el archivo");
+            exit(1);
+        }
+        else{
+            char nombre[100] = "\0";
+            sprintf(nombre, "%d", contO);
+            strcat(nombre,".txt");
+            FILE *out = fopen(nombre,"w+");
+            //system_goal(inc, out, contO+1, nombreI, nombreO);
+            // fclose(inc);
+            // fclose(out);
+            // //----------
+            // getcwd(direccion, sizeof(direccion));
+            // strcat( direccion,"/");
+            // strcat( direccion, nombre);
+            // out = fopen(direccion,"r");
+            // //----------
+            // fclose(fo);
+            // getcwd(direccion, sizeof(direccion));
+            // strcat( direccion,"/");
+            // strcat( direccion, nombreO);
+            // fo = fopen(direccion, "w");
+            // char c1;
+            // while ((c1 = fgetc(out)) != EOF){
+            //     fputc(c1, fo);
+            // }
+        }
+    }
+    // fclose(temp);
+    // getcwd(direccion, sizeof(direccion));
+    // strcat( direccion,"/");
+    // strcat( direccion, nombreT);
+    // temp = fopen(direccion, "r");
+    // char c2;
+    // while ((c2 = fgetc(temp)) != EOF){
+    //     fputc(c2, fo);
+    // }
+//
+//
+//
+//
+//
+//     int pos = ftell(fp);
+//     getcwd(direccion, sizeof(direccion));
+//     strcat( direccion,"/");
+//     strcat( direccion, token_buffer);
+//     FILE *inc = fopen(direccion, "r");
+//     if(inc == NULL){
+//         fprintf(stderr,"Error al encontrar el archivo");
+//         exit(1);
+//     }
+//     else{
+//         clear_buffer_2();
+//         char nombre[100] = "\0";
+//         sprintf(nombre, "%d", contO);
+//         strcat(nombre,".txt");
+//         FILE *out = fopen(nombre,"w+");
+//         // for(int i = 0; i<strlen(nombre);i++){
+//         //     printf("%c", nombre[i]);
+//         // }
+//         printf("\n");
+//         printf("%s\n","Recursiva" );
+//         system_goal(inc, out, contO+1, nombreI, nombreO);
+//         fclose(inc);
+//         fclose(out); //se llama de a analizar el archivo del include de conformar
+//         //recursiva pues puede tener otros include adentro
+//         //abrir el archivo temporal que genero la llamada recursiva para incluirlo en el archivo final
+// //---------------------------------------------------------------------------------------------------------------------------------------------
+//         // while ((c = fgetc(out)) != EOF){
+//         //     printf("%c", c);
+//         // }
+//         // rewind(out);
+//         // while ((c = fgetc(out)) != EOF){
+//         //     printf("%c", c);
+//         // }
+//         //FILE *temp = fopen("temp.txt","w+");
+//         // if(out == NULL){
+//         //     fprintf(stderr,"Error al encontrar el archivo");
+//         //     exit(1);
+//         // }
+//         //else{
+//             //cerrar el fo y abrirlo en modo lectura
+//             // char c;
+//             fclose(fo);
+//             getcwd(direccion, sizeof(direccion));
+//             strcat( direccion,"/");
+//             strcat( direccion, nombreO);
+//             fo = fopen(direccion, "a+");
+//
+//             getcwd(direccion, sizeof(direccion));
+//             strcat( direccion,"/");
+//             strcat( direccion, nombre);
+//             out = fopen(direccion,"r");
+//             // //rewind(fo);
+//             // //copiar lo que tiene fo a temp
+//             // while ((c = fgetc(fo)) != EOF){
+//             //     fputc(c, temp);
+//             // }
+//             // printf("\n");
+//             //copiar contenido de out a temp
+//
+//
+//             //AQUI-----------------------------------------------------
+//
+//
+//             char c1;
+//             while ((c1 = fgetc(out)) != EOF){
+//                 fputc(c1, fo);
+//             }
+//             //printf("%s\n",codi );
+//             //cerrar fo y abrirlo en blanco
+//             // fclose(fo);
+//             // getcwd(direccion, sizeof(direccion));
+//             // strcat( direccion,"/");
+//             // strcat( direccion, nombre);
+//             // rewind(temp);
+//             // fo = fopen(direccion, "w");
+//             // while ((c = fgetc(temp)) != EOF){
+//             //     printf("%c", c);
+//             //     fputc(c, fo);
+//             // }
+//             //fclose(temp);
+//         //}
+// //-------------------------------------------------------------------------------------------------------------------------
+//         fclose(fp);
+//         getcwd(direccion, sizeof(direccion));
+//         strcat( direccion,"/");
+//         strcat( direccion, nombreI);
+//         fp = fopen(direccion, "r");
+//         fseek(fp,pos,SEEK_CUR);
+//     }
+}
+
+int file_exist(const char *filename){
+    FILE *file;
+    if(file = fopen(filename, "r")){
+        fclose(file);
+        return 1;
+    }
+    return 0;
+}
+
 void scanner(void){
     int in_char, c;
     clear_buffer();
@@ -45,7 +201,6 @@ void scanner(void){
         // if(isspace(in_char)){
         //     continue; /* do nothin */
         // }
-        printf("%c",in_char );
         if(in_char == '#'){
             buffer_char_2(in_char);
             in_char = fgetc(fp);
@@ -98,209 +253,71 @@ void scanner(void){
                                     // while((in_char = fgetc(fp) ) != EOF){
                                     //     printf("%c", in_char);
                                     // }
-                                    int pos = ftell(fp);
-                                    char direccion[200];
                                     getcwd(direccion, sizeof(direccion));
                                     strcat( direccion,"/");
                                     strcat( direccion, token_buffer);
-                                    FILE *inc = fopen(direccion, "r");
-                                    if(inc == NULL){
-                                        fprintf(stderr,"Error al encontrar el archivo");
-                                        exit(1);
+                                    if(file_exist(direccion)){
+                                        int ig = 0;
+                                        for(int i = 0; i<incCont;i++){
+                                            if(!strcmp(token_buffer, inc[i])){
+                                                ig = 1;
+                                            }
+                                        }
+                                        if(ig == 0){
+                                            strcpy(inc[incCont],token_buffer);
+                                            incCont++;
+                                        }
                                     }
                                     else{
-                                        clear_buffer_2();
-                                        char nombre[100] = "\0";
-                                        sprintf(nombre, "%d", contO);
-                                        strcat(nombre,".txt");
-                                        FILE *out = fopen(nombre,"w+");
-                                        // for(int i = 0; i<strlen(nombre);i++){
-                                        //     printf("%c", nombre[i]);
-                                        // }
-                                        printf("\n");
-                                        printf("%s\n","Recursiva" );
-                                        system_goal(inc, out, contO+1, nombreI, nombreO);
-                                        fclose(inc);
-                                        fclose(out); //se llama de a analizar el archivo del include de conformar
-                                        //recursiva pues puede tener otros include adentro
-                                        //abrir el archivo temporal que genero la llamada recursiva para incluirlo en el archivo final
-//---------------------------------------------------------------------------------------------------------------------------------------------
-                                        // while ((c = fgetc(out)) != EOF){
-                                        //     printf("%c", c);
-                                        // }
-                                        // rewind(out);
-                                        // while ((c = fgetc(out)) != EOF){
-                                        //     printf("%c", c);
-                                        // }
-                                        //FILE *temp = fopen("temp.txt","w+");
-                                        // if(out == NULL){
-                                        //     fprintf(stderr,"Error al encontrar el archivo");
-                                        //     exit(1);
-                                        // }
-                                        //else{
-                                            //cerrar el fo y abrirlo en modo lectura
-                                            // char c;
-                                            fclose(fo);
-                                            getcwd(direccion, sizeof(direccion));
-                                            strcat( direccion,"/");
-                                            strcat( direccion, nombreO);
-                                            fo = fopen(direccion, "a+");
-
-                                            getcwd(direccion, sizeof(direccion));
-                                            strcat( direccion,"/");
-                                            strcat( direccion, nombre);
-                                            out = fopen(direccion,"r");
-                                            // //rewind(fo);
-                                            // //copiar lo que tiene fo a temp
-                                            // while ((c = fgetc(fo)) != EOF){
-                                            //     fputc(c, temp);
-                                            // }
-                                            // printf("\n");
-                                            //copiar contenido de out a temp
-
-
-                                            //AQUI-----------------------------------------------------
-
-
-                                            char c1;
-                                            while ((c1 = fgetc(out)) != EOF){
-                                                fputc(c1, fo);
-                                            }
-                                            //printf("%s\n",codi );
-                                            //cerrar fo y abrirlo en blanco
-                                            // fclose(fo);
-                                            // getcwd(direccion, sizeof(direccion));
-                                            // strcat( direccion,"/");
-                                            // strcat( direccion, nombre);
-                                            // rewind(temp);
-                                            // fo = fopen(direccion, "w");
-                                            // while ((c = fgetc(temp)) != EOF){
-                                            //     printf("%c", c);
-                                            //     fputc(c, fo);
-                                            // }
-                                            //fclose(temp);
-                                        //}
-//-------------------------------------------------------------------------------------------------------------------------
-                                        fclose(fp);
-                                        getcwd(direccion, sizeof(direccion));
-                                        strcat( direccion,"/");
-                                        strcat( direccion, nombreI);
-                                        fp = fopen(direccion, "r");
-                                        fseek(fp,pos,SEEK_CUR);
-
-                                        continue;
+                                        fprintf(temp, token_buffer_2);
                                     }
+                                    clear_buffer_2();
+                                    clear_buffer();
+                                    continue;
                                 }
                                 else{
                                     clear_buffer();
-                                    fprintf(fo, token_buffer_2);
+                                    fprintf(temp, token_buffer_2);
                                     continue;
                                 }
                             }
                             else{
                                 clear_buffer();
-                                fprintf(fo, token_buffer_2);
+                                fprintf(temp, token_buffer_2);
                                 continue;
                             }
                         }
                         else{
                             clear_buffer();
-                            fprintf(fo, token_buffer_2);
+                            fprintf(temp, token_buffer_2);
                             continue;
                             printf("%s\n", "no");
                         }
                     }
                     else{
-                        fprintf(fo, token_buffer_2);
+                        fprintf(temp, token_buffer_2);
                         continue;
                     }
                 }
                 else{//si no es un include se manda a escribir tal cual
                     printf("%s\n", "no");
-                    fprintf(fo, token_buffer_2);
+                    fprintf(temp, token_buffer_2);
                     continue;
                 }
             }
             else{
-                fprintf(fo, token_buffer_2);
+                fprintf(temp, token_buffer_2);
                 continue;
             }
         }
         else{
             //printf("%c",in_char );
-            fputc(in_char,fo);
+            fputc(in_char,temp);
         }
     }
-    //     else if(isalpha(in_char)){
-    //         /*
-    //         * ID ::= LETTER | ID LETTER
-    //                         | ID DIGIT
-    //                         | ID UNDERSCORE
-    //         */
-    //         buffer_char(in_char);
-    //         for(c = fgetc(fp) ; isalnum(c) || c == '_'; c = fgetc(fp) )
-    //             buffer_char(c);
-    //             ungetc(c, fp);
-    //             return check_reserved();
-    //     }
-    //     else if(isdigit(in_char)){
-    //         /*
-    //          * INLITERAL ::= DIGIT |
-    //          *               INLITERAL DIGIT
-    //          */
-    //         buffer_char(in_char);
-    //         for(c = fgetc(fp); isdigit(c); c = fgetc(fp))
-    //             buffer_char(c);
-    //             ungetc(c, fp);
-    //             return INTLITERAL;
-    //
-    //     }
-    //     else if(in_char == '('){
-    //         return LPAREN;
-    //     }
-    //     else if(in_char == ')'){
-    //         return RPAREN;
-    //     }
-    //     else if(in_char == ';'){
-    //         return SEMICOLON;
-    //     }
-    //     else if(in_char == ','){
-    //         return COMMA;
-    //     }
-    //     else if(in_char == '+'){
-    //         return PLUSOP;
-    //     }
-    //     else if(in_char == '|'){
-    //         return PIPE;
-    //     }
-    //     else if(in_char == ':'){
-    //         /* lookig for ":=" */
-    //         c = fgetc(fp);
-    //         if(c == '='){
-    //             return ASSIGNOP;
-    //         }
-    //         else{
-    //             ungetc(c, fp);
-    //             lexical_error(in_char);
-    //         }
-    //     }
-    //     else if(in_char == '-'){
-    //         /* is it --, comment start */
-    //         c = fgetc(fp);
-    //         if(c == '-'){
-    //             while(in_char != '\n'){
-    //                 in_char = fgetc(fp);
-    //             }
-    //         }
-    //         else{
-    //             ungetc(c, fp);
-    //             return MINUSOP;
-    //         }
-    //     }
-    //     else{
-    //         lexical_error(in_char);
-    //     }
-    //fclose(fo);
+    for(int i = 0; i<incCont;i++){
+        printf("%s\n",inc[i] );
+    }
     if(feof(fp)){
         return;
     }
@@ -309,8 +326,16 @@ void scanner(void){
 void system_goal(FILE *in, FILE *out, int n, char *nomI, char *nomO){
     fp = in;
     fo = out;
+    char nombre[100] = "temp";
+    char num[100] = "\0";
+    sprintf(num, "%d", contO);
+    strcat(nombre,num);
+    strcat(nombre,".txt");
+    temp = fopen(nombre,"w");
     strcpy(nombreI, nomI);
     strcpy(nombreO, nomO);
+    strcpy(nombreT, nombre);
     contO = n;
     scanner();
+    incAux();
 }
