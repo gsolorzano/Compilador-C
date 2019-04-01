@@ -8,6 +8,8 @@ int contO;
 
 extern char token_buffer[100] = "\0";
 char token_buffer_2[100] = "\0";
+char nombreI[100];
+char nombreO[100];
 char incl[] = "include";
 char def[] = "define";
 
@@ -39,9 +41,11 @@ void scanner(void){
         return;
     }
     while((in_char = fgetc(fp) ) != EOF){//lee todo el codigo hasta el final del archivo
+        // printf("%c", in_char);
         // if(isspace(in_char)){
         //     continue; /* do nothin */
         // }
+        printf("%c",in_char );
         if(in_char == '#'){
             buffer_char_2(in_char);
             in_char = fgetc(fp);
@@ -91,6 +95,10 @@ void scanner(void){
                                 in_char = fgetc(fp);
                                 buffer_char_2(in_char);
                                 if(in_char == '"'){//Se detecto un #include "archivo.c" por lo que se tiene que incluir
+                                    // while((in_char = fgetc(fp) ) != EOF){
+                                    //     printf("%c", in_char);
+                                    // }
+                                    int pos = ftell(fp);
                                     char direccion[200];
                                     getcwd(direccion, sizeof(direccion));
                                     strcat( direccion,"/");
@@ -106,19 +114,17 @@ void scanner(void){
                                         sprintf(nombre, "%d", contO);
                                         strcat(nombre,".txt");
                                         FILE *out = fopen(nombre,"w+");
-                                        for(int i = 0; i<strlen(nombre);i++){
-                                            printf("%c", nombre[i]);
-                                        }
+                                        // for(int i = 0; i<strlen(nombre);i++){
+                                        //     printf("%c", nombre[i]);
+                                        // }
                                         printf("\n");
-                                        system_goal(inc, out, contO+1);
+                                        printf("%s\n","Recursiva" );
+                                        system_goal(inc, out, contO+1, nombreI, nombreO);
                                         fclose(inc);
                                         fclose(out); //se llama de a analizar el archivo del include de conformar
                                         //recursiva pues puede tener otros include adentro
                                         //abrir el archivo temporal que genero la llamada recursiva para incluirlo en el archivo final
-                                        getcwd(direccion, sizeof(direccion));
-                                        strcat( direccion,"/");
-                                        strcat( direccion, nombre);
-                                        out = fopen(direccion,"r");
+//---------------------------------------------------------------------------------------------------------------------------------------------
                                         // while ((c = fgetc(out)) != EOF){
                                         //     printf("%c", c);
                                         // }
@@ -126,34 +132,64 @@ void scanner(void){
                                         // while ((c = fgetc(out)) != EOF){
                                         //     printf("%c", c);
                                         // }
-                                        FILE *temp = fopen("temp.txt","w");
+                                        //FILE *temp = fopen("temp.txt","w+");
                                         // if(out == NULL){
                                         //     fprintf(stderr,"Error al encontrar el archivo");
                                         //     exit(1);
                                         // }
                                         //else{
+                                            //cerrar el fo y abrirlo en modo lectura
                                             // char c;
-                                            // fclose(fo);
-                                            // getcwd(direccion, sizeof(direccion));
-                                            // strcat( direccion,"/");
-                                            // strcat( direccion, "1.txt");
-                                            // fo = fopen(direccion, "r");
+                                            fclose(fo);
+                                            getcwd(direccion, sizeof(direccion));
+                                            strcat( direccion,"/");
+                                            strcat( direccion, nombreO);
+                                            fo = fopen(direccion, "a+");
+
+                                            getcwd(direccion, sizeof(direccion));
+                                            strcat( direccion,"/");
+                                            strcat( direccion, nombre);
+                                            out = fopen(direccion,"r");
                                             // //rewind(fo);
+                                            // //copiar lo que tiene fo a temp
                                             // while ((c = fgetc(fo)) != EOF){
-                                            //     printf("%c", c);
                                             //     fputc(c, temp);
                                             // }
                                             // printf("\n");
+                                            //copiar contenido de out a temp
+
+
+                                            //AQUI-----------------------------------------------------
+
+
                                             char c1;
                                             while ((c1 = fgetc(out)) != EOF){
-                                                printf("%c", c1);
-                                                fputc(c1, temp);
+                                                fputc(c1, fo);
                                             }
-                                            fo = temp;
-                                            fclose(temp);
+                                            //printf("%s\n",codi );
+                                            //cerrar fo y abrirlo en blanco
+                                            // fclose(fo);
+                                            // getcwd(direccion, sizeof(direccion));
+                                            // strcat( direccion,"/");
+                                            // strcat( direccion, nombre);
+                                            // rewind(temp);
+                                            // fo = fopen(direccion, "w");
+                                            // while ((c = fgetc(temp)) != EOF){
+                                            //     printf("%c", c);
+                                            //     fputc(c, fo);
+                                            // }
+                                            //fclose(temp);
                                         //}
-                                    }
+//-------------------------------------------------------------------------------------------------------------------------
+                                        fclose(fp);
+                                        getcwd(direccion, sizeof(direccion));
+                                        strcat( direccion,"/");
+                                        strcat( direccion, nombreI);
+                                        fp = fopen(direccion, "r");
+                                        fseek(fp,pos,SEEK_CUR);
 
+                                        continue;
+                                    }
                                 }
                                 else{
                                     clear_buffer();
@@ -186,11 +222,12 @@ void scanner(void){
                 }
             }
             else{
-                fprintf(fo, in_char);
-                return;
+                fprintf(fo, token_buffer_2);
+                continue;
             }
         }
         else{
+            //printf("%c",in_char );
             fputc(in_char,fo);
         }
     }
@@ -269,9 +306,11 @@ void scanner(void){
     }
 }
 
-void system_goal(FILE *in, FILE *out, int n){
+void system_goal(FILE *in, FILE *out, int n, char *nomI, char *nomO){
     fp = in;
     fo = out;
+    strcpy(nombreI, nomI);
+    strcpy(nombreO, nomO);
     contO = n;
     scanner();
 }

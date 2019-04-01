@@ -21,7 +21,7 @@ int main(int argc, char *argv[]){
         fprintf(stderr,"Error al encontrar el archivo");
         exit(1);
     }
-    system_goal(fp, fo, 2);
+    system_goal(fp, fo, 2, argv[1],"1.txt");
     fclose(fp);
     fclose(fo);
     return 0;

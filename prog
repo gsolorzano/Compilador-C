@@ -1,1 +1,7 @@
 #include "archivo1.c"
+
+int mae(int argc, char *argv[]){
+    return 0;
+}
+
+#include "archivo1.c"
