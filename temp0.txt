@@ -1,5 +1,0 @@
-
-
-int mae(int argc, char *argv[]){
-    return 0;
-}

@@ -1,5 +1,5 @@
 executable:
-	gcc -w -o prepro main.c preproceso.c
+	gcc -w -o prepro main.c reader.c
 
 
 

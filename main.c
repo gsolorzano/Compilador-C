@@ -3,26 +3,30 @@
 #include <string.h>
 #include <ctype.h>
 
-FILE *fp;
-FILE *fo;
+FILE *fileImput;
+FILE *fileOutput;
 
 int main(int argc, char *argv[]){
     char direccion[100];
     getcwd(direccion, sizeof(direccion))  ; //direccion del archivo en cuestion  tambien en la plantilla de nasm
-    if (argc== 1){
+    char nombre[50];
+    if (argc == 1){
         printf("Error al encontrar ruta de archivo \n");
         return 1;
-    };
+    }
+    //printf("Introduzca el nombre del archivo: \n");
     strcat( direccion,"/");
     strcat( direccion,argv[1]);
-    fp = fopen(direccion, "r");
-    fo = fopen("1.txt","w");
-    if(fp == NULL){
-        fprintf(stderr,"Error al encontrar el archivo");
+    strcat( direccion,nombre);
+    fileImput = fopen(direccion, "r");
+    fileOutput = fopen("OUTPUT.txt","w");
+    if(fileImput == NULL){
+        fprintf(stderr,"Error al encontrar el archivo de entrada");
         exit(1);
     }
-    system_goal(fp, fo, 2, argv[1],"1.txt");
-    fclose(fp);
-    fclose(fo);
+    system_goal(fileImput, fileOutput, 0);
+    printf("%s\n", "Preproceso finalizado");
+    fclose(fileImput);
+    fclose(fileOutput);
     return 0;
 }
