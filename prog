@@ -1,6 +1,4 @@
-#include "archivo1.c"
-#include "archivo1.c"
+#define A44 hola
+#define B 66
 
-int mae(int argc, char *argv[]){
-    return 0;
-}
+int B
