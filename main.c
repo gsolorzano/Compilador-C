@@ -24,7 +24,14 @@ int main(int argc, char *argv[]){
         fprintf(stderr,"Error al encontrar el archivo de entrada");
         exit(1);
     }
-    //system_goal(fileImput, fileOutput, 0);
+    system_goal(fileImput, fileOutput, 0);
+    fclose(fileImput);
+    fclose(fileOutput);
+
+    getcwd(direccion, sizeof(direccion));
+    strcat( direccion,"/OUTPUT.txt");
+    fileImput = fopen(direccion,"r");
+    fileOutput = fopen("prepo.c","w");
     doDefs(fileImput, fileOutput);
     printf("%s\n", "Preproceso finalizado");
     fclose(fileImput);

@@ -1,2 +1,9 @@
 
- 
+#define B A c+3
+#define A hola
+
+int main(B){
+
+}
+
+#define A adios

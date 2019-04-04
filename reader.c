@@ -125,17 +125,44 @@ void scanner(){
                         clear_buffer();
                         //fprintf(temp, token_buffer_2);
                         fprintf(fileOutput, token_buffer_2);
+                        clear_buffer_2();
                         continue;
                     }
                 }
                 else{ //NO HAY
                     fprintf(fileOutput, token_buffer_2);
+                    clear_buffer();
+                    clear_buffer_2();
                     continue;
                 }
             }
             else{//si no es un include se manda a escribir tal cual
                 fprintf(fileOutput, token_buffer_2);
+                clear_buffer_2();
                 continue;
+            }
+        }
+        else if(in_char == '/'){
+            buffer_char_2(in_char);
+            in_char = fgetc(fileImput);
+            if(in_char == '/'){
+                clear_buffer();
+                clear_buffer_2();
+                while(in_char != '\n') in_char = fgetc(fileImput);
+            }else if(in_char == '*'){
+                clear_buffer();
+                clear_buffer_2();
+                int sigueComentario = 1;
+                while(sigueComentario && in_char != EOF) {
+                    in_char = fgetc(fileImput);
+                    if( (in_char = fgetc(fileImput) ) == '*'){
+                        if( (in_char = fgetc(fileImput) ) == '/' ) sigueComentario=0;
+                    }
+                }
+            }
+            else{//DIFERENTE A // y /*
+            fprintf(fileOutput, token_buffer_2);
+            continue;
             }
         }
         else{//DIFERENTE A #
