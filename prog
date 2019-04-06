@@ -1,15 +1,3 @@
-/*hola
-
-
-
-
-
-hola */
-#define B A c+3
-#define A hola
-
 int main(B){
-
+    printf("hola mundo!");
 }
-
-#define A adios

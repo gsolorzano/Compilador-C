@@ -1,0 +1,6 @@
+\sethlcolor{azure}\hl{\textit{int}}\sethlcolor{green}\hl{\textit{main}}\sethlcolor{yellow}\hl{(}\sethlcolor{green}\hl{\textit{B}}\sethlcolor{yellow}\hl{)}\sethlcolor{yellow}\hl{\{}
+\\
+\sethlcolor{green}\hl{\textit{printf}}\sethlcolor{yellow}\hl{(}\sethlcolor{green}\hl{\textit{hola}}\sethlcolor{green}\hl{\textit{mundo}}\sethlcolor{yellow}\hl{)}
+\\
+\sethlcolor{yellow}\hl{\}}
+\\
