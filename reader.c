@@ -1,15 +1,14 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <stdbool.h>
-
-#define A1111 B_-1.(
-
+#include <string.h>
+#include <stdlib.h>
 FILE *fileImput;
 FILE *fileOutput;
 FILE *temp;
 FILE *files[200];
-int currentFiles; //en donde est� el temp, antes del temp, est� el fuente
-//y antes del fuente, est� el output
+int currentFiles; //en donde estï¿½ el temp, antes del temp, estï¿½ el fuente
+//y antes del fuente, estï¿½ el output
 
 char direccion[300] = "\0";
 char token_buffer[100] = "\0";
@@ -60,7 +59,7 @@ int file_exist(const char *filename){
 }
 
 void scanner(){
-    int in_char, c;
+    int in_char;
     clear_buffer();
     clear_buffer_2();
     if(feof(fileImput)){
@@ -85,7 +84,7 @@ void scanner(){
             }
             //chequea si hay un include
             buffer_char_2(in_char);
-            if(!strcmp(token_buffer,incl)){//si hay un include se har�a aqui
+            if(!strcmp(token_buffer,incl)){//si hay un include se harï¿½a aqui
                 clear_buffer();
                 in_char = fgetc(fileImput);
                 buffer_char_2(in_char);
@@ -120,6 +119,8 @@ void scanner(){
                             printf("%s\n",err);
                             exit(0);
                         }
+                        clear_buffer();
+                        clear_buffer_2();
                     }
                     else{//NO HAY " SEGUNDO
                         clear_buffer();
@@ -149,16 +150,22 @@ void scanner(){
                 clear_buffer();
                 clear_buffer_2();
                 while(in_char != '\n') in_char = fgetc(fileImput);
+                fputc(' ',fileOutput);
             }else if(in_char == '*'){
                 clear_buffer();
                 clear_buffer_2();
                 int sigueComentario = 1;
                 while(sigueComentario && in_char != EOF) {
                     in_char = fgetc(fileImput);
-                    if( (in_char = fgetc(fileImput) ) == '*'){
+                    if( in_char == '*'){
                         if( (in_char = fgetc(fileImput) ) == '/' ) sigueComentario=0;
                     }
                 }
+                if(in_char == EOF){
+                    printf("%s\n", "Comentario no finalizado.");
+                    exit(1);
+                }
+                fputc(' ',fileOutput);
             }
             else{//DIFERENTE A // y /*
             fprintf(fileOutput, token_buffer_2);
@@ -169,9 +176,42 @@ void scanner(){
             fputc(in_char, fileOutput);
         }
     }
+    fputc(' ',fileOutput);
     if(feof(fileImput)){
         return;
     }
+}
+
+void cleanCode(){
+    getcwd(direccion, sizeof(direccion)) ;
+    strcat( direccion,"/OUTPUT.txt");
+    fileImput = fopen(direccion, "r");
+    fileOutput = fopen("OUTPUT2.txt","w");
+
+    char in_char;
+    in_char = fgetc(fileImput);
+    int band = 0;
+    while(in_char != EOF && (in_char == '\n')){
+        in_char = fgetc(fileImput);
+    }
+    while(in_char != EOF){
+        if(in_char == '\n'){
+            if(band == 0){
+                fputc(in_char, fileOutput);
+                band = 1;
+                in_char = fgetc(fileImput);
+            }
+            else{
+                in_char = fgetc(fileImput);
+            }
+        }
+        else{
+            band = 0;
+            fputc(in_char, fileOutput);
+            in_char = fgetc(fileImput);
+        }
+    }
+    return;
 }
 
 void system_goal(FILE *in, FILE *out, int n){

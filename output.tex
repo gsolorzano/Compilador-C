@@ -1,0 +1,274 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{natbib}
+\usepackage{pgf-pie}
+\usepackage{color}
+\usepackage{pgfplots}
+\usepackage{multicol}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amssymb, amsmath, amsbsy}
+\usepackage{utopia} %font utopia imported
+\usepackage{lmodern}
+\usepackage{soul} 
+
+\usetheme{Singapore}
+\usecolortheme{default}
+
+\definecolor{azure}{rgb}{0.0, 0.5, 1.0}
+\definecolor{amethyst}{rgb}{0.6, 0.4, 0.8}
+\definecolor{green}{rgb}{0.01, 0.75, 0.24}
+\definecolor{pink}{rgb}{1.0, 0.65, 0.79}
+\definecolor{green}{rgb}{0.01, 0.75, 0.24}
+\definecolor{orange}{rgb}{0.93, 0.53, 0.18}
+
+%------------------------------------------------------------
+%This block of code defines the information to appear in the
+%Title page
+
+
+
+
+
+\title[] %optional
+{An\'alisis de proceso de scanner para lenguage C}
+
+\subtitle{Proyecto I: Compiladores e Intérpretes}
+
+\institute{Tecnol\'ogico de Costa Rica \\
+            Francisco Torres Rojas \\
+}
+\author{Carlos Adri\'an G\'omez Segura\\
+        Kevin Jafet Zamora\\
+        Gabriel Solórzano Chanto\\
+    }
+\date{ Abril 10 , 2019\\
+        Semestre 1 }  % Se manda por parámetro
+
+
+
+\logo{\includegraphics[height=0.75 cm]{/home/gabriel/Music/Lat/photos/tec.png}}
+
+%End of title page configuration block
+%------------------------------------------------------------
+
+
+
+%------------------------------------------------------------
+%The next block of commands puts the table of contents at the 
+%beginning of each section and highlights the current section:
+
+\AtBeginSection[]
+{
+  \begin{frame}
+    \frametitle{Table of Contents}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+%------------------------------------------------------------
+\makeatletter
+\newcommand\Oricolor{%
+  \let\set@color\beamerorig@set@color
+  \let\reset@color\beamerorig@reset@color
+  }
+\makeatother 
+
+\begin{document}
+
+%The next statement creates the title page.
+\frame{\titlepage}
+
+
+%---------------------------------------------------------
+%This block of code is for the table of contents after
+%the title page
+\begin{frame}
+\frametitle{Table of Contents}
+\begin{columns}
+
+\column{0.5\textwidth}
+\begin{center}
+\tableofcontents    
+\end{center}
+
+\column{0.5\textwidth}
+\begin{center}
+    \includegraphics[height=5.5cm]{/home/gabriel/Music/Lat/photos/2.jpg}
+\end{center}
+\end{columns}
+\end{frame}
+%---------------------------------------------------------
+
+
+\section{Proceso de scanning}
+
+\begin{frame}{Descripción del proceso de de scanning.}
+    
+
+\begin{columns}
+
+\column{0.5\textwidth}
+El preproceso es el primer proceso de ejecución que se realiza en el momento de compilación.\\
+
+Se encarga principalmente de:
+\begin{itemize}
+\item \#defines
+\item \#includes
+\end{itemize}
+
+\column{0.5\textwidth}
+\begin{center}
+    \includegraphics[height=3.5cm]{/home/gabriel/Music/Lat/photos/1.jpg}
+\end{center}
+
+\end{columns}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Cont. Descripción del proceso de de scanning.}
+
+
+\begin{columns}
+\column{0.5\textwidth}
+La primera parte es el preproceso que se encarga de preparar el código para que luego el scanner lo utilice.
+Se encarga de hacer lo includes y hacer el define\\ 
+
+
+
+
+
+\column{0.5\textwidth}
+Include, busca y carga código que se encuentra en la misma carpeta, en la que se está ejecutando el archivo, en el preproceso también se dirige al archivo, por ende, busca el código y lo agrega al archivo  deseado.\\
+\end{columns}
+
+\begin{center}
+    \includegraphics[height=2.5cm]{/home/gabriel/Music/Lat/photos/4.jpg}
+\end{center}
+
+\end{frame}
+
+
+
+\begin{frame}{Cont. Descripción del proceso de de scanning.}
+\begin{columns}
+
+\column{0.5\textwidth}
+Define: busca y reemplaza en todo el código, lo establecido en la línea del Define, lo reemplaza por constantes.\\
+Otra función:\\
+\begin{itemize}
+\item Eliminar los comentarios 
+\end{itemize}
+
+\column{0.5\textwidth}
+
+\begin{center}
+    \includegraphics[height=3 cm]{/home/gabriel/Music/Lat/photos/5.jpg}
+\end{center}
+
+\end{columns}
+\end{frame}
+
+
+%------------------------------------------------------------------------------
+\begin{frame}{Cont. Descripción del proceso de de scanning.}
+
+\begin{center}
+Sección de scanner\\    
+\end{center}
+
+
+
+\begin{columns}
+
+\column{0.5\textwidth}
+El scanner se va a encargar de generar unidades léxicas mínimas  en este caso, tokens, a partir de Flex, recibe el programa C, y Flex reconocerá qué tipo de token es, el mismo va a llevar ciertos contadores sobre el programa para luego  ser procesadas en una presentación Beamer.
+
+\column{0.5\textwidth}
+
+\begin{center}
+    \includegraphics[height=3 cm]{/home/gabriel/Music/Lat/photos/6.jpg}
+\end{center}
+
+\end{columns}
+\end{frame}
+
+%--------------------------------------------------------------------------------
+
+\section{Herramienta Flex }
+
+\begin{frame}
+\frametitle{Descripción de la herramienta Flex.}
+\begin{columns}
+
+\column{0.5\textwidth}
+
+\begin{center}
+    \includegraphics[height=4.5cm]{/home/gabriel/Music/Lat/photos/3.jpg}
+\end{center}
+
+\column{0.5\textwidth}
+
+Flex es una herramienta de gran ayuda que genera los analizadores lexicos.\\ 
+
+A través de un conjunto de expresiones regulares, se busca coincidencias y ejecuta
+instrucciones relacionadas a la expresiones.\\
+
+\end{columns}
+
+\end{frame}
+
+
+
+
+
+
+
+\section{Análisis del programa }
+
+\begin{frame}
+\frametitle{Notación.}
+
+\begin{center}
+    \fcolorbox{azure}{azure}{\textit{Palabras Reservadas}}\\
+    \fcolorbox{yellow}{yellow}{Carácteres Especiales}\\
+    \fcolorbox{red}{red}{Operadores}\\
+    \fcolorbox{orange}{orange}{\textit{Strings}}\\
+    \fcolorbox{green}{green}{\textit{Identificadores}}\\
+    \fcolorbox{amethyst}{amethyst}{\textbf{Constantes}}\\
+    \fcolorbox{pink}{pink}{Errores Léxicos}
+\end{center}
+
+\end{frame}\begin{frame}{Análisis de código} 
+\fcolorbox{pink}{pink}{\textbf{á}} \fcolorbox{pink}{pink}{\textbf{é}} \fcolorbox{pink}{pink}{\textbf{í}} \fcolorbox{pink}{pink}{\textbf{ó}} \fcolorbox{pink}{pink}{\textbf{ú}} \fcolorbox{pink}{pink}{\textbf{\$}} \fcolorbox{pink}{pink}{\textbf{\$}} \fcolorbox{pink}{pink}{\textbf{ä}} \fcolorbox{pink}{pink}{\textbf{ë}} \fcolorbox{pink}{pink}{\textbf{ö}}\\
+\fcolorbox{pink}{pink}{\textbf{$\neg$}} \fcolorbox{pink}{pink}{\textbf{$\neg$}} \fcolorbox{pink}{pink}{\textbf{`}} \fcolorbox{pink}{pink}{\textbf{`}}\\
+ \end{frame}
+  \section{Histogramas del análisis}  \begin{frame} \frametitle{Histograma de la cantidad de tokens}  
+ \begin{tikzpicture}  
+ \begin{axis}[legend columns=3, 
+   	x tick label style={ 
+ /pgf/number format/1000 sep=}, 
+ ylabel=Tokens,
+ 	enlargelimits=0.05, 
+legend style={at={(0.5,-0.04)}, 
+  	anchor=north,legend columns=-1},  
+ 	ybar interval=0.7,   
+  ] 
+  \addplot coordinates {(0,0) (5,5)}; 
+ \addplot coordinates {(0,0) (5,5)}; 
+ \addplot coordinates {(0,0) (5,5)}; 
+ \addplot coordinates {(0,0) (5,5)}; 
+ \addplot coordinates {(0,0) (5,5)}; 
+ \addplot coordinates {(0,0) (5,5)}; 
+ \addplot coordinates {(0,10) (5,5)}; 
+  \legend{Palabras reservadas,Identificadores,Strings, Constantes, Símbolos Especiales, Operadores, Errores Léxicos } 
+  \end{axis} 
+ \end{tikzpicture} 
+ \end{frame}  
+  \begin{frame}  \frametitle{Gráfico circular del porcentaje de uso de tokens } 
+  \begin{tikzpicture}[scale=0.9]  
+    \pie[text=legend]{0.00 / Palabras reservadas: 0.00 \%, 0.00 / Identificadores: 0.00 \%, 0.00 / Strings: 0.00 \%, 0.00 / Constantes: 0.00 \%, 0.00 / Símbolos especiales: 0.00 \%, 0.00 / Operadores: 0.00 \%, 100.00 / Errores Léxicos: 100.00 \%}  
+  \end{tikzpicture} 
+ \end{frame}  
+  \section{Referencias }\begin{frame}{Referencias}Levine, J. (2009). \textit{Flex \& Bison: Text Processing Tools.} O'Reilly Media, Inc.\end{frame}\end{document}
