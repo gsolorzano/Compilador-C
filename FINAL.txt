@@ -1,3 +1,38 @@
-\fcolorbox{pink}{pink}{\textbf{á}} \fcolorbox{pink}{pink}{\textbf{é}} \fcolorbox{pink}{pink}{\textbf{í}} \fcolorbox{pink}{pink}{\textbf{ó}} \fcolorbox{pink}{pink}{\textbf{ú}} \fcolorbox{pink}{pink}{\textbf{\$}} \fcolorbox{pink}{pink}{\textbf{\$}} \fcolorbox{pink}{pink}{\textbf{ä}} \fcolorbox{pink}{pink}{\textbf{ë}} \fcolorbox{pink}{pink}{\textbf{ö}}\\
-\fcolorbox{pink}{pink}{\textbf{$\neg$}} \fcolorbox{pink}{pink}{\textbf{$\neg$}} \fcolorbox{pink}{pink}{\textbf{`}} \fcolorbox{pink}{pink}{\textbf{`}}\\
+\leavevmode\\
+ \leavevmode\\
+ \leavevmode\\
+  \leavevmode\\
+ \leavevmode\\
+ \leavevmode\\
+   \leavevmode\\
+  \leavevmode\\
+\leavevmode\\
+ \leavevmode\\
+  \leavevmode\\
+   \leavevmode\\
+      \leavevmode\\
+  \leavevmode\\
+\leavevmode\\
+         \leavevmode\\
+  \leavevmode\\
+\leavevmode\\
+  \leavevmode\\
+  \leavevmode\\
+  \leavevmode\\
+ \leavevmode\\
+  \leavevmode\\
+  \leavevmode\\
+\leavevmode\\
+\leavevmode\\
+  \leavevmode\\
+\leavevmode\\
+\leavevmode\\
+\leavevmode\\
+  \leavevmode\\
+ \leavevmode\\
+  \leavevmode\\
+\leavevmode\\
+\leavevmode\\
+\leavevmode\\
+\leavevmode\\
  

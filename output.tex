@@ -22,6 +22,8 @@
 \definecolor{pink}{rgb}{1.0, 0.65, 0.79}
 \definecolor{green}{rgb}{0.01, 0.75, 0.24}
 \definecolor{orange}{rgb}{0.93, 0.53, 0.18}
+\definecolor{red}{rgb}{0.87, 0.36, 0.51}
+\definecolor{er}{rgb}{0.89, 0.0, 0.13}
 
 %------------------------------------------------------------
 %This block of code defines the information to appear in the
@@ -219,8 +221,85 @@ instrucciones relacionadas a la expresiones.\\
 
 \end{frame}
 
+\section{Proceso de parsing}
+
+\begin{frame}
+\frametitle{Descripción del proceso del proceso de parsing.}
+\begin{columns}
+
+\column{0.5\textwidth}
+El proceso de parsing consiste que en que se analiza una cadena de símbolos de acuerdo
+a las reglas de una gramática formal que sido previamente establecida.\\
+En el proceso de parsing, se genera la estructura de un árbol sintáctico, con el objetivo de verficar 
+que el contenido del programa cumpla con las reglas sintácticas.
+
+\column{0.5\textwidth}
+
+\begin{center}
+    \includegraphics[height=2.5cm]{/home/gabriel/Music/Lat/photos/10.png}
+\end{center}
+
+\end{columns}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Cont. Descripción del proceso del proceso de parsing.}
+\begin{columns}
+
+\column{0.5\textwidth}
+
+\begin{center}
+    \includegraphics[height=2.5cm]{/home/gabriel/Music/Lat/photos/9.png}
+\end{center}
 
 
+\column{0.5\textwidth}
+El análisis sintáctico convierte el texto de entrada en árboles,que pueden ser estucturas de datos o estar implícitas en el proceso de parsing, que se vuelven de gran importancia y brindan una jerarquía implícita de la entrada. 
+
+
+\end{columns}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Cont. Descripción del proceso del proceso de parsing.}
+\begin{columns}
+
+\column{0.5\textwidth}
+
+Se establece una relación entre un analizador léxico que crea tokens de una secuencia de caracteres de entrada y son estos tokens los que son procesados por el analizador sintáctico (parser) para construir un árbol.
+
+\column{0.5\textwidth}
+
+\begin{center}
+    \includegraphics[height=2cm]{/home/gabriel/Music/Lat/photos/8.jpg}
+\end{center}
+
+
+\end{columns}
+
+\end{frame}
+
+\section{Herramienta Bison}
+\begin{frame}
+\frametitle{Descripción Herramienta Bison}
+\begin{columns}
+
+\column{0.5\textwidth}
+
+\begin{center}
+    \includegraphics[height=4.5cm]{/home/gabriel/Music/Lat/photos/7.jpg}
+\end{center}
+
+
+\column{0.5\textwidth}
+GNU bison es un programa generador de analizadores sintácticos de propósito general.
+Bison convierte la descripción formal de un lenguaje, escrita como una gramática libre de contexto LALR, en un programa que realiza análisis sintáctico.
+
+\end{columns}
+
+\end{frame}
 
 
 
@@ -240,10 +319,101 @@ instrucciones relacionadas a la expresiones.\\
     \fcolorbox{pink}{pink}{Errores Léxicos}
 \end{center}
 
-\end{frame}\begin{frame}{Análisis de código} 
-\fcolorbox{pink}{pink}{\textbf{á}} \fcolorbox{pink}{pink}{\textbf{é}} \fcolorbox{pink}{pink}{\textbf{í}} \fcolorbox{pink}{pink}{\textbf{ó}} \fcolorbox{pink}{pink}{\textbf{ú}} \fcolorbox{pink}{pink}{\textbf{\$}} \fcolorbox{pink}{pink}{\textbf{\$}} \fcolorbox{pink}{pink}{\textbf{ä}} \fcolorbox{pink}{pink}{\textbf{ë}} \fcolorbox{pink}{pink}{\textbf{ö}}\\
-\fcolorbox{pink}{pink}{\textbf{$\neg$}} \fcolorbox{pink}{pink}{\textbf{$\neg$}} \fcolorbox{pink}{pink}{\textbf{`}} \fcolorbox{pink}{pink}{\textbf{`}}\\
+\end{frame}
+
+\begin{frame}{Análisis de código} 
+\leavevmode\\
+\leavevmode\\
+\setstcolor{azure}\sethlcolor{azure}\Oricolor\hl{\textit{int}} \setstcolor{red}\sethlcolor{red}\Oricolor\hl{*}\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{a}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{;}\leavevmode\\
+\setstcolor{azure}\sethlcolor{azure}\Oricolor\hl{\textit{void}} \setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{cleanCode}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{\{}\leavevmode\\
+\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{getcwd}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(}\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{direccion}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{,} \setstcolor{azure}\sethlcolor{azure}\Oricolor\hl{\textit{sizeof}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(}\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{direccion}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)} \setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{;}\leavevmode\\
+\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{strcat}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(} \setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{direccion}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{,}\fcolorbox{orange}{orange}{\textbf{''/OUTPUT.txt''}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{;}\leavevmode\\
+\end{frame}
+\begin{frame}{Análisis de código} 
+\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fileImput}} \setstcolor{red}\sethlcolor{red}\Oricolor\hl{=} \setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fopen}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(}\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{direccion}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{,} \fcolorbox{orange}{orange}{\textbf{''r''}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{;}\leavevmode\\
+\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fileOutput}} \setstcolor{red}\sethlcolor{red}\Oricolor\hl{=} \setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fopen}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(}\fcolorbox{orange}{orange}{\textbf{''OUTPUT2.txt''}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{,}\fcolorbox{orange}{orange}{\textbf{''w''}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{;}\leavevmode\\
+\setstcolor{azure}\sethlcolor{azure}\Oricolor\hl{\textit{char}} \setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{in\_char}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{;}\leavevmode\\
+\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{in\_char}} \setstcolor{red}\sethlcolor{red}\Oricolor\hl{=} \setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fgetc}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(}\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fileImput}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{;}\leavevmode\\
+\setstcolor{azure}\sethlcolor{azure}\Oricolor\hl{\textit{int}} \setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{band}} \setstcolor{red}\sethlcolor{red}\Oricolor\hl{=} \setstcolor{amethyst}\sethlcolor{amethyst}\Oricolor\hl{\textbf{0}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{;}\leavevmode\\
+\end{frame}
+\begin{frame}{Análisis de código} 
+\setstcolor{azure}\sethlcolor{azure}\Oricolor\hl{\textit{while}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(} \setstcolor{red}\sethlcolor{red}\Oricolor\hl{!=}\\\setstcolor{er}\sethlcolor{er}\Oricolor\hl{Syntax Error, in line:3}\\ \setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{EOF}} \setstcolor{red}\sethlcolor{red}\Oricolor\hl{\&}\setstcolor{red}\sethlcolor{red}\Oricolor\hl{\&} \setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(}\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{in\_char}} \setstcolor{red}\sethlcolor{red}\Oricolor\hl{==} \fcolorbox{orange}{orange}{\textbf{'\textbackslash n'}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{\{}\leavevmode\\
+\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{in\_char}} \setstcolor{red}\sethlcolor{red}\Oricolor\hl{=} \setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fgetc}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(}\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fileImput}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{;}\leavevmode\\
+\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{\}}\leavevmode\\
+\setstcolor{azure}\sethlcolor{azure}\Oricolor\hl{\textit{while}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(}\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{in\_char}} \setstcolor{red}\sethlcolor{red}\Oricolor\hl{!=} \setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{EOF}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{\{}\leavevmode\\
+\setstcolor{azure}\sethlcolor{azure}\Oricolor\hl{\textit{if}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(}\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{in\_char}} \setstcolor{red}\sethlcolor{red}\Oricolor\hl{==} \fcolorbox{orange}{orange}{\textbf{'\textbackslash n'}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{\{}\leavevmode\\
+\end{frame}
+\begin{frame}{Análisis de código} 
+\setstcolor{azure}\sethlcolor{azure}\Oricolor\hl{\textit{if}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(}\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{band}} \setstcolor{red}\sethlcolor{red}\Oricolor\hl{==} \setstcolor{amethyst}\sethlcolor{amethyst}\Oricolor\hl{\textbf{0}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{\{}\leavevmode\\
+\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fputc}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(}\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{in\_char}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{,} \setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fileOutput}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)}\leavevmode\\
+\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{band}}\\\setstcolor{er}\sethlcolor{er}\Oricolor\hl{Syntax Error, in line:3}\\ \setstcolor{red}\sethlcolor{red}\Oricolor\hl{=} \setstcolor{amethyst}\sethlcolor{amethyst}\Oricolor\hl{\textbf{1}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{;}\leavevmode\\
+\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{in\_char}} \setstcolor{red}\sethlcolor{red}\Oricolor\hl{=} \setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fgetc}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(}\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fileImput}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{;}\leavevmode\\
+\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{\}}\leavevmode\\
+\end{frame}
+\begin{frame}{Análisis de código} 
+\setstcolor{azure}\sethlcolor{azure}\Oricolor\hl{\textit{else}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{\{}\leavevmode\\
+\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{in\_char}} \setstcolor{red}\sethlcolor{red}\Oricolor\hl{=} \setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fgetc}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(}\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fileImput}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{;}\leavevmode\\
+\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{\}}\leavevmode\\
+\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{\}}\leavevmode\\
+\setstcolor{azure}\sethlcolor{azure}\Oricolor\hl{\textit{else}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{\{}\leavevmode\\
+\end{frame}
+\begin{frame}{Análisis de código} 
+\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{band}} \setstcolor{red}\sethlcolor{red}\Oricolor\hl{=} \setstcolor{amethyst}\sethlcolor{amethyst}\Oricolor\hl{\textbf{0}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{;}\leavevmode\\
+\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fputc}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(}\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{in\_char}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{,} \setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fileOutput}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{;}\leavevmode\\
+\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{in\_char}} \setstcolor{red}\sethlcolor{red}\Oricolor\hl{=} \setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fgetc}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(}\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fileImput}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{;}\leavevmode\\
+\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{\}}\leavevmode\\
+\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{\}}\leavevmode\\
+\end{frame}
+\begin{frame}{Análisis de código} 
+\setstcolor{azure}\sethlcolor{azure}\Oricolor\hl{\textit{return}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{;}\leavevmode\\
+\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{\}}\leavevmode\\
+ \leavevmode\\
+\setstcolor{azure}\sethlcolor{azure}\Oricolor\hl{\textit{int}} \setstcolor{red}\sethlcolor{red}\Oricolor\hl{*}\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{a}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{;}\leavevmode\\
+\setstcolor{azure}\sethlcolor{azure}\Oricolor\hl{\textit{void}} \setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{cleanCode}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{\{}\leavevmode\\
+\end{frame}
+\begin{frame}{Análisis de código} 
+\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{getcwd}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(}\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{direccion}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{,} \setstcolor{azure}\sethlcolor{azure}\Oricolor\hl{\textit{sizeof}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(}\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{direccion}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)} \setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{;}\leavevmode\\
+\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{strcat}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(} \setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{direccion}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{,}\fcolorbox{orange}{orange}{\textbf{''/OUTPUT.txt''}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{;}\leavevmode\\
+\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fileImput}} \setstcolor{red}\sethlcolor{red}\Oricolor\hl{=} \setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fopen}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(}\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{direccion}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{,} \fcolorbox{orange}{orange}{\textbf{''r''}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{;}\leavevmode\\
+\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fileOutput}} \setstcolor{red}\sethlcolor{red}\Oricolor\hl{=} \setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fopen}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(}\fcolorbox{orange}{orange}{\textbf{''OUTPUT2.txt''}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{,}\fcolorbox{orange}{orange}{\textbf{''w''}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{;}\leavevmode\\
+\setstcolor{azure}\sethlcolor{azure}\Oricolor\hl{\textit{char}} \setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{in\_char}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{;}\leavevmode\\
+\end{frame}
+\begin{frame}{Análisis de código} 
+\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{in\_char}} \setstcolor{red}\sethlcolor{red}\Oricolor\hl{=} \setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fgetc}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(}\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fileImput}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{;}\leavevmode\\
+\setstcolor{azure}\sethlcolor{azure}\Oricolor\hl{\textit{int}} \setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{band}} \setstcolor{red}\sethlcolor{red}\Oricolor\hl{=} \setstcolor{amethyst}\sethlcolor{amethyst}\Oricolor\hl{\textbf{0}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{;}\leavevmode\\
+\setstcolor{azure}\sethlcolor{azure}\Oricolor\hl{\textit{while}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(} \setstcolor{red}\sethlcolor{red}\Oricolor\hl{!=}\\\setstcolor{er}\sethlcolor{er}\Oricolor\hl{Syntax Error, in line:3}\\ \setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{EOF}} \setstcolor{red}\sethlcolor{red}\Oricolor\hl{\&}\setstcolor{red}\sethlcolor{red}\Oricolor\hl{\&} \setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(}\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{in\_char}} \setstcolor{red}\sethlcolor{red}\Oricolor\hl{==} \fcolorbox{orange}{orange}{\textbf{'\textbackslash n'}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{\{}\leavevmode\\
+\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{in\_char}} \setstcolor{red}\sethlcolor{red}\Oricolor\hl{=} \setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fgetc}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(}\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fileImput}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{;}\leavevmode\\
+\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{\}}\leavevmode\\
+\end{frame}
+\begin{frame}{Análisis de código} 
+\setstcolor{azure}\sethlcolor{azure}\Oricolor\hl{\textit{while}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(}\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{in\_char}} \setstcolor{red}\sethlcolor{red}\Oricolor\hl{!=} \setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{EOF}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{\{}\leavevmode\\
+\setstcolor{azure}\sethlcolor{azure}\Oricolor\hl{\textit{if}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(}\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{in\_char}} \setstcolor{red}\sethlcolor{red}\Oricolor\hl{==} \fcolorbox{orange}{orange}{\textbf{'\textbackslash n'}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{\{}\leavevmode\\
+\setstcolor{azure}\sethlcolor{azure}\Oricolor\hl{\textit{if}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(}\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{band}} \setstcolor{red}\sethlcolor{red}\Oricolor\hl{==} \setstcolor{amethyst}\sethlcolor{amethyst}\Oricolor\hl{\textbf{0}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{\{}\leavevmode\\
+\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fputc}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(}\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{in\_char}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{,} \setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fileOutput}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)}\leavevmode\\
+\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{band}}\\\setstcolor{er}\sethlcolor{er}\Oricolor\hl{Syntax Error, in line:3}\\ \setstcolor{red}\sethlcolor{red}\Oricolor\hl{=} \setstcolor{amethyst}\sethlcolor{amethyst}\Oricolor\hl{\textbf{1}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{;}\leavevmode\\
+\end{frame}
+\begin{frame}{Análisis de código} 
+\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{in\_char}} \setstcolor{red}\sethlcolor{red}\Oricolor\hl{=} \setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fgetc}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(}\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fileImput}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{;}\leavevmode\\
+\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{\}}\leavevmode\\
+\setstcolor{azure}\sethlcolor{azure}\Oricolor\hl{\textit{else}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{\{}\leavevmode\\
+\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{in\_char}} \setstcolor{red}\sethlcolor{red}\Oricolor\hl{=} \setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fgetc}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(}\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fileImput}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{;}\leavevmode\\
+\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{\}}\leavevmode\\
+\end{frame}
+\begin{frame}{Análisis de código} 
+\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{\}}\leavevmode\\
+\setstcolor{azure}\sethlcolor{azure}\Oricolor\hl{\textit{else}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{\{}\leavevmode\\
+\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{band}} \setstcolor{red}\sethlcolor{red}\Oricolor\hl{=} \setstcolor{amethyst}\sethlcolor{amethyst}\Oricolor\hl{\textbf{0}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{;}\leavevmode\\
+\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fputc}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(}\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{in\_char}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{,} \setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fileOutput}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{;}\leavevmode\\
+\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{in\_char}} \setstcolor{red}\sethlcolor{red}\Oricolor\hl{=} \setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fgetc}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{(}\setstcolor{green}\sethlcolor{green}\Oricolor\hl{\textbf{fileImput}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{)}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{;}\leavevmode\\
+\end{frame}
+\begin{frame}{Análisis de código} 
+\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{\}}\leavevmode\\
+\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{\}}\leavevmode\\
+\setstcolor{azure}\sethlcolor{azure}\Oricolor\hl{\textit{return}}\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{;}\leavevmode\\
+\setstcolor{yellow}\sethlcolor{yellow}\Oricolor\hl{\}}\leavevmode\\
  \end{frame}
+\begin{frame}{Análisis de código} 
+\end{frame}
   \section{Histogramas del análisis}  \begin{frame} \frametitle{Histograma de la cantidad de tokens}  
  \begin{tikzpicture}  
  \begin{axis}[legend columns=3, 
@@ -255,20 +425,20 @@ legend style={at={(0.5,-0.04)},
   	anchor=north,legend columns=-1},  
  	ybar interval=0.7,   
   ] 
-  \addplot coordinates {(0,0) (5,5)}; 
+  \addplot coordinates {(0,24) (5,5)}; 
+ \addplot coordinates {(0,86) (5,5)}; 
+ \addplot coordinates {(0,12) (5,5)}; 
+ \addplot coordinates {(0,8) (5,5)}; 
+ \addplot coordinates {(0,144) (5,5)}; 
+ \addplot coordinates {(0,34) (5,5)}; 
  \addplot coordinates {(0,0) (5,5)}; 
- \addplot coordinates {(0,0) (5,5)}; 
- \addplot coordinates {(0,0) (5,5)}; 
- \addplot coordinates {(0,0) (5,5)}; 
- \addplot coordinates {(0,0) (5,5)}; 
- \addplot coordinates {(0,10) (5,5)}; 
   \legend{Palabras reservadas,Identificadores,Strings, Constantes, Símbolos Especiales, Operadores, Errores Léxicos } 
   \end{axis} 
  \end{tikzpicture} 
  \end{frame}  
   \begin{frame}  \frametitle{Gráfico circular del porcentaje de uso de tokens } 
   \begin{tikzpicture}[scale=0.9]  
-    \pie[text=legend]{0.00 / Palabras reservadas: 0.00 \%, 0.00 / Identificadores: 0.00 \%, 0.00 / Strings: 0.00 \%, 0.00 / Constantes: 0.00 \%, 0.00 / Símbolos especiales: 0.00 \%, 0.00 / Operadores: 0.00 \%, 100.00 / Errores Léxicos: 100.00 \%}  
+    \pie[text=legend]{7.79 / Palabras reservadas: 7.79 \%, 27.92 / Identificadores: 27.92 \%, 3.90 / Strings: 3.90 \%, 2.60 / Constantes: 2.60 \%, 46.75 / Símbolos especiales: 46.75 \%, 11.04 / Operadores: 11.04 \%, 0.00 / Errores Léxicos: 0.00 \%}  
   \end{tikzpicture} 
  \end{frame}  
   \section{Referencias }\begin{frame}{Referencias}Levine, J. (2009). \textit{Flex \& Bison: Text Processing Tools.} O'Reilly Media, Inc.\end{frame}\end{document}

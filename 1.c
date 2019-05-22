@@ -1,7 +1,7 @@
 #define A 2
-#define B 8 + A
+                 #define B 8 + A
 
-int print1 (int argc, char* argv[]) {
+int print1 (int argc, char* argv[]) {                 #define B no
 	print("%d", B)
 }
 

@@ -1,16 +1,19 @@
-#include <stdio.h>
-#include <ctype.h>
-#include <stdbool.h>
-#include <string.h>
+#include<stdio.h>
+#include<ctype.h>
+#include<stdbool.h>
+#include<string.h>
+
+int numLinea = 0;
+
 
 FILE *fileIn;
 FILE *fileOut;
 
-char nomDefine[100] = "\0";
-char nomDefine_val[100] = "\0";
-char nomDefine_2[100] = "\0";
+char nomDefine[200] = "\0";
+char nomDefine_val[200] = "\0";
+char nomDefine_2[200] = "\0";
 
-int visitedDef[100];
+int visitedDef[150];
 int visitedDefCount=0;
 
 
@@ -22,7 +25,7 @@ struct defs{
     char valor[150];
 };
 
-struct defs ldef[100];
+struct defs ldef[2000];
 
 void clean_v(){//borra el contenido de nomDef y lo resetea a un string vacio
     memset(nomDefine_val, 0, sizeof(nomDefine_val));
@@ -55,16 +58,15 @@ void addStr(char c){//Recibe un char para agregarlo al buffer y conformar palabr
 }
 
 
-//struct defs ldef[100]; --> es solo para saber como se llama el array de structs
-
-
 int getMatch(char toSearch[30]){
-    printf("\t \t GETMATCH: \t Valor %s Index: \t", toSearch);
+    //printf("\t \t GETMATCH: \t Valor %s Index: \t", toSearch);
     for(int i=0; i<defineCont; i++){
         if(!strcmp(toSearch, ldef[i].nombre)) {
+                //printf("%i \n", i);
                 return i;
         }
     }
+    //printf("NO HAY PARA: "); printf("%s \n", toSearch);
     return -1;
 }
 
@@ -82,15 +84,16 @@ void totalValorMaker(int pos){ //Función para encontrar el valor de cada define
     int tempWordCont=0;
 
     for(int k=0; k<size; k++){
-            printf("\t \t \t Letra actual: %c \n", ldef[pos].valor[k]);
-        //printf("%c", ldef[pos].valor[k] );
+            //printf("\t \t \t Letra actual: %c \n", ldef[pos].valor[k]);
         if(isRecursive ){
+            //printf("RECURSIVO \n");
             fputc(ldef[pos].valor[k],fileOut);
             continue;
         }
         else if (ldef[pos].valor[k]=='"' || entreComillas==1) { //aquí se escribe directo en el archivo mientras se encuentren
                 //comillas o se esté en medio de algún par de comillas
-                //ELSE IF3
+
+                //printf("COMILLAS \n");
 
                 int defMatch=0;
 
@@ -104,14 +107,17 @@ void totalValorMaker(int pos){ //Función para encontrar el valor de cada define
                 }//Verificar si algunos de los defines visitados se encuentra en el valor
 
             if( defMatch){//si se detectó recursión procede a escribir
+                //printf("COMPARE CIERTO EXTRANO \n");
                 fprintf(fileOut,tempWord);
                 isRecursive=1;
+                //printf("\t hay recursion: %s \t", tempWord ); printf("Define %s \n", ldef[pos].nombre);
                 memset(tempWord, 0, sizeof(tempWord));//ESTO SE PUEDE SACAR DESPUES DEL IF Y EL ELSE
                 tempWordCont =0;
                 fputc(ldef[pos].valor[k],fileOut);
                 continue;
             }
             else{ //no es recursiva y tiene una definición de algo más
+                //printf("COMPARE FALSO EXTRANO \n");
                 int newPos = getMatch(tempWord);
 
                 if(newPos != -1) {
@@ -138,29 +144,38 @@ void totalValorMaker(int pos){ //Función para encontrar el valor de cada define
 
          if((ldef[pos].valor[k] == ' ' || ldef[pos].valor[k] == '\n') || k+1 == size )
         { //señal para evaluar la palabra // IF3
-
-//            if( (isalpha(ldef[pos].valor[k]) || isdigit(ldef[pos].valor[k])) ){
-//                tempWord[tempWordCont] = ldef[pos].valor[k];
-//                tempWordCont++;
-//                printf("Palabra actual: %s \n", tempWord);
-//            }
+            //printf("ESPACIO DETECTADO \n");
+            if(k+1 == size){
+              //   printf(" \n SIZE REACH \n");
+                if(ldef[pos].valor[k] != ' '){
+                tempWord[tempWordCont] = ldef[pos].valor[k];
+                tempWordCont++;
+                }
+            }//ESTE IF SE HACE EN CASO DE QUE EL SIZE
+            //ESTÉ PROTO A SUPERARSE, PERO QUE EL ACTUAL
+            //NO SEA UN ESPACIO, SINO UNA LETRA
 
             int defMatch=0;
             for(int p=0; p<visitedDefCount; p++){
+                //printf("\n \t \t \t \t TEMP WORD: %s, %i \n", tempWord, strlen(tempWord));
                 if(!strcmp(tempWord, ldef[visitedDef[p]].nombre )) {
                         defMatch++;
                         break;
                 }
             }
             if( defMatch){//si se detectó recursión procede a escribir
+                //printf("COMPARE CIERTO EXTRANO \n");
                 fprintf(fileOut,tempWord);
                 isRecursive=1;
+                //printf("\t hay recursion: %s \t", tempWord ); printf("Define %s \n", ldef[pos].nombre);
                 memset(tempWord, 0, sizeof(tempWord));//ESTO SE PUEDE SACAR DESPUES DEL IF Y EL ELSE
                 tempWordCont =0;
                 fputc(ldef[pos].valor[k],fileOut);
                 continue;
             }
             else{ //no es recursiva y tiene una definición de algo más
+                //printf("COMPARE FALSO EXTRANO \n");
+
                 int newPos = getMatch(tempWord);
 
                 if(newPos != -1) {
@@ -171,21 +186,22 @@ void totalValorMaker(int pos){ //Función para encontrar el valor de cada define
 
                 memset(tempWord, 0, sizeof(tempWord));
                 tempWordCont =0;
-                fputc(ldef[pos].valor[k],fileOut);//ESTO SE PUEDE SACAR DESPUES DEL IF Y EL ELSE
+                if(k+1 != size) fputc(ldef[pos].valor[k],fileOut);//ESTO SE PUEDE SACAR DESPUES DEL IF Y EL ELSE
                 continue;
             }
             //aquí se limpia el string temporal
-//            memset(tempWord, 0, sizeof(tempWord));
-//            tempWordCont =0;
 
         }//  IF3
         else if( (ldef[pos].valor[k]=='_' || isalpha(ldef[pos].valor[k]) || isdigit(ldef[pos].valor[k])) )
         {//IF2
+            //printf("\n \n IS CARACTER \n \n");
             tempWord[tempWordCont] = ldef[pos].valor[k];
             tempWordCont++;
+            //printf("Palabra actual: %s \n", tempWord);
         }//IF2
         else{
             //fputc(ldef[pos].valor[k], fileOut);
+            //printf("CARACTER EXTRANO DETECTADO: "); printf("%c", ldef[pos].valor[k]);
             int defMatch=0;
             for(int p=0; p<visitedDefCount; p++){
                 if(!strcmp(tempWord, ldef[visitedDef[p]].nombre )) {
@@ -194,14 +210,17 @@ void totalValorMaker(int pos){ //Función para encontrar el valor de cada define
                 }
             }
             if( defMatch){//si se detectó recursión procede a escribir
+                //printf("COMPARE CIERTO EXTRANO \n");
                 fprintf(fileOut,tempWord);
                 isRecursive=1;
+                //printf("\t hay recursion: %s \t", tempWord ); printf("Define %s \n", ldef[pos].nombre);
                 memset(tempWord, 0, sizeof(tempWord));//ESTO SE PUEDE SACAR DESPUES DEL IF Y EL ELSE
                 tempWordCont =0;
                 fputc(ldef[pos].valor[k],fileOut);
                 continue;
             }
             else{ //no es recursiva y tiene una definición de algo más
+                //printf("COMPARE FALSO EXTRANO \n");
                 int newPos = getMatch(tempWord);
 
                 if(newPos != -1) {
@@ -230,14 +249,17 @@ void defFinder(){
         return;
     }
     while((in_char = fgetc(fileIn) ) != EOF){//lee todo el codigo hasta el final del archivo
+
+
         if(in_char == '#'){
             addStr_2(in_char);
             in_char = fgetc(fileIn);
-            if(isspace(in_char)){
+            while( isspace(in_char) && ( (in_char = fgetc(fileIn) ) != EOF ) ){//lo cambié a while a ver si se come en verdad se come los espacios -->Da segmentation
                 addStr_2(in_char);
                 in_char = fgetc(fileIn);
                 continue;
             }
+            //printf("\n Después de isspace: --> %s \n", nomDefine_2);
             while(isalpha(in_char)){
                 addStr_2(in_char);
                 addStr(in_char);
@@ -246,9 +268,10 @@ void defFinder(){
 //            for(int j = 0; j <= strlen(nomDef);j++){
 //                nomDef[j] = tolower(nomDef[j]);
 //            }
-            //chequea si hay un declare
+            //chequea si hay un define
             addStr_2(in_char);
-            if(!strcmp(nomDefine,def)){//si hay un declare se hace aqui
+            if(!strcmp(nomDefine,def)){//si hay un define se hace aqui
+                fputc('\n',fileOut);
                 clean();
                 in_char = fgetc(fileIn);
                 addStr_2(in_char);
@@ -273,6 +296,7 @@ void defFinder(){
                         addStr_2(in_char);
                     }
                     if(in_char == '\n'){ // si no hay valor mete el nombre y blanco en el valor
+                        numLinea++;
                         int band = 0;
                         for(int i = 0; i<=defineCont;i++){
                             if(!strcmp(nomDefine,ldef[i].nombre)){
@@ -300,12 +324,13 @@ void defFinder(){
                         clean();
                         fputc(' ', fileOut);
                         continue;
-                    }
+                    }//NO es igual a salto de línea
                     else{
                         while(in_char != '\n'){//lee todo lo que falta hasta encontrar un new line
                             addStr_v(in_char);
                             in_char = fgetc(fileIn);
                         }
+                        numLinea++;
                         int band = 0;
                         for(int i = 0; i<=defineCont;i++){
                             if(!strcmp(nomDefine,ldef[i].nombre)){
@@ -333,20 +358,40 @@ void defFinder(){
                         clean();
                         continue;
                     }
-                }
+                } //nombre de la variable no es válido
                 else{
                     while(in_char != '\n'){
                         in_char = fgetc(fileIn);
                     }
+                    numLinea++;
                     continue;
                 }
             }//HASTA AQUÍ SE TRABAJA EL DEFINE (CONFECCIONARLO)
-            else{//si no es un include se manda a escribir tal cual
+            else if( !strcmp( nomDefine, "if" ) || !strcmp( nomDefine, "f" ) ){
+
+                while( in_char != '\n' ){
+                    in_char = fgetc(fileIn);
+                }
+                printf("\n \t \t \t ENTRANDO EN #IF");
+                clean();
+                clean_2();
+                clean_v();
+
+            }
+            else{//si no es un define se manda a escribir tal cual
                 fprintf(fileOut, nomDefine_2);
+                //printf("\n No hay palabra define: --> %s \n", nomDefine_2);
+                clean_v();
+                clean_2();
+                clean();
+                //ES NECESARIO LIMPIAR ACÁ PARA EVITAR REDUNDANCIAS
+                //Y QUE EL CÓDIGO QUE HORRIBLE
                 continue;
             }
         }
         else{//DIFERENTE A # --> BUSCAR POR EL NOMBRE DE UN DEFINE
+                clean();
+                clean_2();
             if(isalpha(in_char) || in_char == '_'){ //busca a ver si el nombre de la variable es valido solo _ o letras
                 addStr(in_char);
                 in_char = fgetc(fileIn);
@@ -360,24 +405,24 @@ void defFinder(){
                         //Chequear si no hay que cambiar algo.
                         //printf("\nBueno: Word: "); printf("%s \t",nomDefine); printf("Name: "); printf("%s \t", ldef[i].nombre);
                         //printf("Valor: ");printf("%s \n", ldef[i].valor);
-                        //checkBefore(i);//Funcion que verifica si hay una variable que sustituir
-                        //checkBefore(i);//Funcion que verifica si hay una variable que sustituir
                         totalValorMaker(i); //Se encarga de expandir la el define hasta ser resuelto o hasta ser recurrente
-                        //fprintf(fileOut, totalValorMakerString); //LO QUITÉ PARA HACER EL FPRINT EN LAS FUNCIONES
                         visitedDefCount = 0;
-                        //visitedDef[0] = -1;
                         band = 1;
                     }
                 }
                 if(band == 0){
+                    //printf("\n \t \t No hay define para: "); printf("%s \n",nomDefine);
                     fprintf(fileOut, nomDefine);
                 }
                 fputc(in_char, fileOut); //CREO QUE ESTE HACE QUE SE PRODUZCA UN ERROR
+                //printf("\n \t \t \t \t Letra que quedo: "); printf("%c \n",in_char);
             }
             else{
                 fputc(in_char, fileOut);
+                //printf("\n \t \t \t ***Letra Extranna: "); printf("%c \n",in_char);
             }
-//            printf("%s\n", nomDef);
+//            printf("\n NomDef --> %s \n", nomDefine);
+//            printf("\n NomDef2 --> %s \n", nomDefine_2);
             clean();
         }
     }
@@ -390,36 +435,6 @@ void defFinder(){
     }
 }
 
-void checkBefore(int pos){//Recibe la posición del valor a verificar
-    //Se limpian los strings a usar
-    clean_2();
-    clean_v();
-    for(int i = 0; i<strlen(ldef[pos].valor);i++){//Se recorre el valor a verificar char por char
-        if(isalpha(ldef[pos].valor[i]) || ldef[pos].valor[i] == '_'){ //busca a ver si el nombre de la variable es valido solo _ o letras
-            addStr_2(ldef[pos].valor[i]);
-            i++;
-            while(isalpha(ldef[pos].valor[i]) || isdigit(ldef[pos].valor[i]) || ldef[pos].valor[i] == '_'){ //busca todo el contenido del nombre de la variable _ o letras o nums
-                addStr_2(ldef[pos].valor[i]);//Guarda todo el nombre de la variale en nomDef_2
-                i++;
-            }
-            int band = 0;//bandera para ver si se encontro algo igual
-            for(int j = 0; j<=defineCont;j++){
-                if(!strcmp(nomDefine_2, ldef[j].nombre)){//compara si el nombre de la variable está en la lista de structs
-                    strcat(nomDefine_val, ldef[j].valor);//Agrega el valor del struct envez de la variable
-                    band = 1;//cambia bandera
-                    break;
-                }
-            }
-            if(band == 0){//Si la bandera no se cambio meta en nomDef_val el nombre de la variable
-                strcat(nomDefine_val, nomDefine_2);
-            }
-        }
-        else{
-            addStr_v(ldef[pos].valor[i]);//Si no es una variable lo que se leyo solo escribalo en nomDef_val directamente
-        }
-    }
-    fprintf(fileOut, nomDefine_val);
-}
 
 void doDefs(FILE *in, FILE *out){
     fileIn = in;

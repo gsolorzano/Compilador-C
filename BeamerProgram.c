@@ -12,7 +12,7 @@
 
 
 
-#define MAXCHAR 90000
+#define MAXCHAR 900000
     FILE *fp;  //codigo Gabo
     FILE *plantilla; //plantilla de beamer
     FILE *fo; //salida
@@ -25,7 +25,7 @@
 
     float porcentajeCantidad[7]= {0.0,0.0,0.0,0.0,0.0,0.0, 0.0};
     int totalTokens;
-    char direccion[300];
+    char direccion[500];
 
 
 void prepararPorcentajes(){
@@ -66,7 +66,7 @@ void crearCodeSlides(){
   strcpy(formatoSlide, "");
   while (fgets(str, MAXCHAR, fp) != NULL){
       strcat(declares, str);
-      if (lineas == 5 ){
+      if (lineas == 7 ){
           strcat(formatoSlide, "\\begin{frame}{Análisis de código} \n");
           strcat(formatoSlide, declares);
           strcat(formatoSlide, "\\end{frame}\n");
@@ -104,10 +104,10 @@ void deleteFiles(){
   remove("output.nav");
   remove("output.out");
   remove("output.snm");
-  //remove("output.tex");
-  //remove("FINAL.txt");
-  //remove("OUTPUT2.txt");
-  //remove("OUTPUT.txt");
+  remove("output.tex");
+  remove("FINAL.txt");
+  remove("OUTPUT2.txt");
+  remove("OUTPUT.txt");
 }
 
 int createBeamer(int n[]){

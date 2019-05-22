@@ -8,17 +8,84 @@ int id = 0;
 int cst = 0;
 int str = 0;
 int err = 0;
+extern int errores;
+int conteo = 0;
+int beamer = 0;
 FILE *fileOut;
+char linea[700];
 char direccion[300];
-
-typedef enum token_types{
-    KEYWORD = 1, SPECIAL = 2, OPERATOR = 3, STRING = 4, IDENTIFIER = 5, CONSTANT = 6
-} token;
+int column = 0;
+enum yytokentype
+{
+  IDENTIFIER = 258,
+  CONSTANT = 259,
+  STRING_LITERAL = 260,
+  SIZEOF = 261,
+  PTR_OP = 262,
+  INC_OP = 263,
+  DEC_OP = 264,
+  LEFT_OP = 265,
+  RIGHT_OP = 266,
+  LE_OP = 267,
+  GE_OP = 268,
+  EQ_OP = 269,
+  NE_OP = 270,
+  AND_OP = 271,
+  OR_OP = 272,
+  MUL_ASSIGN = 273,
+  DIV_ASSIGN = 274,
+  MOD_ASSIGN = 275,
+  ADD_ASSIGN = 276,
+  SUB_ASSIGN = 277,
+  LEFT_ASSIGN = 278,
+  RIGHT_ASSIGN = 279,
+  AND_ASSIGN = 280,
+  XOR_ASSIGN = 281,
+  OR_ASSIGN = 282,
+  TYPE_NAME = 283,
+  TYPEDEF = 284,
+  EXTERN = 285,
+  STATIC = 286,
+  AUTO = 287,
+  REGISTER = 288,
+  INLINE = 289,
+  RESTRICT = 290,
+  CHAR = 291,
+  SHORT = 292,
+  INT = 293,
+  LONG = 294,
+  SIGNED = 295,
+  UNSIGNED = 296,
+  FLOAT = 297,
+  DOUBLE = 298,
+  CONST = 299,
+  VOLATILE = 300,
+  VOID = 301,
+  BOOL = 302,
+  COMPLEX = 303,
+  IMAGINARY = 304,
+  STRUCT = 305,
+  UNION = 306,
+  ENUM = 307,
+  ELLIPSIS = 308,
+  CASE = 309,
+  DEFAULT = 310,
+  IF = 311,
+  ELSE = 312,
+  SWITCH = 313,
+  WHILE = 314,
+  DO = 315,
+  FOR = 316,
+  GOTO = 317,
+  CONTINUE = 318,
+  BREAK = 319,
+  RETURN = 320
+};
 
 int input_pos = 0;
 int ini = 0;
 int fin = 0;
-
+int yylval;
 %}
 
 UCN (\\u[0-9a-fA-F]{4}|\\U[0-9a-fA-F]{8})
@@ -26,111 +93,189 @@ EXP ([Ee][-+]?[0-9]+)
 ILEN ([Uu](L|l|LL|ll)?|(L|l|LL|ll)[Uu]?)
 
 %%
-"_Bool" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{\\"); fprintf(fileOut, yytext); fprintf(fileOut, "}}"); return KEYWORD;}
-"_Complex" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{\\"); fprintf(fileOut, yytext); fprintf(fileOut, "}}"); return KEYWORD;}
-"_Imaginary" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{\\"); fprintf(fileOut, yytext); fprintf(fileOut, "}}"); return KEYWORD;}
-"auto" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}"); return KEYWORD;}
-"break" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}"); return KEYWORD;}
-"case" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}"); return KEYWORD;}
-"char" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}"); return KEYWORD;}
-"const" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}"); return KEYWORD;}
-"continues" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}"); return KEYWORD;}
-"default" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}"); return KEYWORD;}
-"do" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}"); return KEYWORD;}
-"int" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}");  return KEYWORD;}
-"long" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}"); return KEYWORD;}
-"register" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}"); return KEYWORD;}
-"return" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{"); fprintf(fileOut, yytext); fprintf(fileOut, "}} "); return KEYWORD;}
-"short" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}"); return KEYWORD;}
-"signed" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}"); return KEYWORD;}
-"sizeof" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}"); return KEYWORD;}
-"static" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}"); return KEYWORD;}
-"struct" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}"); return KEYWORD;}
-"switch" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}"); return KEYWORD;}
-"typedef" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}"); return KEYWORD;}
-"union" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}"); return KEYWORD;}
-"unsigned" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}"); return KEYWORD;}
-"void" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}"); return KEYWORD;}
-"volatile" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}"); return KEYWORD;}
-"while" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}"); return KEYWORD;}
-"double" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}"); return KEYWORD;}
-"else" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}"); return KEYWORD;}
-"enum" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}"); return KEYWORD;}
-"extern" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}"); return KEYWORD;}
-"float" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}"); return KEYWORD;}
-"for" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}"); return KEYWORD;}
-"goto" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}"); return KEYWORD;}
-"if" { key++;fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}"); return KEYWORD;}
-"(" { sp++;fprintf(fileOut, "\\setstcolor{yellow}\\sethlcolor{yellow}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return SPECIAL;}
-")" { sp++;fprintf(fileOut, "\\setstcolor{yellow}\\sethlcolor{yellow}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return SPECIAL;}
-"\\" { sp++;fprintf(fileOut, "\\setstcolor{yellow}\\sethlcolor{yellow}\\Oricolor\\hl{"); fprintf(fileOut, "\\textbackslash"); fprintf(fileOut, "}"); return SPECIAL;}
-"{" { sp++;fprintf(fileOut, "\\setstcolor{yellow}\\sethlcolor{yellow}\\Oricolor\\hl{\\"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return SPECIAL;}
-"}" { sp++;fprintf(fileOut, "\\setstcolor{yellow}\\sethlcolor{yellow}\\Oricolor\\hl{\\"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return SPECIAL;}
-";" { sp++;fprintf(fileOut, "\\setstcolor{yellow}\\sethlcolor{yellow}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return SPECIAL;}
-"," { sp++;fprintf(fileOut, "\\setstcolor{yellow}\\sethlcolor{yellow}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return SPECIAL;}
-"." { sp++;fprintf(fileOut, "\\setstcolor{yellow}\\sethlcolor{yellow}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return SPECIAL;}
-"?" { sp++;fprintf(fileOut, "\\setstcolor{yellow}\\sethlcolor{yellow}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return SPECIAL;}
-"!" { sp++;fprintf(fileOut, "\\setstcolor{yellow}\\sethlcolor{yellow}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return SPECIAL;}
-"@" { sp++;fprintf(fileOut, "\\setstcolor{yellow}\\sethlcolor{yellow}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return SPECIAL;}
-"[" { sp++;fprintf(fileOut, "\\setstcolor{yellow}\\sethlcolor{yellow}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return SPECIAL;}
-"]" { sp++;fprintf(fileOut, "\\setstcolor{yellow}\\sethlcolor{yellow}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return SPECIAL;}
-":" { sp++;fprintf(fileOut, "\\setstcolor{yellow}\\sethlcolor{yellow}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return SPECIAL;}
-"->" { sp++;fprintf(fileOut, "\\setstcolor{yellow}\\sethlcolor{yellow}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return SPECIAL;}
-"=" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return OPERATOR;}
-"+" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return OPERATOR;}
-"+=" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return OPERATOR;}
-"-=" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return OPERATOR;}
-"%=" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{\\"); fputs(yytext,fileOut); fprintf(fileOut, "}"); return OPERATOR;}
-"/=" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return OPERATOR;}
-"*=" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return OPERATOR;}
-"<<=" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return OPERATOR;}
-">>=" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return OPERATOR;}
-"<=" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return OPERATOR;}
-">=" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return OPERATOR;}
-"!=" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return OPERATOR;}
-"==" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return OPERATOR;}
-"++" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return OPERATOR;}
-"--" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return OPERATOR;}
-"-" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return OPERATOR;}
-"*" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return OPERATOR;}
-"/" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return OPERATOR;}
-"%" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{\\"); fputs(yytext,fileOut); fprintf(fileOut, "}"); return OPERATOR;}
-"<" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return OPERATOR;}
-">" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return OPERATOR;}
-"||" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return OPERATOR;}
-"&" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{\\"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return OPERATOR;}
-"&=" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{\\"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return OPERATOR;}
-"|" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return OPERATOR;}
-"|=" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return OPERATOR;}
-"?:" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return OPERATOR;}
-"^" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{\\"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return OPERATOR;}
-"^=" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{\\"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return OPERATOR;}
-"~" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return OPERATOR;}
-"<<" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return OPERATOR;}
-">>" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{"); fprintf(fileOut, yytext); fprintf(fileOut, "}"); return OPERATOR;}
-"%>" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{\\"); fputs(yytext,fileOut); fprintf(fileOut, "}"); return OPERATOR;}
-"%:" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{\\"); fputs(yytext,fileOut); fprintf(fileOut, "}"); return OPERATOR;}
-"<:" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{\\"); fputs(yytext,fileOut); fprintf(fileOut, "}"); return OPERATOR;}
-":>" { op++;fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{\\"); fputs(yytext,fileOut); fprintf(fileOut, "}"); return OPERATOR;}
-"\n" {fprintf(fileOut, "\\\\"); fprintf(fileOut, "\n");}
+"auto" { strcat(linea, yytext);count();key++;if(beamer == 1){if(beamer == 1){latKey(2);}}; if(conteo == 1)return AUTO;}
+"break" { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return BREAK;}
+"case" { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return CASE;}
+"char" { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return CHAR;}
+"const" { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return CONST;}
+"continue" { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return CONTINUE;}
+"default" { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return DEFAULT;}
+"do" { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return DO;}
+"int" { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);};  if(conteo == 1)return INT;}
+"long" {strcat(linea, yytext);count(); key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return LONG;}
+"register" { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return REGISTER;}
+"return" { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return RETURN;}
+"short" { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return SHORT;}
+"signed" { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return SIGNED;}
+"sizeof" { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return SIZEOF;}
+"static" { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return STATIC;}
+"struct" { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return STRUCT;}
+"switch" { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return SWITCH;}
+"typedef" { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return TYPEDEF;}
+"union" {strcat(linea, yytext);count(); key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return UNION;}
+"unsigned" { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return UNSIGNED;}
+"void" { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return VOID;}
+"volatile" { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return VOLATILE;}
+"while" { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return WHILE;}
+"double" { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return DOUBLE;}
+"else" { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return ELSE;}
+"enum" { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return ENUM;}
+"extern" { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return EXTERN;}
+"float" { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return FLOAT;}
+"for" { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return FOR;}
+"goto" { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return GOTO;}
+"if" { strcat(linea, yytext);count(); key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return IF;}
+"bool" { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(1);};if(conteo == 1)return BOOL; }
+"_Bool" { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(1);};if(conteo == 1)return BOOL; }
+"_Complex" { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(1);};if(conteo == 1)return COMPLEX; }
+"_Imaginary" { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(1);};if(conteo == 1)return IMAGINARY; }
+"(" { strcat(linea, yytext);count();sp++;if(beamer == 1){latSp(1);}; if(conteo == 1)return '(';}
+")" { strcat(linea, yytext);count();sp++;if(beamer == 1){latSp(1);}; if(conteo == 1)return ')';}
+"\\" { strcat(linea, yytext);count();sp++;if(beamer == 1){latSp(3);}; if(conteo == 1)return '\\';}
+"{" { strcat(linea, yytext);count();sp++;if(beamer == 1){latSp(2);}; if(conteo == 1)return '{';}
+"}" { strcat(linea, yytext);count();sp++;if(beamer == 1){latSp(2);}; if(conteo == 1)return '}';}
+";" { strcat(linea, yytext);count();sp++;if(beamer == 1){latSp(1);}; if(conteo == 1)return ';';}
+"," { strcat(linea, yytext);count();sp++;if(beamer == 1){latSp(1);}; if(conteo == 1)return ',';}
+"." { strcat(linea, yytext);count();sp++;if(beamer == 1){latSp(1);}; if(conteo == 1)return '.';}
+"?" { strcat(linea, yytext);count();sp++;if(beamer == 1){latSp(1);}; if(conteo == 1)return '?';}
+"!" { strcat(linea, yytext);count();sp++;if(beamer == 1){latSp(1);}; if(conteo == 1)return '!';}
+"@" { strcat(linea, yytext);count();sp++;if(beamer == 1){latSp(1);}; if(conteo == 1)return '@';}
+"[" { strcat(linea, yytext);count();sp++;if(beamer == 1){latSp(1);}; if(conteo == 1)return '[';}
+"]" { strcat(linea, yytext);count();sp++;if(beamer == 1){latSp(1);}; if(conteo == 1)return ']';}
+":" { strcat(linea, yytext);count();sp++;if(beamer == 1){latSp(1);}; if(conteo == 1)return ':';}
+"=" { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return '=';}
+"+" { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return '+';}
+"-" { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return '-';}
+"*" { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return '*';}
+"/" { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return '/';}
+"%" { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(2);}; if(conteo == 1)return '%';}
+"<" { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return '<';}
+">" { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return '>';}
+"|" { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return '|';}
+"&" { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(2);}; if(conteo == 1)return '&';}
+"^" { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(2);}; if(conteo == 1)return '^';}
+"~" { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return '~';}
+"..." { strcat(linea, yytext);count();sp++;if(beamer == 1){latSp(1);} if(conteo == 1)return ELLIPSIS;}
+"->" { strcat(linea, yytext);count();sp++;if(beamer == 1){latSp(1);} if(conteo == 1)return PTR_OP;}
+"+=" { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return ADD_ASSIGN;}
+"-=" { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return SUB_ASSIGN;}
+"%=" { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(2);}; if(conteo == 1)return MOD_ASSIGN;}
+"/=" { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return DIV_ASSIGN;}
+"*=" { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return MUL_ASSIGN;}
+"<<=" { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return LEFT_ASSIGN;}
+">>=" { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return RIGHT_ASSIGN;}
+"&=" { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(2);}; if(conteo == 1)return AND_ASSIGN;}
+"|=" { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return OR_ASSIGN;}
+"^=" { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(2);}; if(conteo == 1)return XOR_ASSIGN;}
+"<=" { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return LE_OP;}
+">=" { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return GE_OP;}
+"!=" { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return NE_OP;}
+"==" { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return EQ_OP;}
+"++" { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return INC_OP;}
+"--" { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return DEC_OP;}
+"||" { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return OR_OP;}
+"&&" { strcat(linea, yytext);count();op++;if(beamer == 1){latOpSP('&');}; if(beamer == 1){latOpSP('&');}; return AND_OP;}
+"<<" { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return LEFT_OP;}
+">>" { strcat(linea, yytext);strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return RIGHT_OP;}
+"\n" {strcat(linea, yytext);count(); memset(linea, 0, sizeof(linea));if(conteo == 1){yylineno++;};fprintf(fileOut, "\\leavevmode\\\\"); fprintf(fileOut, "\n");column = 0;}
 " " {fprintf(fileOut, " ");}
-"¬" {fprintf(fileOut, "\\fcolorbox{pink}{pink}{\\textbf{$\\neg$}}"); }
-[ñáéíóúÑÁÉÍÓÚäëöüÄÖÜ`]+[a-zA-ZñáéíóúÑÁÉÍÓÚäëöüÄÖÜ]* {err++; fprintf(fileOut, "\\fcolorbox{pink}{pink}{\\textbf{"); fputs(yytext,fileOut); fprintf(fileOut, "}}");}
-[a-zA-Z_]+[ñáéíóúÑÁÉÍÓÚäöüÄÖÜ]+[a-zA-Z_]* {err++;fprintf(fileOut, "\\fcolorbox{pink}{pink}{\\textbf{"); fputs(yytext,fileOut); fprintf(fileOut, "}}");}
-L?\"([^"\\]|\\['"?\\abfnrtv]|\\[0-7]{1,3}|\\[Xx][0-9a-fA-F]+|{UCN})*\"  { strSpecial(); str++; return STRING;}
-\'([^'\\]|\\['"?\\abfnrtv]|\\[0-7]{1,3}|\\[Xx][0-9a-fA-F]+|{UCN})+\' { strSpecial(); str++; return STRING;}
-[a-zA-Z_][a-zA-Z0-9_]* {id++; strIde(); return IDENTIFIER;}
-0[0-7]*{ILEN}? { cst++;fprintf(fileOut, "\\setstcolor{amethyst}\\sethlcolor{amethyst}\\Oricolor\\hl{\\textbf{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}");return CONSTANT;}
-[1-9][0-9]*{ILEN}? { cst++;fprintf(fileOut, "\\setstcolor{amethyst}\\sethlcolor{amethyst}\\Oricolor\\hl{\\textbf{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}");return CONSTANT;}
-0[Xx][0-9a-fA-F]+{ILEN}? { cst++;fprintf(fileOut, "\\setstcolor{amethyst}\\sethlcolor{amethyst}\\Oricolor\\hl{\\textbf{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}");return CONSTANT;}
-([0-9]*\.[0-9]+|[0-9]+\.){EXP}?[flFL]? { cst++;fprintf(fileOut, "\\setstcolor{amethyst}\\sethlcolor{amethyst}\\Oricolor\\hl{\\textbf{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}");return CONSTANT;}
-[0-9]+{EXP}[flFL]? { cst++;fprintf(fileOut, "\\setstcolor{amethyst}\\sethlcolor{amethyst}\\Oricolor\\hl{\\textbf{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}");return CONSTANT;}
-0[Xx]([0-9a-fA-F]*\.[0-9a-fA-F]+|[0-9a-fA-F]+\.?)[Pp][-+]?[0-9]+[flFL]? { cst++;fprintf(fileOut, "\\setstcolor{amethyst}\\sethlcolor{amethyst}\\Oricolor\\hl{\\textbf{"); fprintf(fileOut, yytext); fprintf(fileOut, "}}");return CONSTANT;}
-. {strBad();}
+"\t" {}
+"¬" {if(beamer == 1){fprintf(fileOut, "\\fcolorbox{pink}{pink}{\\textbf{$\\neg$}}");}; }
+\'([^'\\]|\\['"?\\abfnrtv]|\\[0-7]{1,3}|\\[Xx][0-9a-fA-F]+|{UCN})+\' { strcat(linea, yytext);count();if(beamer == 1){strSpecial();}; str++; if(conteo == 1)return CONSTANT;}
+L?\"([^"\\]|\\['"?\\abfnrtv]|\\[0-7]{1,3}|\\[Xx][0-9a-fA-F]+|{UCN})*\"  {strcat(linea, yytext);count();if(beamer == 1){strSpecial();}; str++; if(conteo == 1)return STRING_LITERAL;}
+[ñáéíóúÑÁÉÍÓÚäëöüÄÖÜ`]+[a-zA-ZñáéíóúÑÁÉÍÓÚäëöüÄÖÜ]* {strcat(linea, yytext);count();err++; if(beamer == 1){fprintf(fileOut, "\\fcolorbox{pink}{pink}{\\textbf{"); fputs(yytext,fileOut); fprintf(fileOut, "}}");};}
+[a-zA-Z_]+[ñáéíóúÑÁÉÍÓÚäöüÄÖÜ]+[a-zA-Z_]* {strcat(linea, yytext);count();err++;if(beamer == 1){fprintf(fileOut, "\\fcolorbox{pink}{pink}{\\textbf{"); fputs(yytext,fileOut); fprintf(fileOut, "}}");};}
+([_a-zA-Z]|{UCN})([_a-zA-Z0-9]|{UCN})* {strcat(linea, yytext);count();id++; if(beamer == 1){strIde();}; if(conteo == 1)return IDENTIFIER;}
+0[0-7]*{ILEN}? { strcat(linea, yytext);count();cst++;if(beamer == 1){latNum();};if(conteo == 1)return CONSTANT;}
+[1-9][0-9]*{ILEN}? { strcat(linea, yytext);count();cst++;if(beamer == 1){latNum();};if(conteo == 1)return CONSTANT;}
+0[Xx][0-9a-fA-F]+{ILEN}? { strcat(linea, yytext);count();cst++;if(beamer == 1){latNum();};if(conteo == 1)return CONSTANT;}
+([0-9]*\.[0-9]+|[0-9]+\.){EXP}?[flFL]? {strcat(linea, yytext);count(); cst++;if(beamer == 1){latNum();};if(conteo == 1)return CONSTANT;}
+[0-9]+{EXP}[flFL]? { strcat(linea, yytext);count(); cst++;if(beamer == 1){latNum();};if(conteo == 1)return CONSTANT;}
+0[Xx]([0-9a-fA-F]*\.[0-9a-fA-F]+|[0-9a-fA-F]+\.?)[Pp][-+]?[0-9]+[flFL]? { strcat(linea, yytext);count();cst++;if(beamer == 1){latNum();};if(conteo == 1)return CONSTANT;}
+"☼" {if(conteo == 1){conteo = 0;}else{conteo = 1;yylineno--;};}
+. {strBad(); /*printf("%s\n\n\n", "ERROR");*/ }
 %%
+
+void count(void)
+{
+	int i;
+
+	for (i = 0; yytext[i] != '\0'; i++)
+		if (yytext[i] == '\n')
+			column = 0;
+		else if (yytext[i] == '\t')
+			column += 8 - (column % 8);
+		else
+			column++;
+}
+
+int check_type(void){
+
+	return IDENTIFIER;
+}
+
 
 int getToken(){
     yylex();
+}
+
+void latNum(){
+    fprintf(fileOut, "\\setstcolor{amethyst}\\sethlcolor{amethyst}\\Oricolor\\hl{\\textbf{");
+    fprintf(fileOut, yytext);
+    fprintf(fileOut, "}}");
+}
+
+void latOp(int n){
+    if(n==1){
+        fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{");
+        fprintf(fileOut, yytext);
+        fprintf(fileOut, "}");
+    }
+    else{
+        fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{\\");
+        fputs(yytext,fileOut);
+        fprintf(fileOut, "}");
+    }
+    return;
+}
+
+void latOpSP(char c){
+    fprintf(fileOut, "\\setstcolor{red}\\sethlcolor{red}\\Oricolor\\hl{\\");
+    fputc(c,fileOut);
+    fprintf(fileOut, "}");
+}
+
+void latSp(int n){
+    if(n==1){
+        fprintf(fileOut, "\\setstcolor{yellow}\\sethlcolor{yellow}\\Oricolor\\hl{");
+        fprintf(fileOut, yytext);
+        fprintf(fileOut, "}");
+    }
+    else if(n==2){
+        fprintf(fileOut, "\\setstcolor{yellow}\\sethlcolor{yellow}\\Oricolor\\hl{\\");
+        fprintf(fileOut, yytext);
+        fprintf(fileOut, "}");
+    }
+    else{
+        fprintf(fileOut, "\\setstcolor{yellow}\\sethlcolor{yellow}\\Oricolor\\hl{");
+        fprintf(fileOut, "\\textbackslash");
+        fprintf(fileOut, "}");
+    }
+    return;
+}
+
+void latKey(int n){
+    if(n==1){
+        fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{\\");
+        fprintf(fileOut, yytext);
+        fprintf(fileOut, "}}");
+    }
+    else{
+        fprintf(fileOut, "\\setstcolor{azure}\\sethlcolor{azure}\\Oricolor\\hl{\\textit{");
+        fprintf(fileOut, yytext);
+        fprintf(fileOut, "}}");
+    }
+    return;
 }
 
 void strBad(){
@@ -177,7 +322,11 @@ void strIde(){
 }
 
 void strSpecial(){
-    char str2[200] = "\0";
+    if(yyleng >= 511){
+        printf("%s","string length 'XXX' is greater than the length '509' ISO C90 compilers are required to support");
+        exit(1);
+    }
+    char str2[2000] = "\0";
     int t = 0;
     for(int i = 0; i<yyleng;i++){
         if(yytext[i] == '%'){
@@ -265,20 +414,28 @@ void includes(char nom[]){
     fileImput = fopen(direccion, "r");
     fileOutput = fopen("OUTPUT.txt","w");
     if(fileImput == NULL){
-        fprintf(stderr,"Error al encontrar el archivo de entrada");
+        fprintf(stderr,"Error al encontrar el archivo de entrada\n\n");
+        printf("%s\n\n", "**Guía de como usar el programa**");
+        printf("\t%s\n\n", "Para correr el programa se utiliza el comando: lexscan");
+        printf("\t%s\n", "El programa recibe un parámetro obligatorio:");
+        printf("\t\t%s\n\n", "Archivo de texto que contiene código a parsear");
+        printf("\t%s\n", "El programa recibe una bandera opcional:");
+        printf("\t\t%s\n\n", "-B es la bandera que permite crear un beamer con la información del preproceso y parsing");
+        printf("\t%s\n", "Ejemplo de ejecución:");
+        printf("\t\t%s\n\n", "lexscan programa.c");
+        printf("\t%s\n", "Ejemplo de ejecución con Beamer:");
+        printf("\t\t%s\n", "lexscan programa.c -B");
         exit(1);
     }
+    fprintf(fileOutput, "☼\n");
     system_goal(fileImput, fileOutput, 0);
-    fclose(fileImput);
-    fclose(fileOutput);
-    cleanCode();
     fclose(fileImput);
     fclose(fileOutput);
 }
 
 void defines(){
     getcwd(direccion, sizeof(direccion));
-    strcat( direccion,"/OUTPUT2.txt");
+    strcat( direccion,"/OUTPUT.txt");
     fileImput = fopen(direccion,"r");
     fileOutput = fopen("prepo.c","w");
     doDefs(fileImput, fileOutput);
@@ -287,62 +444,106 @@ void defines(){
     fclose(fileOutput);
 }
 
+void compile(){
+    printf("%s","Parsing:\n\n");
+    /* FLEX */
+    getcwd(direccion, sizeof(direccion));
+    strcat( direccion,"/prepo.c");
+    yyin = fopen(direccion, "r");
+    /* if(argc > 1){
+        if(!(yyin = fopen(argv[1], "r"))) {
+        perror(argv[1]);
+        return (1);
+        }
+    } */
+    fileOut = fopen("FINAL.txt","w");
+    yylineno = 1;
+    //while(getToken());
+    /* while(yyparse() != 0){
+        printf("%s\n","-----------------------------------------------------------");
+        while(yylex()!= ';' && yylex() != 0){
+            printf("%s\n", "leyendo");
+        }
+        if(yylex() == 0){
+            break;
+        } */
+        yyparse();
+    //}
+    if(errores != 0){
+        printf("%s","Proceso de parsing finalizo con errores. Total de errores sintácticos: ");
+        printf("%d\n",errores);
+    }
+    else{
+        printf("%s\n","Proceso de parsing finalizo satisfactoriamente sin errores.");
+    }
+    fclose(fileOut);
+}
 
 int main(int argc, char *argv[]){
     if (argc == 1){
-        printf("Error al encontrar ruta de archivo \n");
+        printf("%s\n\n", "**Guía de como usar el programa**");
+        printf("\t%s\n\n", "Para correr el programa se utiliza el comando: lexscan");
+        printf("\t%s\n", "El programa recibe un parámetro obligatorio:");
+        printf("\t\t%s\n\n", "Archivo de texto que contiene código a parsear");
+        printf("\t%s\n", "El programa recibe una bandera opcional:");
+        printf("\t\t%s\n\n", "-B es la bandera que permite crear un beamer con la información del preproceso y parsing");
+        printf("\t%s\n", "Ejemplo de ejecución:");
+        printf("\t\t%s\n\n", "lexscan programa.c");
+        printf("\t%s\n", "Ejemplo de ejecución con Beamer:");
+        printf("\t\t%s\n", "lexscan programa.c -B");
         return 1;
     }
     if (argc == 2){
+        //printf("%s","antes include");
         includes(argv[1]);
+        //printf("%s","pase include");
         defines();
-        /* FLEX */
-        getcwd(direccion, sizeof(direccion));
-        strcat( direccion,"/prepo.c");
-        //strcat( direccion,"/OUTPUT2.txt");
-        yyin = fopen(direccion, "r");
-        /* if(argc > 1){
-            if(!(yyin = fopen(argv[1], "r"))) {
-            perror(argv[1]);
-            return (1);
-            }
-        } */
-        fileOut = fopen("FINAL.txt","w");
-        //scan();
-        while(getToken());
-        fclose(fileOut);
-        int nums[7];
-        nums[0] = key;
-        nums[1] = id;
-        nums[2] = str;
-        nums[3] = cst;
-        nums[4] = sp;
-        nums[5] = op;
-        nums[6] = err;
-        /* BEAMER */
-        createBeamer(nums);
+        //printf("%s","pase define");
+        compile();
+        remove("FINAL.txt");
+        remove("OUTPUT.txt");
+    }
+    else if (argc == 3){
+        if(!strcmp(argv[2],"-B")){
+            beamer = 1;
+            includes(argv[1]);
+            defines();
+            compile();
+            /* BEAMER */
+            int nums[7];
+            nums[0] = key;
+            nums[1] = id;
+            nums[2] = str;
+            nums[3] = cst;
+            nums[4] = sp;
+            nums[5] = op;
+            nums[6] = err;
+            createBeamer(nums);
+        }
+        else{
+            printf("%s\n\n", "**Guía de como usar el programa**");
+            printf("\t%s\n\n", "Para correr el programa se utiliza el comando: lexscan");
+            printf("\t%s\n", "El programa recibe un parámetro obligatorio:");
+            printf("\t\t%s\n\n", "Archivo de texto que contiene código a parsear");
+            printf("\t%s\n", "El programa recibe una bandera opcional:");
+            printf("\t\t%s\n\n", "-B es la bandera que permite crear un beamer con la información del preproceso y parsing");
+            printf("\t%s\n", "Ejemplo de ejecución:");
+            printf("\t\t%s\n\n", "lexscan programa.c");
+            printf("\t%s\n", "Ejemplo de ejecución con Beamer:");
+            printf("\t\t%s\n", "lexscan programa.c -B");
+        }
     }
     else{
-        includes(argv[1]);
-        defines();
-        /* FLEX */
-        getcwd(direccion, sizeof(direccion));
-        strcat( direccion,"/prepo.c");
-        yyin = fopen(direccion, "r");
-        /* if(argc > 1){
-            if(!(yyin = fopen(argv[1], "r"))) {
-            perror(argv[1]);
-            return (1);
-            }
-        } */
-        fileOut = fopen("FINAL.txt","w");
-        scan();
-
-        fclose(fileOut);
-        while(ini!=fin){
-            getToken();
-        }
+        printf("%s\n\n", "**Guía de como usar el programa**");
+        printf("\t%s\n\n", "Para correr el programa se utiliza el comando: lexscan");
+        printf("\t%s\n", "El programa recibe un parámetro obligatorio:");
+        printf("\t\t%s\n\n", "Archivo de texto que contiene código a parsear");
+        printf("\t%s\n", "El programa recibe una bandera opcional:");
+        printf("\t\t%s\n\n", "-B es la bandera que permite crear un beamer con la información del preproceso y parsing");
+        printf("\t%s\n", "Ejemplo de ejecución:");
+        printf("\t\t%s\n\n", "lexscan programa.c");
+        printf("\t%s\n", "Ejemplo de ejecución con Beamer:");
+        printf("\t\t%s\n", "lexscan programa.c -B");
     }
     return 1;
 }
-

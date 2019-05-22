@@ -1,6 +1,8 @@
 \babel@toc {spanish}{}
 \beamer@sectionintoc {1}{Proceso de scanning}{3}{0}{1}
 \beamer@sectionintoc {2}{Herramienta Flex }{8}{0}{2}
-\beamer@sectionintoc {3}{An\IeC {\'a}lisis del programa }{10}{0}{3}
-\beamer@sectionintoc {4}{Histogramas del an\IeC {\'a}lisis}{13}{0}{4}
-\beamer@sectionintoc {5}{Referencias }{16}{0}{5}
+\beamer@sectionintoc {3}{Proceso de parsing}{10}{0}{3}
+\beamer@sectionintoc {4}{Herramienta Bison}{14}{0}{4}
+\beamer@sectionintoc {5}{An\IeC {\'a}lisis del programa }{16}{0}{5}
+\beamer@sectionintoc {6}{Histogramas del an\IeC {\'a}lisis}{32}{0}{6}
+\beamer@sectionintoc {7}{Referencias }{35}{0}{7}
