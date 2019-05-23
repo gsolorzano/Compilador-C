@@ -1,6 +1,7 @@
 %{
 # include <stdio.h>
 # include <stdlib.h>
+#include "stackC.h"
 int errores = 0;
 extern int yylineno;
 extern FILE *fileOut;
@@ -8,6 +9,12 @@ extern int beamer;
 extern char linea[700];
 extern int conteo;
 extern char *yytext;
+
+enum tok{ID, OP, TIPO, ASGN, NUM};
+struct semantic_record* pila = NULL;
+
+struct symbolT* symbolTable = NULL;
+
 %}
 
 %define parse.lac full
@@ -30,7 +37,7 @@ extern char *yytext;
 %%
 primary_expression
 	: IDENTIFIER
-	| CONSTANT
+	| CONSTANT {push(&pila, NUM, yytext);}
 	| STRING_LITERAL
 	| '(' expression rparen
 	| error
@@ -172,7 +179,19 @@ constant_expression
 
 declaration
 	: declaration_specifiers ';'
-	| declaration_specifiers init_declarator_list ';'
+	| declaration_specifiers init_declarator_list ';' {
+
+		struct semantic_record* tipo = retrieve(pila,TIPO);
+		while(top(pila)==ID){
+			struct semantic_record* identificador = retrieve(pila,ID);
+			lookup(symbolTable, identificador->name);
+			insert(&symbolTable, tipo->type,identificador->name);
+			/* clearStack(pila); */
+			free(pila);
+			pila = NULL;
+		}
+
+		}//Aqui se hace el int n; y int n = 5;
 	;
 
 declaration_specifiers
@@ -192,8 +211,8 @@ init_declarator_list
 	;
 
 init_declarator
-	: declarator
-	| declarator '=' initializer
+	: declarator {printf("\n");}
+	| declarator '=' {push(&pila, ASGN, "=");} initializer
 	;
 
 storage_class_specifier
@@ -209,7 +228,7 @@ type_specifier
 	: VOID
 	| CHAR
 	| SHORT
-	| INT
+	| INT {push(&pila, TIPO, "int");}
 	| LONG
 	| FLOAT
 	| DOUBLE
@@ -300,7 +319,7 @@ declarator
 
 
 direct_declarator
-	: IDENTIFIER
+	: IDENTIFIER {push(&pila, ID, yytext);}
 	| '(' declarator rparen
 	| direct_declarator '[' type_qualifier_list assignment_expression ']'
 	| direct_declarator '[' type_qualifier_list ']'
