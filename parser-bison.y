@@ -13,6 +13,10 @@ extern int conteo;
 extern char *yytext;
 extern char idActual[200];
 
+
+char temporal[200];
+int tempAct = 0;
+
 int numContxt = 1;
 
 enum tok{ID, TIPO, ERROR, DATAO, TOKEN};
@@ -56,8 +60,8 @@ postfix_expression
 	| postfix_expression '(' argument_expression_list rparen
 	| postfix_expression '.' IDENTIFIER
 	| postfix_expression PTR_OP IDENTIFIER
-	| postfix_expression INC_OP
-	| postfix_expression DEC_OP
+	| postfix_expression INC_OP {process_op();eval_unary();}
+	| postfix_expression DEC_OP {process_op();eval_unary();}
 	| '(' type_name rparen '{' initializer_list '}'
 	| '(' type_name rparen '{' initializer_list ',' '}'
 	;
@@ -69,8 +73,8 @@ argument_expression_list
 
 unary_expression
 	: postfix_expression
-	| INC_OP unary_expression
-	| DEC_OP unary_expression
+	| INC_OP {process_op();} unary_expression {eval_unary();}
+	| DEC_OP {process_op();} unary_expression {eval_unary();}
 	| unary_operator cast_expression
 	| SIZEOF unary_expression
 	| SIZEOF '(' type_name rparen
@@ -94,14 +98,14 @@ cast_expression
 multiplicative_expression
 	: cast_expression
 	| multiplicative_expression '*'{process_op();}  cast_expression {eval_binary();}
-	| multiplicative_expression '/' {process_op();} cast_expression
-	| multiplicative_expression '%'{process_op();}  cast_expression
+	| multiplicative_expression '/' {process_op();} cast_expression {eval_binary();}
+	| multiplicative_expression '%'{process_op();}  cast_expression {eval_binary();}
 	;
 
 additive_expression
 	: multiplicative_expression
 	| additive_expression '+'{process_op();} multiplicative_expression {eval_binary();}
-	| additive_expression '-' {process_op();} multiplicative_expression
+	| additive_expression '-' {process_op();} multiplicative_expression {eval_binary();}
 	;
 
 shift_expression
@@ -509,27 +513,67 @@ void eval_binary(){
 	pila = pop(&pila);
 
 	//crear funcion que crea temporales
+	createTemp();
 	if(OP1->type == ERROR){
-		push(&pila,ERROR,"");
+		push(&pila,ERROR,temporal);
 		return;
 	}
 	else if(OP2->type == ERROR){
-		push(&pila,ERROR,"");
+		push(&pila,ERROR,temporal);
 		return;
 	}
 	else{
-		push(&pila,DATAO,"");
+		push(&pila,DATAO,temporal);
 	}
 
 	if(!strcmp(OPERATOR->name,"-")||!strcmp(OPERATOR->name,"/")){
 		struct semantic_record* temp = OP1;
 		OP1 = OP2;
 		OP1 = temp;
-		free(temp);
 	}
 
 	//generar codigo ensamblador para OP1 OPERATOR OUTPUT2 = TEMP1
 
+}
+
+void clear_temp(){//borra el contenido de token_buffer y lo resetea a un string vacio
+    memset(temporal, 0, sizeof(temporal));
+}
+
+void createTemp(){
+	clear_temp();
+	char buffer [200];
+	snprintf(buffer, 200, "%d", ++tempAct);
+	strcat(temporal, "Temp");
+	strcat(temporal, buffer);
+}
+
+void eval_unary(){
+	printStack(pila);
+	struct semantic_record* OP1 = top(pila);
+	pila = pop(&pila);
+	struct semantic_record* OPERATOR = top(pila);
+	pila = pop(&pila);
+
+	//crear funcion que crea temporales
+	createTemp();
+	if(OP1->type == ERROR){
+		push(&pila,ERROR,temporal);
+		return;
+	}
+
+	if(OP1->type == DATAO){
+		//generar codigo ensamblador para ++a
+		printf("%s = ",temporal);
+		printf("%s ",OP1->name);
+		printf("%s\n",OPERATOR->name);
+	}
+	else{
+		//generar codigo ensamblador para a++
+		printf("%s = ",temporal);
+		printf("%s ",OPERATOR->name);
+		printf("%s\n",OP1->name);
+	}
 }
 
 void process_literal(){
@@ -561,7 +605,7 @@ void guardar_tipo(){
 
 void fin_decl(){
 	struct semantic_record* tipo = retrieve(pila,TIPO);
-	while(top(pila)==ID){
+	while(top(pila)->type==ID){
 		struct semantic_record* identificador = retrieve(pila,ID);
 		struct symbolT* smb = topSymbol(&symbolStck);
 		if(lookup(smb, identificador->name) == 1){

@@ -30,7 +30,7 @@ void push(struct semantic_record** root, int type,char name[200])
     struct semantic_record* semantic_record = newNode(type, name);
     semantic_record->next = *root;
     *root = semantic_record;
-    printf("%s pushed to stack\n", name);
+    // printf("%s pushed to stack\n", name);
 }
 
 struct semantic_record* pop(struct semantic_record** root)
@@ -39,8 +39,8 @@ struct semantic_record* pop(struct semantic_record** root)
         return NULL;
     struct semantic_record* temp = *root;
     *root = (*root)->next;
-    printf("%s poopped\n", temp->name);
-    free(temp);
+    // printf("%s poopped\n", temp->name);
+    //free(temp);
     return *root;
 }
 
