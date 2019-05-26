@@ -2,6 +2,8 @@
 # include <stdio.h>
 # include <stdlib.h>
 #include "stackC.h"
+#include "symbolTable.h"
+#include "symbolStack.h"
 int errores = 0;
 extern int yylineno;
 extern FILE *fileOut;
@@ -9,12 +11,16 @@ extern int beamer;
 extern char linea[700];
 extern int conteo;
 extern char *yytext;
+extern char idActual[200];
 
-enum tok{ID, OP, TIPO, ASGN, NUM};
+int numContxt = 1;
+
+enum tok{ID, TIPO, ERROR, DATAO, TOKEN};
 struct semantic_record* pila = NULL;
 
 struct symbolT* symbolTable = NULL;
 
+struct tableRegister* symbolStck = NULL;
 %}
 
 %define parse.lac full
@@ -36,8 +42,8 @@ struct symbolT* symbolTable = NULL;
 %start translation_unit
 %%
 primary_expression
-	: IDENTIFIER
-	| CONSTANT {push(&pila, NUM, yytext);}
+	: IDENTIFIER {process_id();}
+	| CONSTANT {process_literal();}
 	| STRING_LITERAL
 	| '(' expression rparen
 	| error
@@ -87,15 +93,15 @@ cast_expression
 
 multiplicative_expression
 	: cast_expression
-	| multiplicative_expression '*' cast_expression
-	| multiplicative_expression '/' cast_expression
-	| multiplicative_expression '%' cast_expression
+	| multiplicative_expression '*'{process_op();}  cast_expression {eval_binary();}
+	| multiplicative_expression '/' {process_op();} cast_expression
+	| multiplicative_expression '%'{process_op();}  cast_expression
 	;
 
 additive_expression
 	: multiplicative_expression
-	| additive_expression '+' multiplicative_expression
-	| additive_expression '-' multiplicative_expression
+	| additive_expression '+'{process_op();} multiplicative_expression {eval_binary();}
+	| additive_expression '-' {process_op();} multiplicative_expression
 	;
 
 shift_expression
@@ -179,19 +185,7 @@ constant_expression
 
 declaration
 	: declaration_specifiers ';'
-	| declaration_specifiers init_declarator_list ';' {
-
-		struct semantic_record* tipo = retrieve(pila,TIPO);
-		while(top(pila)==ID){
-			struct semantic_record* identificador = retrieve(pila,ID);
-			lookup(symbolTable, identificador->name);
-			insert(&symbolTable, tipo->type,identificador->name);
-			/* clearStack(pila); */
-			free(pila);
-			pila = NULL;
-		}
-
-		}//Aqui se hace el int n; y int n = 5;
+	| declaration_specifiers init_declarator_list ';' {fin_decl();}//Aqui se hace el int n; y int n = 5;
 	;
 
 declaration_specifiers
@@ -212,7 +206,7 @@ init_declarator_list
 
 init_declarator
 	: declarator {printf("\n");}
-	| declarator '=' {push(&pila, ASGN, "=");} initializer
+	| declarator '=' {push(&pila, TOKEN, "=");} initializer
 	;
 
 storage_class_specifier
@@ -228,7 +222,7 @@ type_specifier
 	: VOID
 	| CHAR
 	| SHORT
-	| INT {push(&pila, TIPO, "int");}
+	| INT {guardar_tipo();}
 	| LONG
 	| FLOAT
 	| DOUBLE
@@ -319,7 +313,7 @@ declarator
 
 
 direct_declarator
-	: IDENTIFIER {push(&pila, ID, yytext);}
+	: IDENTIFIER {guardar_id();}
 	| '(' declarator rparen
 	| direct_declarator '[' type_qualifier_list assignment_expression ']'
 	| direct_declarator '[' type_qualifier_list ']'
@@ -436,8 +430,8 @@ labeled_statement
 	;
 
 compound_statement
-	: '{' '}'
-	| '{' block_item_list '}'
+	: '{'{open_scope();}'}'{close_scope();}
+	| '{' {open_scope();} block_item_list '}' {close_scope();} //Aqui se hacen los { } de una funcion
 	;
 
 block_item_list
@@ -505,6 +499,91 @@ declaration_list
 	;
 
 %%
+
+void eval_binary(){
+	struct semantic_record* OP1 = top(pila);
+	pila = pop(&pila);
+	struct semantic_record* OPERATOR = top(pila);
+	pila = pop(&pila);
+	struct semantic_record* OP2 = top(pila);
+	pila = pop(&pila);
+
+	//crear funcion que crea temporales
+	if(OP1->type == ERROR){
+		push(&pila,ERROR,"");
+		return;
+	}
+	else if(OP2->type == ERROR){
+		push(&pila,ERROR,"");
+		return;
+	}
+	else{
+		push(&pila,DATAO,"");
+	}
+
+	if(!strcmp(OPERATOR->name,"-")||!strcmp(OPERATOR->name,"/")){
+		struct semantic_record* temp = OP1;
+		OP1 = OP2;
+		OP1 = temp;
+		free(temp);
+	}
+
+	//generar codigo ensamblador para OP1 OPERATOR OUTPUT2 = TEMP1
+
+}
+
+void process_literal(){
+	push(&pila, DATAO, yytext);
+}
+
+void process_op(){
+	push(&pila, TOKEN, yytext);
+}
+
+void process_id(){
+	struct symbolT* smb = topSymbol(&symbolStck);
+	if(lookup(smb, idActual) != 1){
+		push(&pila, ERROR, idActual);
+		//printf("%d",pila->);
+	}
+	else{
+		push(&pila, ID, idActual);
+	}
+}
+
+void guardar_id(){
+	push(&pila, ID, yytext);
+}
+
+void guardar_tipo(){
+	push(&pila, TIPO, yytext);
+}
+
+void fin_decl(){
+	struct semantic_record* tipo = retrieve(pila,TIPO);
+	while(top(pila)==ID){
+		struct semantic_record* identificador = retrieve(pila,ID);
+		struct symbolT* smb = topSymbol(&symbolStck);
+		if(lookup(smb, identificador->name) == 1){
+			printf("Error semántico, %s ya ha sido declarado antes.\n", identificador->name);
+			exit(1);
+		}
+		insert(&smb, tipo->name,identificador->name);
+		symbolStck = popSymbol(&symbolStck);
+		pushSymbol(&symbolStck, smb);
+		pila = pop(&pila);
+	}
+	pila = pop(&pila);
+}
+
+void open_scope(){
+	struct symbolT* newSymbolTable = NULL;
+	pushSymbol(&symbolStck, newSymbolTable);
+}
+
+void close_scope(){
+	symbolStck = popSymbol(&symbolStck);
+}
 
 extern char *yytext;
 

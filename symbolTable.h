@@ -6,15 +6,15 @@
 struct symbolT
 {
     char name[200];
-    int type;
+    char type [200];
     struct symbolT* next;
 };
 
-struct symbolT* nuevoNodo(int type, char name[200])
+struct symbolT* nuevoNodo(char type [200], char name[200])
 {
     struct symbolT* symbolT = (struct symbolT*) malloc(sizeof(struct symbolT));
     strcpy(symbolT->name, name);
-    symbolT->type = type;
+    strcpy(symbolT->type, type);
     symbolT->next = NULL;
     return symbolT;
 }
@@ -24,7 +24,7 @@ int isVacio(struct symbolT *root)
     return !root;
 }
 
-void insert(struct symbolT** root, int type, char name[200])
+void insert(struct symbolT** root, char type [200], char name[200])
 {
     struct symbolT* symbolT = nuevoNodo(type, name);
     symbolT->next = *root;
@@ -63,8 +63,25 @@ int lookup(struct symbolT* root, char name[200])
                 return 2;
             }
             if(!(strcmp(temp->name,name))){
-                printf("Error semántico, %s ya ha sido declarado antes.\n", name);
-                exit(1);
+                return 1;
+            }
+            temp = temp->next;
+        }
+    }
+}
+
+void printSymbol(struct symbolT* root)
+{
+    if(isVacio(root)){
+        printf("Empty\n");
+        return;
+    }
+    else{
+        struct symbolT* temp = root;
+        while(1){
+            printf("Elemento: %s\n", temp->name);
+            if(temp->next == NULL){
+                return;
             }
             temp = temp->next;
         }

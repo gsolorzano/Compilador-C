@@ -983,12 +983,20 @@ int cst = 0;
 int str = 0;
 int err = 0;
 extern int errores;
+extern struct semantic_record* pila;
+
+extern struct symbolT* symbolTable;
+
+extern struct tableRegister* symbolStck;
 int conteo = 0;
 int beamer = 0;
 FILE *fileOut;
 char linea[700];
 char direccion[300];
 int column = 0;
+
+char idActual[200];
+
 enum yytokentype
 {
   IDENTIFIER = 258,
@@ -1059,9 +1067,8 @@ enum yytokentype
 int input_pos = 0;
 int ini = 0;
 int fin = 0;
-int yylval;
-#line 1064 "lex.yy.c"
-#line 1065 "lex.yy.c"
+#line 1071 "lex.yy.c"
+#line 1072 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -1278,9 +1285,9 @@ YY_DECL
 		}
 
 	{
-#line 95 "flex_reserved.l"
+#line 102 "flex_reserved.l"
 
-#line 1284 "lex.yy.c"
+#line 1291 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1339,518 +1346,518 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 96 "flex_reserved.l"
+#line 103 "flex_reserved.l"
 { strcat(linea, yytext);count();key++;if(beamer == 1){if(beamer == 1){latKey(2);}}; if(conteo == 1)return AUTO;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 97 "flex_reserved.l"
+#line 104 "flex_reserved.l"
 { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return BREAK;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 98 "flex_reserved.l"
+#line 105 "flex_reserved.l"
 { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return CASE;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 99 "flex_reserved.l"
+#line 106 "flex_reserved.l"
 { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return CHAR;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 100 "flex_reserved.l"
+#line 107 "flex_reserved.l"
 { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return CONST;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 101 "flex_reserved.l"
+#line 108 "flex_reserved.l"
 { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return CONTINUE;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 102 "flex_reserved.l"
+#line 109 "flex_reserved.l"
 { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return DEFAULT;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 103 "flex_reserved.l"
+#line 110 "flex_reserved.l"
 { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return DO;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 104 "flex_reserved.l"
+#line 111 "flex_reserved.l"
 { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);};  if(conteo == 1)return INT;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 105 "flex_reserved.l"
+#line 112 "flex_reserved.l"
 {strcat(linea, yytext);count(); key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return LONG;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 106 "flex_reserved.l"
+#line 113 "flex_reserved.l"
 { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return REGISTER;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 107 "flex_reserved.l"
+#line 114 "flex_reserved.l"
 { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return RETURN;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 108 "flex_reserved.l"
+#line 115 "flex_reserved.l"
 { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return SHORT;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 109 "flex_reserved.l"
+#line 116 "flex_reserved.l"
 { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return SIGNED;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 110 "flex_reserved.l"
+#line 117 "flex_reserved.l"
 { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return SIZEOF;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 111 "flex_reserved.l"
+#line 118 "flex_reserved.l"
 { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return STATIC;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 112 "flex_reserved.l"
+#line 119 "flex_reserved.l"
 { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return STRUCT;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 113 "flex_reserved.l"
+#line 120 "flex_reserved.l"
 { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return SWITCH;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 114 "flex_reserved.l"
+#line 121 "flex_reserved.l"
 { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return TYPEDEF;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 115 "flex_reserved.l"
+#line 122 "flex_reserved.l"
 {strcat(linea, yytext);count(); key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return UNION;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 116 "flex_reserved.l"
+#line 123 "flex_reserved.l"
 { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return UNSIGNED;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 117 "flex_reserved.l"
+#line 124 "flex_reserved.l"
 { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return VOID;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 118 "flex_reserved.l"
+#line 125 "flex_reserved.l"
 { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return VOLATILE;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 119 "flex_reserved.l"
+#line 126 "flex_reserved.l"
 { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return WHILE;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 120 "flex_reserved.l"
+#line 127 "flex_reserved.l"
 { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return DOUBLE;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 121 "flex_reserved.l"
+#line 128 "flex_reserved.l"
 { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return ELSE;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 122 "flex_reserved.l"
+#line 129 "flex_reserved.l"
 { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return ENUM;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 123 "flex_reserved.l"
+#line 130 "flex_reserved.l"
 { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return EXTERN;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 124 "flex_reserved.l"
+#line 131 "flex_reserved.l"
 { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return FLOAT;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 125 "flex_reserved.l"
+#line 132 "flex_reserved.l"
 { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return FOR;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 126 "flex_reserved.l"
+#line 133 "flex_reserved.l"
 { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return GOTO;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 127 "flex_reserved.l"
+#line 134 "flex_reserved.l"
 { strcat(linea, yytext);count(); key++;if(beamer == 1){latKey(2);}; if(conteo == 1)return IF;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 128 "flex_reserved.l"
+#line 135 "flex_reserved.l"
 { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(1);};if(conteo == 1)return BOOL; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 129 "flex_reserved.l"
+#line 136 "flex_reserved.l"
 { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(1);};if(conteo == 1)return BOOL; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 130 "flex_reserved.l"
+#line 137 "flex_reserved.l"
 { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(1);};if(conteo == 1)return COMPLEX; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 131 "flex_reserved.l"
+#line 138 "flex_reserved.l"
 { strcat(linea, yytext);count();key++;if(beamer == 1){latKey(1);};if(conteo == 1)return IMAGINARY; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 132 "flex_reserved.l"
+#line 139 "flex_reserved.l"
 { strcat(linea, yytext);count();sp++;if(beamer == 1){latSp(1);}; if(conteo == 1)return '(';}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 133 "flex_reserved.l"
+#line 140 "flex_reserved.l"
 { strcat(linea, yytext);count();sp++;if(beamer == 1){latSp(1);}; if(conteo == 1)return ')';}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 134 "flex_reserved.l"
+#line 141 "flex_reserved.l"
 { strcat(linea, yytext);count();sp++;if(beamer == 1){latSp(3);}; if(conteo == 1)return '\\';}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 135 "flex_reserved.l"
+#line 142 "flex_reserved.l"
 { strcat(linea, yytext);count();sp++;if(beamer == 1){latSp(2);}; if(conteo == 1)return '{';}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 136 "flex_reserved.l"
+#line 143 "flex_reserved.l"
 { strcat(linea, yytext);count();sp++;if(beamer == 1){latSp(2);}; if(conteo == 1)return '}';}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 137 "flex_reserved.l"
+#line 144 "flex_reserved.l"
 { strcat(linea, yytext);count();sp++;if(beamer == 1){latSp(1);}; if(conteo == 1)return ';';}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 138 "flex_reserved.l"
+#line 145 "flex_reserved.l"
 { strcat(linea, yytext);count();sp++;if(beamer == 1){latSp(1);}; if(conteo == 1)return ',';}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 139 "flex_reserved.l"
+#line 146 "flex_reserved.l"
 { strcat(linea, yytext);count();sp++;if(beamer == 1){latSp(1);}; if(conteo == 1)return '.';}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 140 "flex_reserved.l"
+#line 147 "flex_reserved.l"
 { strcat(linea, yytext);count();sp++;if(beamer == 1){latSp(1);}; if(conteo == 1)return '?';}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 141 "flex_reserved.l"
+#line 148 "flex_reserved.l"
 { strcat(linea, yytext);count();sp++;if(beamer == 1){latSp(1);}; if(conteo == 1)return '!';}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 142 "flex_reserved.l"
+#line 149 "flex_reserved.l"
 { strcat(linea, yytext);count();sp++;if(beamer == 1){latSp(1);}; if(conteo == 1)return '@';}
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 143 "flex_reserved.l"
+#line 150 "flex_reserved.l"
 { strcat(linea, yytext);count();sp++;if(beamer == 1){latSp(1);}; if(conteo == 1)return '[';}
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 144 "flex_reserved.l"
+#line 151 "flex_reserved.l"
 { strcat(linea, yytext);count();sp++;if(beamer == 1){latSp(1);}; if(conteo == 1)return ']';}
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 145 "flex_reserved.l"
+#line 152 "flex_reserved.l"
 { strcat(linea, yytext);count();sp++;if(beamer == 1){latSp(1);}; if(conteo == 1)return ':';}
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 146 "flex_reserved.l"
+#line 153 "flex_reserved.l"
 { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return '=';}
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 147 "flex_reserved.l"
+#line 154 "flex_reserved.l"
 { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return '+';}
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 148 "flex_reserved.l"
+#line 155 "flex_reserved.l"
 { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return '-';}
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 149 "flex_reserved.l"
+#line 156 "flex_reserved.l"
 { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return '*';}
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 150 "flex_reserved.l"
+#line 157 "flex_reserved.l"
 { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return '/';}
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 151 "flex_reserved.l"
+#line 158 "flex_reserved.l"
 { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(2);}; if(conteo == 1)return '%';}
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 152 "flex_reserved.l"
+#line 159 "flex_reserved.l"
 { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return '<';}
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 153 "flex_reserved.l"
+#line 160 "flex_reserved.l"
 { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return '>';}
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 154 "flex_reserved.l"
+#line 161 "flex_reserved.l"
 { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return '|';}
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 155 "flex_reserved.l"
+#line 162 "flex_reserved.l"
 { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(2);}; if(conteo == 1)return '&';}
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 156 "flex_reserved.l"
+#line 163 "flex_reserved.l"
 { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(2);}; if(conteo == 1)return '^';}
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 157 "flex_reserved.l"
+#line 164 "flex_reserved.l"
 { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return '~';}
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 158 "flex_reserved.l"
+#line 165 "flex_reserved.l"
 { strcat(linea, yytext);count();sp++;if(beamer == 1){latSp(1);} if(conteo == 1)return ELLIPSIS;}
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 159 "flex_reserved.l"
+#line 166 "flex_reserved.l"
 { strcat(linea, yytext);count();sp++;if(beamer == 1){latSp(1);} if(conteo == 1)return PTR_OP;}
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 160 "flex_reserved.l"
+#line 167 "flex_reserved.l"
 { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return ADD_ASSIGN;}
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-#line 161 "flex_reserved.l"
+#line 168 "flex_reserved.l"
 { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return SUB_ASSIGN;}
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
-#line 162 "flex_reserved.l"
+#line 169 "flex_reserved.l"
 { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(2);}; if(conteo == 1)return MOD_ASSIGN;}
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-#line 163 "flex_reserved.l"
+#line 170 "flex_reserved.l"
 { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return DIV_ASSIGN;}
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
-#line 164 "flex_reserved.l"
+#line 171 "flex_reserved.l"
 { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return MUL_ASSIGN;}
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
-#line 165 "flex_reserved.l"
+#line 172 "flex_reserved.l"
 { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return LEFT_ASSIGN;}
 	YY_BREAK
 case 71:
 YY_RULE_SETUP
-#line 166 "flex_reserved.l"
+#line 173 "flex_reserved.l"
 { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return RIGHT_ASSIGN;}
 	YY_BREAK
 case 72:
 YY_RULE_SETUP
-#line 167 "flex_reserved.l"
+#line 174 "flex_reserved.l"
 { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(2);}; if(conteo == 1)return AND_ASSIGN;}
 	YY_BREAK
 case 73:
 YY_RULE_SETUP
-#line 168 "flex_reserved.l"
+#line 175 "flex_reserved.l"
 { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return OR_ASSIGN;}
 	YY_BREAK
 case 74:
 YY_RULE_SETUP
-#line 169 "flex_reserved.l"
+#line 176 "flex_reserved.l"
 { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(2);}; if(conteo == 1)return XOR_ASSIGN;}
 	YY_BREAK
 case 75:
 YY_RULE_SETUP
-#line 170 "flex_reserved.l"
+#line 177 "flex_reserved.l"
 { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return LE_OP;}
 	YY_BREAK
 case 76:
 YY_RULE_SETUP
-#line 171 "flex_reserved.l"
+#line 178 "flex_reserved.l"
 { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return GE_OP;}
 	YY_BREAK
 case 77:
 YY_RULE_SETUP
-#line 172 "flex_reserved.l"
+#line 179 "flex_reserved.l"
 { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return NE_OP;}
 	YY_BREAK
 case 78:
 YY_RULE_SETUP
-#line 173 "flex_reserved.l"
+#line 180 "flex_reserved.l"
 { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return EQ_OP;}
 	YY_BREAK
 case 79:
 YY_RULE_SETUP
-#line 174 "flex_reserved.l"
+#line 181 "flex_reserved.l"
 { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return INC_OP;}
 	YY_BREAK
 case 80:
 YY_RULE_SETUP
-#line 175 "flex_reserved.l"
+#line 182 "flex_reserved.l"
 { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return DEC_OP;}
 	YY_BREAK
 case 81:
 YY_RULE_SETUP
-#line 176 "flex_reserved.l"
+#line 183 "flex_reserved.l"
 { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return OR_OP;}
 	YY_BREAK
 case 82:
 YY_RULE_SETUP
-#line 177 "flex_reserved.l"
+#line 184 "flex_reserved.l"
 { strcat(linea, yytext);count();op++;if(beamer == 1){latOpSP('&');}; if(beamer == 1){latOpSP('&');}; return AND_OP;}
 	YY_BREAK
 case 83:
 YY_RULE_SETUP
-#line 178 "flex_reserved.l"
+#line 185 "flex_reserved.l"
 { strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return LEFT_OP;}
 	YY_BREAK
 case 84:
 YY_RULE_SETUP
-#line 179 "flex_reserved.l"
+#line 186 "flex_reserved.l"
 { strcat(linea, yytext);strcat(linea, yytext);count();op++;if(beamer == 1){latOp(1);}; if(conteo == 1)return RIGHT_OP;}
 	YY_BREAK
 case 85:
 /* rule 85 can match eol */
 YY_RULE_SETUP
-#line 180 "flex_reserved.l"
+#line 187 "flex_reserved.l"
 {strcat(linea, yytext);count(); memset(linea, 0, sizeof(linea));if(conteo == 1){yylineno++;};fprintf(fileOut, "\\leavevmode\\\\"); fprintf(fileOut, "\n");column = 0;}
 	YY_BREAK
 case 86:
 YY_RULE_SETUP
-#line 181 "flex_reserved.l"
+#line 188 "flex_reserved.l"
 {fprintf(fileOut, " ");}
 	YY_BREAK
 case 87:
 YY_RULE_SETUP
-#line 182 "flex_reserved.l"
+#line 189 "flex_reserved.l"
 {}
 	YY_BREAK
 case 88:
 YY_RULE_SETUP
-#line 183 "flex_reserved.l"
+#line 190 "flex_reserved.l"
 {if(beamer == 1){fprintf(fileOut, "\\fcolorbox{pink}{pink}{\\textbf{$\\neg$}}");}; }
 	YY_BREAK
 case 89:
 /* rule 89 can match eol */
 YY_RULE_SETUP
-#line 184 "flex_reserved.l"
+#line 191 "flex_reserved.l"
 { strcat(linea, yytext);count();if(beamer == 1){strSpecial();}; str++; if(conteo == 1)return CONSTANT;}
 	YY_BREAK
 case 90:
 /* rule 90 can match eol */
 YY_RULE_SETUP
-#line 185 "flex_reserved.l"
+#line 192 "flex_reserved.l"
 {strcat(linea, yytext);count();if(beamer == 1){strSpecial();}; str++; if(conteo == 1)return STRING_LITERAL;}
 	YY_BREAK
 case 91:
 YY_RULE_SETUP
-#line 186 "flex_reserved.l"
+#line 193 "flex_reserved.l"
 {strcat(linea, yytext);count();err++; if(beamer == 1){fprintf(fileOut, "\\fcolorbox{pink}{pink}{\\textbf{"); fputs(yytext,fileOut); fprintf(fileOut, "}}");};}
 	YY_BREAK
 case 92:
 YY_RULE_SETUP
-#line 187 "flex_reserved.l"
+#line 194 "flex_reserved.l"
 {strcat(linea, yytext);count();err++;if(beamer == 1){fprintf(fileOut, "\\fcolorbox{pink}{pink}{\\textbf{"); fputs(yytext,fileOut); fprintf(fileOut, "}}");};}
 	YY_BREAK
 case 93:
 YY_RULE_SETUP
-#line 188 "flex_reserved.l"
-{strcat(linea, yytext);count();id++; if(beamer == 1){strIde();}; if(conteo == 1)return IDENTIFIER;}
+#line 195 "flex_reserved.l"
+{strcat(linea, yytext);count();id++; if(beamer == 1){strIde();}; if(conteo == 1)strcpy(idActual,yytext);return IDENTIFIER;}
 	YY_BREAK
 case 94:
 YY_RULE_SETUP
-#line 189 "flex_reserved.l"
+#line 196 "flex_reserved.l"
 { strcat(linea, yytext);count();cst++;if(beamer == 1){latNum();};if(conteo == 1)return CONSTANT;}
 	YY_BREAK
 case 95:
 YY_RULE_SETUP
-#line 190 "flex_reserved.l"
+#line 197 "flex_reserved.l"
 { strcat(linea, yytext);count();cst++;if(beamer == 1){latNum();};if(conteo == 1)return CONSTANT;}
 	YY_BREAK
 case 96:
 YY_RULE_SETUP
-#line 191 "flex_reserved.l"
+#line 198 "flex_reserved.l"
 { strcat(linea, yytext);count();cst++;if(beamer == 1){latNum();};if(conteo == 1)return CONSTANT;}
 	YY_BREAK
 case 97:
 YY_RULE_SETUP
-#line 192 "flex_reserved.l"
+#line 199 "flex_reserved.l"
 {strcat(linea, yytext);count(); cst++;if(beamer == 1){latNum();};if(conteo == 1)return CONSTANT;}
 	YY_BREAK
 case 98:
 YY_RULE_SETUP
-#line 193 "flex_reserved.l"
+#line 200 "flex_reserved.l"
 { strcat(linea, yytext);count(); cst++;if(beamer == 1){latNum();};if(conteo == 1)return CONSTANT;}
 	YY_BREAK
 case 99:
 YY_RULE_SETUP
-#line 194 "flex_reserved.l"
+#line 201 "flex_reserved.l"
 { strcat(linea, yytext);count();cst++;if(beamer == 1){latNum();};if(conteo == 1)return CONSTANT;}
 	YY_BREAK
 case 100:
 YY_RULE_SETUP
-#line 195 "flex_reserved.l"
+#line 202 "flex_reserved.l"
 {if(conteo == 1){conteo = 0;}else{conteo = 1;yylineno--;};}
 	YY_BREAK
 case 101:
 YY_RULE_SETUP
-#line 196 "flex_reserved.l"
+#line 203 "flex_reserved.l"
 {strBad(); /*printf("%s\n\n\n", "ERROR");*/ }
 	YY_BREAK
 case 102:
 YY_RULE_SETUP
-#line 197 "flex_reserved.l"
+#line 204 "flex_reserved.l"
 ECHO;
 	YY_BREAK
-#line 1854 "lex.yy.c"
+#line 1861 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2855,7 +2862,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 197 "flex_reserved.l"
+#line 204 "flex_reserved.l"
 
 
 void count(void)
@@ -3112,25 +3119,10 @@ void compile(){
     getcwd(direccion, sizeof(direccion));
     strcat( direccion,"/prepo.c");
     yyin = fopen(direccion, "r");
-    /* if(argc > 1){
-        if(!(yyin = fopen(argv[1], "r"))) {
-        perror(argv[1]);
-        return (1);
-        }
-    } */
     fileOut = fopen("FINAL.txt","w");
     yylineno = 1;
-    //while(getToken());
-    /* while(yyparse() != 0){
-        printf("%s\n","-----------------------------------------------------------");
-        while(yylex()!= ';' && yylex() != 0){
-            printf("%s\n", "leyendo");
-        }
-        if(yylex() == 0){
-            break;
-        } */
-        yyparse();
-    //}
+    pushSymbol(&symbolStck,symbolTable, 1);
+    yyparse();
     if(errores != 0){
         printf("%s","Proceso de parsing finalizo con errores. Total de errores sintácticos: ");
         printf("%d\n",errores);
@@ -3156,14 +3148,12 @@ int main(int argc, char *argv[]){
         return 1;
     }
     if (argc == 2){
-        //printf("%s","antes include");
         includes(argv[1]);
-        //printf("%s","pase include");
         defines();
-        //printf("%s","pase define");
         compile();
         remove("FINAL.txt");
         remove("OUTPUT.txt");
+        //printStack(pila);
     }
     else if (argc == 3){
         if(!strcmp(argv[2],"-B")){

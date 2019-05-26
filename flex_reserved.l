@@ -9,12 +9,20 @@ int cst = 0;
 int str = 0;
 int err = 0;
 extern int errores;
+extern struct semantic_record* pila;
+
+extern struct symbolT* symbolTable;
+
+extern struct tableRegister* symbolStck;
 int conteo = 0;
 int beamer = 0;
 FILE *fileOut;
 char linea[700];
 char direccion[300];
 int column = 0;
+
+char idActual[200];
+
 enum yytokentype
 {
   IDENTIFIER = 258,
@@ -85,7 +93,6 @@ enum yytokentype
 int input_pos = 0;
 int ini = 0;
 int fin = 0;
-int yylval;
 %}
 
 UCN (\\u[0-9a-fA-F]{4}|\\U[0-9a-fA-F]{8})
@@ -185,7 +192,7 @@ ILEN ([Uu](L|l|LL|ll)?|(L|l|LL|ll)[Uu]?)
 L?\"([^"\\]|\\['"?\\abfnrtv]|\\[0-7]{1,3}|\\[Xx][0-9a-fA-F]+|{UCN})*\"  {strcat(linea, yytext);count();if(beamer == 1){strSpecial();}; str++; if(conteo == 1)return STRING_LITERAL;}
 [ñáéíóúÑÁÉÍÓÚäëöüÄÖÜ`]+[a-zA-ZñáéíóúÑÁÉÍÓÚäëöüÄÖÜ]* {strcat(linea, yytext);count();err++; if(beamer == 1){fprintf(fileOut, "\\fcolorbox{pink}{pink}{\\textbf{"); fputs(yytext,fileOut); fprintf(fileOut, "}}");};}
 [a-zA-Z_]+[ñáéíóúÑÁÉÍÓÚäöüÄÖÜ]+[a-zA-Z_]* {strcat(linea, yytext);count();err++;if(beamer == 1){fprintf(fileOut, "\\fcolorbox{pink}{pink}{\\textbf{"); fputs(yytext,fileOut); fprintf(fileOut, "}}");};}
-([_a-zA-Z]|{UCN})([_a-zA-Z0-9]|{UCN})* {strcat(linea, yytext);count();id++; if(beamer == 1){strIde();}; if(conteo == 1)return IDENTIFIER;}
+([_a-zA-Z]|{UCN})([_a-zA-Z0-9]|{UCN})* {strcat(linea, yytext);count();id++; if(beamer == 1){strIde();}; if(conteo == 1)strcpy(idActual,yytext);return IDENTIFIER;}
 0[0-7]*{ILEN}? { strcat(linea, yytext);count();cst++;if(beamer == 1){latNum();};if(conteo == 1)return CONSTANT;}
 [1-9][0-9]*{ILEN}? { strcat(linea, yytext);count();cst++;if(beamer == 1){latNum();};if(conteo == 1)return CONSTANT;}
 0[Xx][0-9a-fA-F]+{ILEN}? { strcat(linea, yytext);count();cst++;if(beamer == 1){latNum();};if(conteo == 1)return CONSTANT;}
@@ -450,25 +457,10 @@ void compile(){
     getcwd(direccion, sizeof(direccion));
     strcat( direccion,"/prepo.c");
     yyin = fopen(direccion, "r");
-    /* if(argc > 1){
-        if(!(yyin = fopen(argv[1], "r"))) {
-        perror(argv[1]);
-        return (1);
-        }
-    } */
     fileOut = fopen("FINAL.txt","w");
     yylineno = 1;
-    //while(getToken());
-    /* while(yyparse() != 0){
-        printf("%s\n","-----------------------------------------------------------");
-        while(yylex()!= ';' && yylex() != 0){
-            printf("%s\n", "leyendo");
-        }
-        if(yylex() == 0){
-            break;
-        } */
-        yyparse();
-    //}
+    pushSymbol(&symbolStck,symbolTable, 1);
+    yyparse();
     if(errores != 0){
         printf("%s","Proceso de parsing finalizo con errores. Total de errores sintácticos: ");
         printf("%d\n",errores);
@@ -494,14 +486,12 @@ int main(int argc, char *argv[]){
         return 1;
     }
     if (argc == 2){
-        //printf("%s","antes include");
         includes(argv[1]);
-        //printf("%s","pase include");
         defines();
-        //printf("%s","pase define");
         compile();
         remove("FINAL.txt");
         remove("OUTPUT.txt");
+        //printStack(pila);
     }
     else if (argc == 3){
         if(!strcmp(argv[2],"-B")){

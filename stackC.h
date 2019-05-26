@@ -39,15 +39,16 @@ struct semantic_record* pop(struct semantic_record** root)
         return NULL;
     struct semantic_record* temp = *root;
     *root = (*root)->next;
+    printf("%s poopped\n", temp->name);
     free(temp);
     return *root;
 }
 
-int top(struct semantic_record* root)
+struct semantic_record* top(struct semantic_record* root)
 {
     if (isEmpty(root))
-        return INT_MIN;
-    return root->type;
+        return NULL;
+    return root;
 }
 
 void clearStack(struct semantic_record* root){
@@ -59,6 +60,23 @@ void clearStack(struct semantic_record* root){
         free(temp);
     }
     return;
+}
+
+void printStack(struct semantic_record* root){
+    if(isEmpty(root)){
+        printf("%s\n","Empty");
+    }
+    else{
+        struct semantic_record* temp = root;
+        while(1){
+            if(temp == NULL){
+                return;
+            }
+            printf("\nElemento:\t name: %s", temp->name);
+            printf("\t type: %d\n", temp->type);
+            temp = temp->next;
+        }
+    }
 }
 
 struct semantic_record* retrieve(struct semantic_record* root, int type)

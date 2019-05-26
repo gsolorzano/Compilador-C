@@ -1,7 +1,12 @@
 ☼
+int a;
+
 void cleanCode(){
 int a;
 int n;
-int a;
+int b;
+{int c;}
+int c;
+c + 5 * a;
 }
  
