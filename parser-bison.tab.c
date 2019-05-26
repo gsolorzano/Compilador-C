@@ -2673,11 +2673,14 @@ void eval_binary(){
 	if(!strcmp(OPERATOR->name,"-")||!strcmp(OPERATOR->name,"/")){
 		struct semantic_record* temp = OP1;
 		OP1 = OP2;
-		OP1 = temp;
+		OP2 = temp;
 	}
 
 	//generar codigo ensamblador para OP1 OPERATOR OUTPUT2 = TEMP1
-
+	printf("%s = ",temporal);
+	printf("%s ",OP1->name);
+	printf("%s ",OPERATOR->name);
+	printf("%s\n",OP2->name);
 }
 
 void clear_temp(){//borra el contenido de token_buffer y lo resetea a un string vacio
@@ -2706,14 +2709,18 @@ void eval_unary(){
 		return;
 	}
 
-	if(OP1->type == DATAO){
-		//generar codigo ensamblador para ++a
+	if(OP1->type == TOKEN){
+		//generar codigo ensamblador para a++
+		// el OPERATOR contiene el id
+		// el OP1 contiene el ++
 		printf("%s = ",temporal);
-		printf("%s ",OP1->name);
-		printf("%s\n",OPERATOR->name);
+		printf("%s ",OPERATOR->name);
+		printf("%s\n",OP1->name);
 	}
 	else{
-		//generar codigo ensamblador para a++
+		//generar codigo ensamblador para ++a
+		// el OPERATOR contiene el ++
+		// el OP1 contiene el id
 		printf("%s = ",temporal);
 		printf("%s ",OPERATOR->name);
 		printf("%s\n",OP1->name);
