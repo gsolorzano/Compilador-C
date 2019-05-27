@@ -155,7 +155,7 @@ logical_or_expression
 
 conditional_expression
 	: logical_or_expression
-	| logical_or_expression '?' expression ':' conditional_expression
+	| logical_or_expression {printStack(pila);eval_if();} '?' expression {endIFdec();}':' {process_else();}conditional_expression{eval_else();} {printf("if ternario\n");}
 	;
 
 assignment_expression
@@ -450,14 +450,20 @@ block_item
 
 expression_statement
 	: ';'
-	| expression ';'
+	| expression ';' {pila = clearStack(pila);}
 	;
 
 selection_statement
-	: IF '(' expression rparen statement
-	| IF '(' expression rparen statement ELSE statement
+	: IF { process_if(); } '(' expression rparen { eval_if(); } optionsIF
+	| IF { process_if(); } '(' expression rparen { eval_if(); } optionsIF
+	//IF '(' expression rparen statement { printf("\n \t IF \n "); } ELSE { printf("\n \t ELSE \n "); }
 	| SWITCH '(' expression rparen statement
 	;
+
+optionsIF
+: statement {endIFdec();}ELSE { process_else(); } statement { eval_else(); }
+| statement {endIFdec(); process_else(); eval_else();  }
+;
 
 rparen
 	: ')'
@@ -503,6 +509,38 @@ declaration_list
 	;
 
 %%
+
+void endIFdec(){
+	printf("%s\n","JMP exit_if");
+}
+
+void process_if(){
+	push(&pila, DATAO, yytext);
+	//crear etiquetas ensamblador
+}
+
+void eval_if(){
+	struct semantic_record* Res = top(pila);
+	pila = pop(&pila);
+	pila = pop(&pila);
+	printf("%s","CMP 0 ");
+	printf("%s\n",Res->name);
+	printf("%s\n","JZ ELSE");
+
+	//código para if ensamblador
+}
+
+void process_else(){
+	push(&pila, DATAO, yytext);
+	printf("%s\n","LABEL: ESLE");
+	//crear etiquetas ensamblador
+}
+
+void eval_else(){
+	pila = pop(&pila);
+	printf("%s\n","exit_if");
+	//etiqueta de salida
+}
 
 void eval_binary(){
 	struct semantic_record* OP1 = top(pila);
@@ -638,6 +676,7 @@ void fin_decl(){
 		pila = pop(&pila);
 	}
 	pila = pop(&pila);
+	pila = clearStack(pila);
 }
 
 void open_scope(){

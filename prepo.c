@@ -1,8 +1,7 @@
 ☼
 int a;
 
-void cleanCode(){
-{
-5/a-5*6;}
+void main(){
+f=a? 5: 2;
 }
  
