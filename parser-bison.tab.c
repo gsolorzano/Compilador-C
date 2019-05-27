@@ -2737,12 +2737,25 @@ void process_op(){
 
 void process_id(){
 	struct symbolT* smb = topSymbol(&symbolStck);
-	if(lookup(smb, idActual) != 1){
-		push(&pila, ERROR, idActual);
-		//printf("%d",pila->);
+
+	//DECISION isnertar variable que no ha sido declarada a la tabla de simbolos
+	//y dejar que si se usa de nuevo se pueda usar?
+	//o agregarle una AND al if y que pregunte si el tipo de la variable es != de error
+	if(!(lookup(smb, idActual) != 1)){
+		push(&pila, ID, idActual);
+	}
+	else if(!(lookup(lastSymbol(symbolStck), idActual) != 1)){
+		push(&pila, ID, idActual);
 	}
 	else{
-		push(&pila, ID, idActual);
+		push(&pila, ERROR, idActual);
+		struct semantic_record* identificador = top(pila);
+		printf("%s","Error semántico, ");
+		printf("%s",idActual);
+		printf("%s\n"," no ha sido declarado antes, este error solo será reportado 1 vez por cada variable");
+		insert(&smb, "error",identificador->name);
+		symbolStck = popSymbol(&symbolStck);
+		pushSymbol(&symbolStck, smb);
 	}
 }
 

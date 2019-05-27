@@ -42,7 +42,7 @@ int pop(struct StackNode** root)
     struct StackNode* temp = *root;
     *root = (*root)->next;
     int popped = temp->data;
-    free(temp);
+    //free(temp);
 
     return popped;
 }

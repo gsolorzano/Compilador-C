@@ -38,7 +38,7 @@ struct tableRegister* popSymbol(struct tableRegister** root)
     struct tableRegister* temp = *root;
     *root = (*root)->next;
     printf("Context: popped\n");
-    free(temp);
+    //free(temp);
     return *root;
 }
 
@@ -49,7 +49,7 @@ struct symbolT* topSymbol(struct tableRegister** root)
     return (*root)->symbolT;
 }
 
-struct tableRegister* lastSymbol(struct tableRegister* root)
+struct symbolT* lastSymbol(struct tableRegister* root)
 {
     if(isEmptySymbol(root)){
         return NULL;
@@ -61,7 +61,7 @@ struct tableRegister* lastSymbol(struct tableRegister* root)
                 return NULL;
             }
             if(temp->next == NULL){
-                return temp;
+                return temp->symbolT;
             }
             temp = temp->next;
         }
