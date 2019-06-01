@@ -1,8 +1,6 @@
 ☼
 void main(){
-int a = 0;
-if(a == 0){
-a = 1;
-}
+int a;
+if(a){a=5;}
 }
  

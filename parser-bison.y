@@ -157,7 +157,7 @@ logical_or_expression
 
 conditional_expression
 	: logical_or_expression
-	| logical_or_expression {printStack(pila);eval_if();} '?' expression {endIFdec();}':' {process_else();}conditional_expression{eval_else();} {printf("if ternario\n");}
+	| logical_or_expression {eval_if();} '?' expression {endIFdec();}':' {process_else();}conditional_expression{eval_else();} {printf("if ternario\n");}
 	;
 
 assignment_expression
@@ -460,7 +460,6 @@ expression_statement
 
 selection_statement
 	: IF { process_if(); } '(' expression rparen { eval_if(); } optionsIF
-	| IF { process_if(); } '(' expression rparen { eval_if(); } optionsIF
 	//IF '(' expression rparen statement { printf("\n \t IF \n "); } ELSE { printf("\n \t ELSE \n "); }
 	| SWITCH '(' expression rparen statement
 	;
@@ -517,7 +516,16 @@ declaration_list
 
 void fin_assign(){
 	struct semantic_record* assin = retrieve(pila,TOKEN);
-	struct semantic_record* val = retrieve(pila,DATAO);
+	struct semantic_record* val;
+	int b = 0;
+	if(retrieve(pila,DATAO) != NULL){
+		val = retrieve(pila,DATAO);
+	}
+	else{
+		val = top(pila);
+		pila = pop2(&pila);
+		b = 1;
+	}
 	while(retrieve(pila, ID) != NULL){
 		struct semantic_record* identificador = retrieveDelete(pila,ID);
 		struct symbolT* smb = topSymbol(&symbolStck);
@@ -535,6 +543,7 @@ void fin_assign(){
 		free(identificador);
 	}
 	pila = clearStack(pila);
+	if(b == 1)free(val);
 }
 
 void endIFdec(){
@@ -547,9 +556,11 @@ void process_if(){
 }
 
 void eval_if(){
+	/* printStack(pila); */
 	struct semantic_record* Res = top(pila);
 	pila = pop2(&pila);
-	pila = pop(&pila);
+	//pila = pop(&pila);
+	/* printStack(pila); */
 	printf("%s","CMP 0 ");
 	printf("%s\n",Res->name);
 	printf("%s\n","JZ ELSE");
@@ -620,7 +631,6 @@ void createTemp(){
 }
 
 void eval_unary(){
-	printStack(pila);
 	struct semantic_record* OP1 = top(pila);
 	pila = pop2(&pila);
 	struct semantic_record* OPERATOR = top(pila);
@@ -714,26 +724,28 @@ void fin_decl(){
 }
 
 void fin_declas(){
-	struct semantic_record* tipo = retrieve(pila,TIPO);
-	struct semantic_record* assin = retrieve(pila,TOKEN);
-	struct semantic_record* val = retrieve(pila,DATAO);
-	while(retrieve(pila, ID) != NULL){
-		struct semantic_record* identificador = retrieveDelete(pila,ID);
-		struct symbolT* smb = topSymbol(&symbolStck);
-		if(lookup(smb, identificador->name) == 1){
-			printf("Error semántico, %s ya ha sido declarado antes.\n", identificador->name);
-			exit(1);
+	if(retrieve(pila,DATAO) != NULL){
+		struct semantic_record* tipo = retrieve(pila,TIPO);
+		struct semantic_record* assin = retrieve(pila,TOKEN);
+		struct semantic_record* val = retrieve(pila,DATAO);
+		while(retrieve(pila, ID) != NULL){
+			struct semantic_record* identificador = retrieveDelete(pila,ID);
+			struct symbolT* smb = topSymbol(&symbolStck);
+			if(lookup(smb, identificador->name) == 1){
+				printf("Error semántico, %s ya ha sido declarado antes.\n", identificador->name);
+				exit(1);
+			}
+			insert(&smb, tipo->name,identificador->name);
+			symbolStck = popSymbol(&symbolStck);
+			pushSymbol(&symbolStck, smb);
+			printf("%s ",identificador->name);
+			printf("%s ",assin->name);
+			printf("%s\n",val->name);
+			free(identificador);
 		}
-		insert(&smb, tipo->name,identificador->name);
-		symbolStck = popSymbol(&symbolStck);
-		pushSymbol(&symbolStck, smb);
-		printf("%s ",identificador->name);
-		printf("%s ",assin->name);
-		printf("%s\n",val->name);
-		free(identificador);
+		as = 0;
+		pila = clearStack(pila);
 	}
-	as = 0;
-	pila = clearStack(pila);
 }
 
 void open_scope(){
