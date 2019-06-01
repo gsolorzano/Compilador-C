@@ -496,25 +496,25 @@ static const yytype_uint16 yyrline[] =
      135,   139,   140,   144,   145,   149,   150,   154,   155,   159,
      160,   160,   160,   160,   160,   164,   165,   169,   170,   171,
      172,   173,   174,   175,   176,   177,   178,   179,   180,   184,
-     185,   189,   193,   194,   202,   203,   204,   205,   206,   207,
-     208,   209,   213,   214,   218,   219,   219,   223,   224,   225,
-     226,   227,   228,   232,   233,   234,   235,   236,   237,   238,
-     239,   240,   241,   242,   243,   244,   245,   246,   247,   251,
-     252,   253,   257,   258,   259,   263,   264,   268,   272,   273,
-     274,   275,   279,   280,   284,   285,   286,   290,   291,   292,
-     293,   294,   298,   299,   303,   304,   308,   309,   310,   311,
-     315,   320,   321,   326,   327,   328,   329,   330,   331,   332,
-     333,   334,   335,   336,   337,   338,   342,   343,   344,   345,
-     349,   350,   355,   356,   360,   361,   365,   366,   367,   371,
-     372,   376,   377,   381,   382,   383,   387,   388,   389,   390,
-     391,   392,   393,   394,   395,   396,   397,   401,   402,   403,
-     407,   408,   409,   410,   414,   418,   419,   423,   424,   428,
-     429,   430,   431,   432,   433,   437,   438,   439,   443,   443,
-     444,   444,   448,   449,   453,   454,   458,   459,   463,   463,
-     463,   464,   464,   464,   466,   470,   470,   470,   471,   475,
-     476,   480,   481,   482,   483,   484,   485,   489,   490,   491,
-     492,   493,   494,   498,   499,   503,   504,   508,   509,   513,
-     514
+     185,   189,   193,   194,   201,   202,   203,   204,   205,   206,
+     207,   208,   212,   213,   217,   218,   218,   222,   223,   224,
+     225,   226,   227,   231,   232,   233,   234,   235,   236,   237,
+     238,   239,   240,   241,   242,   243,   244,   245,   246,   250,
+     251,   252,   256,   257,   258,   262,   263,   267,   271,   272,
+     273,   274,   278,   279,   283,   284,   285,   289,   290,   291,
+     292,   293,   297,   298,   302,   303,   307,   308,   309,   310,
+     314,   319,   320,   325,   326,   327,   328,   329,   330,   331,
+     332,   333,   334,   335,   336,   337,   341,   342,   343,   344,
+     348,   349,   354,   355,   359,   360,   364,   365,   366,   370,
+     371,   375,   376,   380,   381,   382,   386,   387,   388,   389,
+     390,   391,   392,   393,   394,   395,   396,   400,   401,   402,
+     406,   407,   408,   409,   413,   417,   418,   422,   423,   427,
+     428,   429,   430,   431,   432,   436,   437,   438,   442,   442,
+     443,   443,   447,   448,   452,   453,   457,   458,   462,   462,
+     462,   463,   463,   463,   465,   469,   469,   469,   470,   474,
+     475,   479,   480,   481,   482,   483,   484,   488,   489,   490,
+     491,   492,   493,   497,   498,   502,   503,   507,   508,   512,
+     513
 };
 #endif
 
@@ -2389,120 +2389,131 @@ yyreduce:
 #line 2390 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
+  case 76:
+#line 165 "parser-bison.y" /* yacc.c:1652  */
+    {fin_assign();}
+#line 2396 "parser-bison.tab.c" /* yacc.c:1652  */
+    break;
+
+  case 77:
+#line 169 "parser-bison.y" /* yacc.c:1652  */
+    {push(&pila, TOKEN, "=");}
+#line 2402 "parser-bison.tab.c" /* yacc.c:1652  */
+    break;
+
   case 93:
 #line 194 "parser-bison.y" /* yacc.c:1652  */
     {
-		printStack(pila);/*retrieveDelete(pila,ID);printStack(pila);*/
 		if(as == 0){fin_decl();}
 		else{fin_declas();}
 			}
-#line 2400 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2411 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 104:
-#line 218 "parser-bison.y" /* yacc.c:1652  */
+#line 217 "parser-bison.y" /* yacc.c:1652  */
     {printf("\n");}
-#line 2406 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2417 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 105:
-#line 219 "parser-bison.y" /* yacc.c:1652  */
+#line 218 "parser-bison.y" /* yacc.c:1652  */
     {as = 1; push(&pila, TOKEN, "=");}
-#line 2412 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2423 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 116:
-#line 235 "parser-bison.y" /* yacc.c:1652  */
+#line 234 "parser-bison.y" /* yacc.c:1652  */
     {guardar_tipo();}
-#line 2418 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2429 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 163:
-#line 326 "parser-bison.y" /* yacc.c:1652  */
+#line 325 "parser-bison.y" /* yacc.c:1652  */
     {guardar_id();}
-#line 2424 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2435 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 228:
-#line 443 "parser-bison.y" /* yacc.c:1652  */
+#line 442 "parser-bison.y" /* yacc.c:1652  */
     {open_scope();pila = clearStack(pila);}
-#line 2430 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2441 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 229:
-#line 443 "parser-bison.y" /* yacc.c:1652  */
+#line 442 "parser-bison.y" /* yacc.c:1652  */
     {close_scope();}
-#line 2436 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2447 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 230:
-#line 444 "parser-bison.y" /* yacc.c:1652  */
+#line 443 "parser-bison.y" /* yacc.c:1652  */
     {open_scope();pila = clearStack(pila);}
-#line 2442 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2453 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 231:
-#line 444 "parser-bison.y" /* yacc.c:1652  */
+#line 443 "parser-bison.y" /* yacc.c:1652  */
     {close_scope();}
-#line 2448 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2459 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 237:
-#line 459 "parser-bison.y" /* yacc.c:1652  */
+#line 458 "parser-bison.y" /* yacc.c:1652  */
     {pila = clearStack(pila);}
-#line 2454 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2465 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 238:
-#line 463 "parser-bison.y" /* yacc.c:1652  */
+#line 462 "parser-bison.y" /* yacc.c:1652  */
     { process_if(); }
-#line 2460 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2471 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 239:
-#line 463 "parser-bison.y" /* yacc.c:1652  */
+#line 462 "parser-bison.y" /* yacc.c:1652  */
     { eval_if(); }
-#line 2466 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2477 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 241:
-#line 464 "parser-bison.y" /* yacc.c:1652  */
+#line 463 "parser-bison.y" /* yacc.c:1652  */
     { process_if(); }
-#line 2472 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2483 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 242:
-#line 464 "parser-bison.y" /* yacc.c:1652  */
+#line 463 "parser-bison.y" /* yacc.c:1652  */
     { eval_if(); }
-#line 2478 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2489 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 245:
-#line 470 "parser-bison.y" /* yacc.c:1652  */
+#line 469 "parser-bison.y" /* yacc.c:1652  */
     {endIFdec();}
-#line 2484 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2495 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 246:
-#line 470 "parser-bison.y" /* yacc.c:1652  */
+#line 469 "parser-bison.y" /* yacc.c:1652  */
     { process_else(); }
-#line 2490 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2501 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 247:
-#line 470 "parser-bison.y" /* yacc.c:1652  */
+#line 469 "parser-bison.y" /* yacc.c:1652  */
     { eval_else(); }
-#line 2496 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2507 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 248:
-#line 471 "parser-bison.y" /* yacc.c:1652  */
+#line 470 "parser-bison.y" /* yacc.c:1652  */
     {endIFdec(); process_else(); eval_else();  }
-#line 2502 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2513 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
 
-#line 2506 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2517 "parser-bison.tab.c" /* yacc.c:1652  */
         default: break;
       }
     if (yychar_backup != yychar)
@@ -2745,8 +2756,30 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 517 "parser-bison.y" /* yacc.c:1918  */
+#line 516 "parser-bison.y" /* yacc.c:1918  */
 
+
+void fin_assign(){
+	struct semantic_record* assin = retrieve(pila,TOKEN);
+	struct semantic_record* val = retrieve(pila,DATAO);
+	while(retrieve(pila, ID) != NULL){
+		struct semantic_record* identificador = retrieveDelete(pila,ID);
+		struct symbolT* smb = topSymbol(&symbolStck);
+		if(!(lookup(smb, identificador->name)) == 1){
+			printf("%s","Error semántico, ");
+			printf("%s",identificador->name);
+			printf("%s\n"," no ha sido declarado antes, este error solo será reportado 1 vez por cada variable");
+			insert(&smb, "error",identificador->name);
+			symbolStck = popSymbol(&symbolStck);
+			pushSymbol(&symbolStck, smb);
+		}
+		printf("%s ",identificador->name);
+		printf("%s ",assin->name);
+		printf("%s\n",val->name);
+		free(identificador);
+	}
+	pila = clearStack(pila);
+}
 
 void endIFdec(){
 	printf("%s\n","JMP exit_if");
@@ -2759,11 +2792,12 @@ void process_if(){
 
 void eval_if(){
 	struct semantic_record* Res = top(pila);
-	pila = pop(&pila);
+	pila = pop2(&pila);
 	pila = pop(&pila);
 	printf("%s","CMP 0 ");
 	printf("%s\n",Res->name);
 	printf("%s\n","JZ ELSE");
+	free(Res);
 
 	//código para if ensamblador
 }
@@ -2872,22 +2906,24 @@ void process_op(){
 }
 
 void process_id(){
-	struct symbolT* smb = topSymbol(&symbolStck);
-
+	struct tableRegister* smb = symbolStck;
 	//DECISION isnertar variable que no ha sido declarada a la tabla de simbolos
 	//y dejar que si se usa de nuevo se pueda usar?
 	//o agregarle una AND al if y que pregunte si el tipo de la variable es != de error
-	if(!(lookup(smb, idActual) != 1)){
-		push(&pila, ID, idActual);
+	int ban = 0;
+	while(smb->next != NULL){
+		if(!(lookup(smb->symbolT, idActual) != 1)){
+			push(&pila, ID, idActual);
+			ban = 1;
+			break;
+		}
+		smb = smb->next;
 	}
-	else if(!(lookup(lastSymbol(symbolStck), idActual) != 1)){
-		push(&pila, ID, idActual);
-	}
-	else{
+	if(ban == 0){
 		push(&pila, ERROR, idActual);
 		struct semantic_record* identificador = top(pila);
 		printf("%s","Error semántico, ");
-		printf("%s",idActual);
+		printf("%s",identificador->name);
 		printf("%s\n"," no ha sido declarado antes, este error solo será reportado 1 vez por cada variable");
 		insert(&smb, "error",identificador->name);
 		symbolStck = popSymbol(&symbolStck);

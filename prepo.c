@@ -1,7 +1,8 @@
 ☼
 void main(){
-int a, n, m = 5;
-int c;
-int v  = 6*6;
+int a = 0;
+if(a == 0){
+a = 1;
+}
 }
  

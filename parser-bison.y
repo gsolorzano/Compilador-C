@@ -162,11 +162,11 @@ conditional_expression
 
 assignment_expression
 	: conditional_expression
-	| unary_expression assignment_operator assignment_expression
+	| unary_expression assignment_operator assignment_expression {fin_assign();}
 	;
 
 assignment_operator
-	: '='
+	: '=' {push(&pila, TOKEN, "=");}
 	| MUL_ASSIGN
 	| DIV_ASSIGN
 	| MOD_ASSIGN
@@ -192,7 +192,6 @@ constant_expression
 declaration
 	: declaration_specifiers ';'
 	| declaration_specifiers init_declarator_list ';' {
-		printStack(pila);/*retrieveDelete(pila,ID);printStack(pila);*/
 		if(as == 0){fin_decl();}
 		else{fin_declas();}
 			}//Aqui se hace el int n; y int n = 5;
@@ -516,6 +515,28 @@ declaration_list
 
 %%
 
+void fin_assign(){
+	struct semantic_record* assin = retrieve(pila,TOKEN);
+	struct semantic_record* val = retrieve(pila,DATAO);
+	while(retrieve(pila, ID) != NULL){
+		struct semantic_record* identificador = retrieveDelete(pila,ID);
+		struct symbolT* smb = topSymbol(&symbolStck);
+		if(!(lookup(smb, identificador->name)) == 1){
+			printf("%s","Error semántico, ");
+			printf("%s",identificador->name);
+			printf("%s\n"," no ha sido declarado antes, este error solo será reportado 1 vez por cada variable");
+			insert(&smb, "error",identificador->name);
+			symbolStck = popSymbol(&symbolStck);
+			pushSymbol(&symbolStck, smb);
+		}
+		printf("%s ",identificador->name);
+		printf("%s ",assin->name);
+		printf("%s\n",val->name);
+		free(identificador);
+	}
+	pila = clearStack(pila);
+}
+
 void endIFdec(){
 	printf("%s\n","JMP exit_if");
 }
@@ -527,11 +548,12 @@ void process_if(){
 
 void eval_if(){
 	struct semantic_record* Res = top(pila);
-	pila = pop(&pila);
+	pila = pop2(&pila);
 	pila = pop(&pila);
 	printf("%s","CMP 0 ");
 	printf("%s\n",Res->name);
 	printf("%s\n","JZ ELSE");
+	free(Res);
 
 	//código para if ensamblador
 }
@@ -640,22 +662,24 @@ void process_op(){
 }
 
 void process_id(){
-	struct symbolT* smb = topSymbol(&symbolStck);
-
+	struct tableRegister* smb = symbolStck;
 	//DECISION isnertar variable que no ha sido declarada a la tabla de simbolos
 	//y dejar que si se usa de nuevo se pueda usar?
 	//o agregarle una AND al if y que pregunte si el tipo de la variable es != de error
-	if(!(lookup(smb, idActual) != 1)){
-		push(&pila, ID, idActual);
+	int ban = 0;
+	while(smb->next != NULL){
+		if(!(lookup(smb->symbolT, idActual) != 1)){
+			push(&pila, ID, idActual);
+			ban = 1;
+			break;
+		}
+		smb = smb->next;
 	}
-	else if(!(lookup(lastSymbol(symbolStck), idActual) != 1)){
-		push(&pila, ID, idActual);
-	}
-	else{
+	if(ban == 0){
 		push(&pila, ERROR, idActual);
 		struct semantic_record* identificador = top(pila);
 		printf("%s","Error semántico, ");
-		printf("%s",idActual);
+		printf("%s",identificador->name);
 		printf("%s\n"," no ha sido declarado antes, este error solo será reportado 1 vez por cada variable");
 		insert(&smb, "error",identificador->name);
 		symbolStck = popSymbol(&symbolStck);
