@@ -38,7 +38,7 @@ struct tableRegister* popSymbol(struct tableRegister** root)
     struct tableRegister* temp = *root;
     *root = (*root)->next;
     printf("Context: popped\n");
-    //free(temp);
+    free(temp);
     return *root;
 }
 

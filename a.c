@@ -1,5 +1,5 @@
-int a;
-
 void main(){
-    f=a? 5: 2;
+    int a, n, m = 5;
+    int c;
+    int v  = 6*6;
 }

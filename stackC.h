@@ -40,6 +40,16 @@ struct semantic_record* pop(struct semantic_record** root)
     struct semantic_record* temp = *root;
     *root = (*root)->next;
     // printf("\t \t popped: %s \n", temp->name);
+    free(temp);
+    return *root;
+}
+struct semantic_record* pop2(struct semantic_record** root)
+{
+    if (isEmpty(*root))
+        return NULL;
+    struct semantic_record* temp = *root;
+    *root = (*root)->next;
+    // printf("\t \t popped: %s \n", temp->name);
     //free(temp);
     return *root;
 }
@@ -91,6 +101,28 @@ struct semantic_record* retrieve(struct semantic_record* root, int type)
             if(temp->type == type){
                 return temp;
             }
+            temp = temp->next;
+        }
+    }
+}
+
+struct semantic_record* retrieveDelete(struct semantic_record* root, int type)
+{
+    if(isEmpty(root)){
+        return NULL;
+    }
+    else{
+        struct semantic_record* temp = root;
+        struct semantic_record* temp2 = root;
+        while(1){
+            if(temp == NULL){
+                return NULL;
+            }
+            if(temp->type == type){
+                temp2->next = temp->next;
+                return temp;
+            }
+            temp2 = temp;
             temp = temp->next;
         }
     }

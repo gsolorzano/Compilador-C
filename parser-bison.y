@@ -13,6 +13,8 @@ extern int conteo;
 extern char *yytext;
 extern char idActual[200];
 
+int as = 0;
+
 
 char temporal[200];
 int tempAct = 0;
@@ -189,7 +191,11 @@ constant_expression
 
 declaration
 	: declaration_specifiers ';'
-	| declaration_specifiers init_declarator_list ';' {fin_decl();}//Aqui se hace el int n; y int n = 5;
+	| declaration_specifiers init_declarator_list ';' {
+		printStack(pila);/*retrieveDelete(pila,ID);printStack(pila);*/
+		if(as == 0){fin_decl();}
+		else{fin_declas();}
+			}//Aqui se hace el int n; y int n = 5;
 	;
 
 declaration_specifiers
@@ -210,7 +216,7 @@ init_declarator_list
 
 init_declarator
 	: declarator {printf("\n");}
-	| declarator '=' {push(&pila, TOKEN, "=");} initializer
+	| declarator '=' {as = 1; push(&pila, TOKEN, "=");} initializer
 	;
 
 storage_class_specifier
@@ -434,8 +440,8 @@ labeled_statement
 	;
 
 compound_statement
-	: '{'{open_scope();}'}'{close_scope();}
-	| '{' {open_scope();} block_item_list '}' {close_scope();} //Aqui se hacen los { } de una funcion
+	: '{'{open_scope();pila = clearStack(pila);}'}'{close_scope();}
+	| '{' {open_scope();pila = clearStack(pila);} block_item_list '}' {close_scope();} //Aqui se hacen los { } de una funcion
 	;
 
 block_item_list
@@ -544,11 +550,11 @@ void eval_else(){
 
 void eval_binary(){
 	struct semantic_record* OP1 = top(pila);
-	pila = pop(&pila);
+	pila = pop2(&pila);
 	struct semantic_record* OPERATOR = top(pila);
-	pila = pop(&pila);
+	pila = pop2(&pila);
 	struct semantic_record* OP2 = top(pila);
-	pila = pop(&pila);
+	pila = pop2(&pila);
 
 	//crear funcion que crea temporales
 	createTemp();
@@ -569,12 +575,14 @@ void eval_binary(){
 		OP1 = OP2;
 		OP2 = temp;
 	}
-
 	//generar codigo ensamblador para OP1 OPERATOR OUTPUT2 = TEMP1
 	printf("%s = ",temporal);
 	printf("%s ",OP1->name);
 	printf("%s ",OPERATOR->name);
 	printf("%s\n",OP2->name);
+	free(OP1);
+	free(OPERATOR);
+	free(OP2);
 }
 
 void clear_temp(){//borra el contenido de token_buffer y lo resetea a un string vacio
@@ -592,9 +600,9 @@ void createTemp(){
 void eval_unary(){
 	printStack(pila);
 	struct semantic_record* OP1 = top(pila);
-	pila = pop(&pila);
+	pila = pop2(&pila);
 	struct semantic_record* OPERATOR = top(pila);
-	pila = pop(&pila);
+	pila = pop2(&pila);
 
 	//crear funcion que crea temporales
 	createTemp();
@@ -619,6 +627,8 @@ void eval_unary(){
 		printf("%s ",OPERATOR->name);
 		printf("%s\n",OP1->name);
 	}
+	free(OP1);
+	free(OPERATOR);
 }
 
 void process_literal(){
@@ -676,6 +686,29 @@ void fin_decl(){
 		pila = pop(&pila);
 	}
 	pila = pop(&pila);
+	pila = clearStack(pila);
+}
+
+void fin_declas(){
+	struct semantic_record* tipo = retrieve(pila,TIPO);
+	struct semantic_record* assin = retrieve(pila,TOKEN);
+	struct semantic_record* val = retrieve(pila,DATAO);
+	while(retrieve(pila, ID) != NULL){
+		struct semantic_record* identificador = retrieveDelete(pila,ID);
+		struct symbolT* smb = topSymbol(&symbolStck);
+		if(lookup(smb, identificador->name) == 1){
+			printf("Error semántico, %s ya ha sido declarado antes.\n", identificador->name);
+			exit(1);
+		}
+		insert(&smb, tipo->name,identificador->name);
+		symbolStck = popSymbol(&symbolStck);
+		pushSymbol(&symbolStck, smb);
+		printf("%s ",identificador->name);
+		printf("%s ",assin->name);
+		printf("%s\n",val->name);
+		free(identificador);
+	}
+	as = 0;
 	pila = clearStack(pila);
 }
 

@@ -82,6 +82,8 @@ extern int conteo;
 extern char *yytext;
 extern char idActual[200];
 
+int as = 0;
+
 
 char temporal[200];
 int tempAct = 0;
@@ -95,7 +97,7 @@ struct symbolT* symbolTable = NULL;
 
 struct tableRegister* symbolStck = NULL;
 
-#line 99 "parser-bison.tab.c" /* yacc.c:337  */
+#line 101 "parser-bison.tab.c" /* yacc.c:337  */
 # ifndef YY_NULLPTR
 #  if defined __cplusplus
 #   if 201103L <= __cplusplus
@@ -485,34 +487,34 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    49,    49,    50,    51,    52,    53,    57,    58,    59,
-      60,    61,    62,    63,    64,    65,    66,    70,    71,    75,
-      76,    76,    77,    77,    78,    79,    80,    84,    85,    86,
-      87,    88,    89,    90,    94,    95,    99,   100,   100,   101,
-     101,   102,   102,   106,   107,   107,   108,   108,   112,   113,
-     114,   118,   119,   120,   121,   122,   126,   127,   128,   132,
-     133,   137,   138,   142,   143,   147,   148,   152,   153,   157,
-     158,   158,   158,   158,   158,   162,   163,   167,   168,   169,
-     170,   171,   172,   173,   174,   175,   176,   177,   178,   182,
-     183,   187,   191,   192,   196,   197,   198,   199,   200,   201,
-     202,   203,   207,   208,   212,   213,   213,   217,   218,   219,
-     220,   221,   222,   226,   227,   228,   229,   230,   231,   232,
-     233,   234,   235,   236,   237,   238,   239,   240,   241,   245,
-     246,   247,   251,   252,   253,   257,   258,   262,   266,   267,
-     268,   269,   273,   274,   278,   279,   280,   284,   285,   286,
-     287,   288,   292,   293,   297,   298,   302,   303,   304,   305,
-     309,   314,   315,   320,   321,   322,   323,   324,   325,   326,
-     327,   328,   329,   330,   331,   332,   336,   337,   338,   339,
-     343,   344,   349,   350,   354,   355,   359,   360,   361,   365,
-     366,   370,   371,   375,   376,   377,   381,   382,   383,   384,
-     385,   386,   387,   388,   389,   390,   391,   395,   396,   397,
-     401,   402,   403,   404,   408,   412,   413,   417,   418,   422,
-     423,   424,   425,   426,   427,   431,   432,   433,   437,   437,
-     438,   438,   442,   443,   447,   448,   452,   453,   457,   457,
-     457,   458,   458,   458,   460,   464,   464,   464,   465,   469,
-     470,   474,   475,   476,   477,   478,   479,   483,   484,   485,
-     486,   487,   488,   492,   493,   497,   498,   502,   503,   507,
-     508
+       0,    51,    51,    52,    53,    54,    55,    59,    60,    61,
+      62,    63,    64,    65,    66,    67,    68,    72,    73,    77,
+      78,    78,    79,    79,    80,    81,    82,    86,    87,    88,
+      89,    90,    91,    92,    96,    97,   101,   102,   102,   103,
+     103,   104,   104,   108,   109,   109,   110,   110,   114,   115,
+     116,   120,   121,   122,   123,   124,   128,   129,   130,   134,
+     135,   139,   140,   144,   145,   149,   150,   154,   155,   159,
+     160,   160,   160,   160,   160,   164,   165,   169,   170,   171,
+     172,   173,   174,   175,   176,   177,   178,   179,   180,   184,
+     185,   189,   193,   194,   202,   203,   204,   205,   206,   207,
+     208,   209,   213,   214,   218,   219,   219,   223,   224,   225,
+     226,   227,   228,   232,   233,   234,   235,   236,   237,   238,
+     239,   240,   241,   242,   243,   244,   245,   246,   247,   251,
+     252,   253,   257,   258,   259,   263,   264,   268,   272,   273,
+     274,   275,   279,   280,   284,   285,   286,   290,   291,   292,
+     293,   294,   298,   299,   303,   304,   308,   309,   310,   311,
+     315,   320,   321,   326,   327,   328,   329,   330,   331,   332,
+     333,   334,   335,   336,   337,   338,   342,   343,   344,   345,
+     349,   350,   355,   356,   360,   361,   365,   366,   367,   371,
+     372,   376,   377,   381,   382,   383,   387,   388,   389,   390,
+     391,   392,   393,   394,   395,   396,   397,   401,   402,   403,
+     407,   408,   409,   410,   414,   418,   419,   423,   424,   428,
+     429,   430,   431,   432,   433,   437,   438,   439,   443,   443,
+     444,   444,   448,   449,   453,   454,   458,   459,   463,   463,
+     463,   464,   464,   464,   466,   470,   470,   470,   471,   475,
+     476,   480,   481,   482,   483,   484,   485,   489,   490,   491,
+     492,   493,   494,   498,   499,   503,   504,   508,   509,   513,
+     514
 };
 #endif
 
@@ -2250,253 +2252,257 @@ yyreduce:
     switch (yyn)
       {
   case 2:
-#line 49 "parser-bison.y" /* yacc.c:1652  */
+#line 51 "parser-bison.y" /* yacc.c:1652  */
     {process_id();}
-#line 2256 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2258 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 3:
-#line 50 "parser-bison.y" /* yacc.c:1652  */
+#line 52 "parser-bison.y" /* yacc.c:1652  */
     {process_literal();}
-#line 2262 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2264 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 13:
-#line 63 "parser-bison.y" /* yacc.c:1652  */
+#line 65 "parser-bison.y" /* yacc.c:1652  */
     {process_op();eval_unary();}
-#line 2268 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2270 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 14:
-#line 64 "parser-bison.y" /* yacc.c:1652  */
+#line 66 "parser-bison.y" /* yacc.c:1652  */
     {process_op();eval_unary();}
-#line 2274 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2276 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 20:
-#line 76 "parser-bison.y" /* yacc.c:1652  */
+#line 78 "parser-bison.y" /* yacc.c:1652  */
     {process_op();}
-#line 2280 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2282 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 21:
-#line 76 "parser-bison.y" /* yacc.c:1652  */
+#line 78 "parser-bison.y" /* yacc.c:1652  */
     {eval_unary();}
-#line 2286 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2288 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 22:
-#line 77 "parser-bison.y" /* yacc.c:1652  */
+#line 79 "parser-bison.y" /* yacc.c:1652  */
     {process_op();}
-#line 2292 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2294 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 23:
-#line 77 "parser-bison.y" /* yacc.c:1652  */
+#line 79 "parser-bison.y" /* yacc.c:1652  */
     {eval_unary();}
-#line 2298 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2300 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 37:
-#line 100 "parser-bison.y" /* yacc.c:1652  */
+#line 102 "parser-bison.y" /* yacc.c:1652  */
     {process_op();}
-#line 2304 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2306 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 38:
-#line 100 "parser-bison.y" /* yacc.c:1652  */
+#line 102 "parser-bison.y" /* yacc.c:1652  */
     {eval_binary();}
-#line 2310 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2312 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 39:
-#line 101 "parser-bison.y" /* yacc.c:1652  */
+#line 103 "parser-bison.y" /* yacc.c:1652  */
     {process_op();}
-#line 2316 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2318 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 40:
-#line 101 "parser-bison.y" /* yacc.c:1652  */
+#line 103 "parser-bison.y" /* yacc.c:1652  */
     {eval_binary();}
-#line 2322 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2324 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 41:
-#line 102 "parser-bison.y" /* yacc.c:1652  */
+#line 104 "parser-bison.y" /* yacc.c:1652  */
     {process_op();}
-#line 2328 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2330 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 42:
-#line 102 "parser-bison.y" /* yacc.c:1652  */
+#line 104 "parser-bison.y" /* yacc.c:1652  */
     {eval_binary();}
-#line 2334 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2336 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 44:
-#line 107 "parser-bison.y" /* yacc.c:1652  */
+#line 109 "parser-bison.y" /* yacc.c:1652  */
     {process_op();}
-#line 2340 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2342 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 45:
-#line 107 "parser-bison.y" /* yacc.c:1652  */
+#line 109 "parser-bison.y" /* yacc.c:1652  */
     {eval_binary();}
-#line 2346 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2348 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 46:
-#line 108 "parser-bison.y" /* yacc.c:1652  */
+#line 110 "parser-bison.y" /* yacc.c:1652  */
     {process_op();}
-#line 2352 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2354 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 47:
-#line 108 "parser-bison.y" /* yacc.c:1652  */
+#line 110 "parser-bison.y" /* yacc.c:1652  */
     {eval_binary();}
-#line 2358 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2360 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 70:
-#line 158 "parser-bison.y" /* yacc.c:1652  */
+#line 160 "parser-bison.y" /* yacc.c:1652  */
     {printStack(pila);eval_if();}
-#line 2364 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2366 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 71:
-#line 158 "parser-bison.y" /* yacc.c:1652  */
+#line 160 "parser-bison.y" /* yacc.c:1652  */
     {endIFdec();}
-#line 2370 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2372 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 72:
-#line 158 "parser-bison.y" /* yacc.c:1652  */
+#line 160 "parser-bison.y" /* yacc.c:1652  */
     {process_else();}
-#line 2376 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2378 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 73:
-#line 158 "parser-bison.y" /* yacc.c:1652  */
+#line 160 "parser-bison.y" /* yacc.c:1652  */
     {eval_else();}
-#line 2382 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2384 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 74:
-#line 158 "parser-bison.y" /* yacc.c:1652  */
+#line 160 "parser-bison.y" /* yacc.c:1652  */
     {printf("if ternario\n");}
-#line 2388 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2390 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 93:
-#line 192 "parser-bison.y" /* yacc.c:1652  */
-    {fin_decl();}
-#line 2394 "parser-bison.tab.c" /* yacc.c:1652  */
-    break;
-
-  case 104:
-#line 212 "parser-bison.y" /* yacc.c:1652  */
-    {printf("\n");}
+#line 194 "parser-bison.y" /* yacc.c:1652  */
+    {
+		printStack(pila);/*retrieveDelete(pila,ID);printStack(pila);*/
+		if(as == 0){fin_decl();}
+		else{fin_declas();}
+			}
 #line 2400 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
-  case 105:
-#line 213 "parser-bison.y" /* yacc.c:1652  */
-    {push(&pila, TOKEN, "=");}
+  case 104:
+#line 218 "parser-bison.y" /* yacc.c:1652  */
+    {printf("\n");}
 #line 2406 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
-  case 116:
-#line 229 "parser-bison.y" /* yacc.c:1652  */
-    {guardar_tipo();}
+  case 105:
+#line 219 "parser-bison.y" /* yacc.c:1652  */
+    {as = 1; push(&pila, TOKEN, "=");}
 #line 2412 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
-  case 163:
-#line 320 "parser-bison.y" /* yacc.c:1652  */
-    {guardar_id();}
+  case 116:
+#line 235 "parser-bison.y" /* yacc.c:1652  */
+    {guardar_tipo();}
 #line 2418 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
-  case 228:
-#line 437 "parser-bison.y" /* yacc.c:1652  */
-    {open_scope();}
+  case 163:
+#line 326 "parser-bison.y" /* yacc.c:1652  */
+    {guardar_id();}
 #line 2424 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
-  case 229:
-#line 437 "parser-bison.y" /* yacc.c:1652  */
-    {close_scope();}
+  case 228:
+#line 443 "parser-bison.y" /* yacc.c:1652  */
+    {open_scope();pila = clearStack(pila);}
 #line 2430 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
-  case 230:
-#line 438 "parser-bison.y" /* yacc.c:1652  */
-    {open_scope();}
+  case 229:
+#line 443 "parser-bison.y" /* yacc.c:1652  */
+    {close_scope();}
 #line 2436 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
-  case 231:
-#line 438 "parser-bison.y" /* yacc.c:1652  */
-    {close_scope();}
+  case 230:
+#line 444 "parser-bison.y" /* yacc.c:1652  */
+    {open_scope();pila = clearStack(pila);}
 #line 2442 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
-  case 237:
-#line 453 "parser-bison.y" /* yacc.c:1652  */
-    {pila = clearStack(pila);}
+  case 231:
+#line 444 "parser-bison.y" /* yacc.c:1652  */
+    {close_scope();}
 #line 2448 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
-  case 238:
-#line 457 "parser-bison.y" /* yacc.c:1652  */
-    { process_if(); }
+  case 237:
+#line 459 "parser-bison.y" /* yacc.c:1652  */
+    {pila = clearStack(pila);}
 #line 2454 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
-  case 239:
-#line 457 "parser-bison.y" /* yacc.c:1652  */
-    { eval_if(); }
+  case 238:
+#line 463 "parser-bison.y" /* yacc.c:1652  */
+    { process_if(); }
 #line 2460 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
-  case 241:
-#line 458 "parser-bison.y" /* yacc.c:1652  */
-    { process_if(); }
+  case 239:
+#line 463 "parser-bison.y" /* yacc.c:1652  */
+    { eval_if(); }
 #line 2466 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
-  case 242:
-#line 458 "parser-bison.y" /* yacc.c:1652  */
-    { eval_if(); }
+  case 241:
+#line 464 "parser-bison.y" /* yacc.c:1652  */
+    { process_if(); }
 #line 2472 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
-  case 245:
+  case 242:
 #line 464 "parser-bison.y" /* yacc.c:1652  */
-    {endIFdec();}
+    { eval_if(); }
 #line 2478 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
-  case 246:
-#line 464 "parser-bison.y" /* yacc.c:1652  */
-    { process_else(); }
+  case 245:
+#line 470 "parser-bison.y" /* yacc.c:1652  */
+    {endIFdec();}
 #line 2484 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
-  case 247:
-#line 464 "parser-bison.y" /* yacc.c:1652  */
-    { eval_else(); }
+  case 246:
+#line 470 "parser-bison.y" /* yacc.c:1652  */
+    { process_else(); }
 #line 2490 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
-  case 248:
-#line 465 "parser-bison.y" /* yacc.c:1652  */
-    {endIFdec(); process_else(); eval_else();  }
+  case 247:
+#line 470 "parser-bison.y" /* yacc.c:1652  */
+    { eval_else(); }
 #line 2496 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
+  case 248:
+#line 471 "parser-bison.y" /* yacc.c:1652  */
+    {endIFdec(); process_else(); eval_else();  }
+#line 2502 "parser-bison.tab.c" /* yacc.c:1652  */
+    break;
 
-#line 2500 "parser-bison.tab.c" /* yacc.c:1652  */
+
+#line 2506 "parser-bison.tab.c" /* yacc.c:1652  */
         default: break;
       }
     if (yychar_backup != yychar)
@@ -2739,7 +2745,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 511 "parser-bison.y" /* yacc.c:1918  */
+#line 517 "parser-bison.y" /* yacc.c:1918  */
 
 
 void endIFdec(){
@@ -2776,11 +2782,11 @@ void eval_else(){
 
 void eval_binary(){
 	struct semantic_record* OP1 = top(pila);
-	pila = pop(&pila);
+	pila = pop2(&pila);
 	struct semantic_record* OPERATOR = top(pila);
-	pila = pop(&pila);
+	pila = pop2(&pila);
 	struct semantic_record* OP2 = top(pila);
-	pila = pop(&pila);
+	pila = pop2(&pila);
 
 	//crear funcion que crea temporales
 	createTemp();
@@ -2801,12 +2807,14 @@ void eval_binary(){
 		OP1 = OP2;
 		OP2 = temp;
 	}
-
 	//generar codigo ensamblador para OP1 OPERATOR OUTPUT2 = TEMP1
 	printf("%s = ",temporal);
 	printf("%s ",OP1->name);
 	printf("%s ",OPERATOR->name);
 	printf("%s\n",OP2->name);
+	free(OP1);
+	free(OPERATOR);
+	free(OP2);
 }
 
 void clear_temp(){//borra el contenido de token_buffer y lo resetea a un string vacio
@@ -2824,9 +2832,9 @@ void createTemp(){
 void eval_unary(){
 	printStack(pila);
 	struct semantic_record* OP1 = top(pila);
-	pila = pop(&pila);
+	pila = pop2(&pila);
 	struct semantic_record* OPERATOR = top(pila);
-	pila = pop(&pila);
+	pila = pop2(&pila);
 
 	//crear funcion que crea temporales
 	createTemp();
@@ -2851,6 +2859,8 @@ void eval_unary(){
 		printf("%s ",OPERATOR->name);
 		printf("%s\n",OP1->name);
 	}
+	free(OP1);
+	free(OPERATOR);
 }
 
 void process_literal(){
@@ -2908,6 +2918,29 @@ void fin_decl(){
 		pila = pop(&pila);
 	}
 	pila = pop(&pila);
+	pila = clearStack(pila);
+}
+
+void fin_declas(){
+	struct semantic_record* tipo = retrieve(pila,TIPO);
+	struct semantic_record* assin = retrieve(pila,TOKEN);
+	struct semantic_record* val = retrieve(pila,DATAO);
+	while(retrieve(pila, ID) != NULL){
+		struct semantic_record* identificador = retrieveDelete(pila,ID);
+		struct symbolT* smb = topSymbol(&symbolStck);
+		if(lookup(smb, identificador->name) == 1){
+			printf("Error semántico, %s ya ha sido declarado antes.\n", identificador->name);
+			exit(1);
+		}
+		insert(&smb, tipo->name,identificador->name);
+		symbolStck = popSymbol(&symbolStck);
+		pushSymbol(&symbolStck, smb);
+		printf("%s ",identificador->name);
+		printf("%s ",assin->name);
+		printf("%s\n",val->name);
+		free(identificador);
+	}
+	as = 0;
 	pila = clearStack(pila);
 }
 
