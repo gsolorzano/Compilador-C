@@ -29,27 +29,8 @@ void insert(struct symbolT** root, char type [200], char name[200])
     struct symbolT* symbolT = nuevoNodo(type, name);
     symbolT->next = *root;
     *root = symbolT;
-    printf("%s agregado a la tabla de simbolos\n", name);
+    //printf("%s agregado a la tabla de simbolos\n", name);
 }
-
-// int pop(struct symbolT** root)
-// {
-//     if (isVacio(*root))
-//         return INT_MIN;
-//     struct symbolT* temp = *root;
-//     *root = (*root)->next;
-//     int popped = temp->name;
-//     free(temp);
-//
-//     return popped;
-// }
-//
-// int peek(struct symbolT* root)
-// {
-//     if (isVacio(root))
-//         return INT_MIN;
-//     return root->name;
-// }
 
 int lookup(struct symbolT* root, char name[200])
 {

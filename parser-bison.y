@@ -7,11 +7,16 @@
 int errores = 0;
 extern int yylineno;
 extern FILE *fileOut;
+extern FILE * declares;
+extern FILE * finalEnsambler;
 extern int beamer;
 extern char linea[700];
 extern int conteo;
 extern char *yytext;
 extern char idActual[200];
+
+FILE * fileTemp1;
+FILE * fileTemp2;
 
 int as = 0;
 
@@ -24,11 +29,18 @@ int lblIf = 1;
 int lblWhile = 1;
 int lblDoWhile = 1;
 int lblFor = 1;
+int lblSwitch = 1;
+int cntSw = 0;
+
+char labelswitch[20][200] = {"lblCase1","lblCase2","lblCase3","lblCase4","lblCase5"
+							,"lblCase6","lblCase7","lblCase8","lblCase9","lblCase10"};
+
 
 int numContxt = 1;
-
+char sw[200];
 enum tok{ID, TIPO, ERROR, DATAO, TOKEN, RES};
 struct semantic_record* pila = NULL;
+struct semantic_record* pila2 = NULL;
 
 struct symbolT* symbolTable = NULL;
 
@@ -440,8 +452,8 @@ statement
 
 labeled_statement
 	: IDENTIFIER ':' statement
-	| CASE constant_expression ':' statement
-	| DEFAULT ':' statement
+	| CASE {process_case(cntSw);}constant_expression {genCmpSwitch(cntSw);} ':' statement
+	| DEFAULT {process_default();}':' statement {endCase();}
 	;
 
 compound_statement
@@ -465,9 +477,9 @@ expression_statement
 	;
 
 selection_statement
-	: IF { process_if(); } '(' expression rparen { eval_if(); } optionsIF
+	: IF { process_if(); } '(' expression rparen { eval_if();} optionsIF
 	//IF '(' expression rparen statement { printf("\n \t IF \n "); } ELSE { printf("\n \t ELSE \n "); }
-	| SWITCH '(' expression rparen statement
+	| SWITCH '(' expression {fileTemp1 = fopen("tempSwitch1.txt","w");process_switch();strcpy(sw, top(pila)->name);}rparen statement {endSwitch();}
 	;
 
 optionsIF
@@ -525,37 +537,145 @@ declaration_list
 
 %%
 
-void end_for(){
-	struct semantic_record* a = retrieve(pila,RES);
-	printf("%s ","JMP");
-	printf("%s\n",a->eti[1]);
-	printf("%s\n",a->eti[3]);
-	pila = pop(&pila);
+
+void endSwitch(){
+	char buffer [200];
+	char buffer1 [200];
+	memset(buffer, 0, sizeof(buffer));
+	snprintf(buffer1, 200, "%d", lblSwitch);
+	strcat(buffer, "Exit_Switch");
+	strcat(buffer, buffer1);
+	printf("JMP %s \n", buffer);
+
+    // ensamblador
+	fputs("\tjmp ", finalEnsambler);
+	fputs(buffer, finalEnsambler);
+	fputs("\n", finalEnsambler);
+
+	memset(buffer, 0, sizeof(buffer));
+	snprintf(buffer1, 200, "%d", lblSwitch);
+	strcat(buffer, "Exit_Switch");
+	strcat(buffer, buffer1);
+	fputs(buffer, fileTemp1);
+	fputs(":\n", fileTemp1);
+	fclose(fileTemp1);
+	fileTemp1 = fopen("tempSwitch1.txt", "r");
+	lblSwitch++;
+	char ch;
+	char restoPrgrama [5000];
+	strcpy(restoPrgrama, "");
+	while((ch = fgetc(fileTemp1)) != EOF){
+      printf("%c", ch);
+      putc(ch,finalEnsambler);
+    }
+
 }
 
-void genIn4(){
-	struct semantic_record* a = retrieve(pila,RES);
-	printf("%s ","JMP");
-	printf("%s\n",a->eti[0]);
-	printf("%s\n",a->eti[2]);
+void process_default(){
+	char buffer [200];
+	char buffer1 [200];
+	memset(buffer, 0, sizeof(buffer));
+	snprintf(buffer1, 200, "%d", lblSwitch);
+	strcat(buffer, "Default");
+	strcat(buffer, buffer1);
+	printf("%s:\n", buffer);
+
+    fputs(buffer, finalEnsambler);
+	fputs(": \n", finalEnsambler);
+
+
+	fputs("jmp ", fileTemp1);
+	fputs(buffer, fileTemp1);
+	fputs("\n", fileTemp1);
+
 }
 
-void genIn3(){
-	struct semantic_record* Res = top(pila);
-	struct semantic_record* a = retrieve(pila,RES);
-	printf("%s","CMP 0 ");
-	printf("%s\n",Res->name);
-	printf("%s ","JZ");
-	printf("%s\n",a->eti[3]);
-	printf("%s ","JMP");
-	printf("%s\n",a->eti[2]);
-	printf("%s\n",a->eti[1]);
+void endCase(){
+	char buffer [200];
+	char buffer1 [200];
+	memset(buffer, 0, sizeof(buffer));
+	snprintf(buffer1, 200, "%d", lblSwitch);
+	strcat(buffer, "Exit_Switch");
+	strcat(buffer, buffer1);
+	printf("JMP %s \n", buffer);
+	// ensamblador
+	fputs("\tjmp ", finalEnsambler);
+	fputs(buffer, finalEnsambler);
+	fputs("\n", finalEnsambler);
 }
 
-void genIn2(){
-	struct semantic_record* a = retrieve(pila,RES);
-	printf("%s\n",a->eti[0]);
+void process_case(int i){
+	char buffer [200];
+	char buffer1 [200];
+	memset(buffer, 0, sizeof(buffer));
+	snprintf(buffer1, 200, "%d", lblSwitch);
+	strcat(buffer, labelswitch[i]);
+	strcat(buffer, buffer1);
+	printf("%s:\n", buffer);
+
+	fputs(buffer, finalEnsambler);
+	fputs(": \n", finalEnsambler);
 }
+
+void process_switch(){
+	char buffer [200];
+	char buffer1 [200];
+	memset(buffer, 0, sizeof(buffer));
+	snprintf(buffer1, 200, "%d", lblSwitch);
+	strcat(buffer, "L_CMPSW");
+	strcat(buffer, buffer1);
+	printf("JMP %s\n", buffer);
+
+	//ensamblador
+
+	fputs("jmp ", finalEnsambler);
+	fputs(buffer, finalEnsambler);
+	fputs("\n", finalEnsambler);
+
+	fputs(buffer, fileTemp1);
+	fputs(":\n", fileTemp1);
+}
+
+void genCmpSwitch(int i){
+	//printStack(pila);
+	char buffer [200];
+	char buffer1 [200];
+	memset(buffer, 0, sizeof(buffer));
+	snprintf(buffer1, 200, "%d", lblSwitch);
+	strcat(buffer, labelswitch[i]);
+	strcat(buffer, buffer1);
+	cntSw++;
+	//ensamblador
+
+	fputs("\tmov eax, [", fileTemp1);
+	fputs(sw, fileTemp1);
+	fputs("]\n\tcmp eax, ", fileTemp1);
+	fputs(top(pila)->name, fileTemp1);
+	fputs("\n\tjz  ", fileTemp1);
+	fputs(buffer, fileTemp1);
+	fputs("\n", fileTemp1);
+
+	/* strcpy(a[0], buffer);
+	memset(buffer, 0, sizeof(buffer));
+	snprintf(buffer1, 200, "%d", lblSwitch);
+	strcat(buffer, "Exit_Dowhile");
+	strcat(buffer, buffer1);
+	strcpy(a[1], buffer);
+	strcpy(a[2], "");
+	strcpy(a[3], "");
+	lblSwitch++;
+	push(&pila, RES, yytext, a);
+	printf("%s\n",a[0]); */
+	//crear etiqueta ensamblador
+}
+
+
+
+
+
+
+
+/*Todo para abajo esta resuelto*/
 
 void process_for(){
 	inFor =1;
@@ -583,29 +703,69 @@ void process_for(){
 	strcat(buffer, buffer1);
 	strcpy(a[3], buffer);
 	lblFor++;
-	push(&pila, RES, yytext, a);
+	push(&pila2, RES, yytext, a);
 }
 
-void end_Dowhile(){
-	struct semantic_record* a = retrieve(pila,RES);
-	printf("%s\n",a->eti[1]);
-	pila = pop(&pila);
+
+void genIn2(){
+	struct semantic_record* a = retrieve(pila2,RES);
+	printf("%s\n",a->eti[0]);
+	fputs(a->eti[0], finalEnsambler);
+	fputs(": \n", finalEnsambler);
 }
 
-void eval_Dowhile(){
-	/* printStack(pila); */
+void genIn3(){
 	struct semantic_record* Res = top(pila);
-	struct semantic_record* a = retrieve(pila,RES);
-	pila = pop2(&pila);
-	//pila = pop(&pila);
-	/* printStack(pila); */
+	struct semantic_record* a = retrieve(pila2,RES);
 	printf("%s","CMP 0 ");
 	printf("%s\n",Res->name);
-	printf("%s ","JNZ");
-	printf("%s\n",a->eti[0]);
-	free(Res);
-	//código para if ensamblador
+	printf("%s ","JZ");
+	printf("%s\n",a->eti[3]);
+	printf("%s ","JMP");
+	printf("%s\n",a->eti[2]);
+	printf("%s\n",a->eti[1]);
+
+	fputs("\tmov eax, [", finalEnsambler);
+	fputs(Res->name, finalEnsambler);
+	fputs("]\n\tcmp eax, 0 \n", finalEnsambler);
+	fputs("\tjz  ", finalEnsambler);
+	fputs(a->eti[3] , finalEnsambler);
+	fputs("\n", finalEnsambler);
+	fputs("\tjmp ", finalEnsambler);
+    fputs(a->eti[2], finalEnsambler);
+    fputs("\n", finalEnsambler);
+    fputs(a->eti[1], finalEnsambler);
+	fputs(": \n", finalEnsambler);
 }
+
+void genIn4(){
+	struct semantic_record* a = retrieve(pila2,RES);
+	printf("%s ","JMP");
+	printf("%s\n",a->eti[0]);
+	printf("%s\n",a->eti[2]);
+	//ensamblador
+	fputs("\tjmp ", finalEnsambler);
+    fputs(a->eti[0], finalEnsambler);
+    fputs("\n", finalEnsambler);
+    fputs(a->eti[2], finalEnsambler);
+	fputs(": \n", finalEnsambler);
+}
+
+void end_for(){
+	struct semantic_record* a = retrieve(pila2,RES);
+	printf("%s ","JMP");
+	printf("%s\n",a->eti[1]);
+	printf("%s\n",a->eti[3]);
+	pila2 = pop(&pila2);
+
+	//ensamblador
+	fputs("\tjmp ", finalEnsambler);
+    fputs(a->eti[1], finalEnsambler);
+    fputs("\n", finalEnsambler);
+    fputs(a->eti[3], finalEnsambler);
+	fputs(": \n", finalEnsambler);
+}
+
 
 void process_dowhile(){
 	char a[4][200];
@@ -624,33 +784,41 @@ void process_dowhile(){
 	strcpy(a[2], "");
 	strcpy(a[3], "");
 	lblDoWhile++;
-	push(&pila, RES, yytext, a);
+	push(&pila2, RES, yytext, a);
 	printf("%s\n",a[0]);
+    fputs(a[0], finalEnsambler);
+	fputs(": \n", finalEnsambler);
+
 	//crear etiqueta ensamblador
 }
 
-void end_while(){
-	struct semantic_record* a = retrieve(pila,RES);
-	printf("%s ","JMP");
-	printf("%s\n",a->eti[0]);
-	printf("%s\n",a->eti[1]);
-	pila = pop(&pila);
-}
-
-void eval_while(){
-	/* printStack(pila); */
+void eval_Dowhile(){
+	//printStack(pila2);
 	struct semantic_record* Res = top(pila);
-	struct semantic_record* a = retrieve(pila,RES);
+	struct semantic_record* a = retrieve(pila2,RES);
 	pila = pop2(&pila);
 	//pila = pop(&pila);
 	/* printStack(pila); */
 	printf("%s","CMP 0 ");
-	struct semantic_record* n = retrieve(pila,DATAO);
 	printf("%s\n",Res->name);
-	printf("%s ","JZ");
-	printf("%s\n",a->eti[1]);
+	printf("%s ","JNZ");
+	printf("%s\n",a->eti[0]);
+
+	fputs("\tmov eax, [", finalEnsambler);
+	fputs(Res->name, finalEnsambler);
+	fputs("]\n\tcmp eax, 0 \n", finalEnsambler);
+	fputs("\tjnz  ", finalEnsambler);
+	fputs(a->eti[0] , finalEnsambler);
+	fputs("\n", finalEnsambler);
 	free(Res);
-	//código para if ensamblador
+}
+
+void end_Dowhile(){
+	struct semantic_record* a = retrieve(pila2,RES);
+	printf("%s\n",a->eti[1]);
+	pila2 = pop(&pila2);
+	fputs(a->eti[1], finalEnsambler);
+	fputs(": \n", finalEnsambler);
 }
 
 void process_while(){
@@ -672,47 +840,48 @@ void process_while(){
 	/* printf("%s\n",a[0]);
 	printf("%s\n",a[1]); */
 	lblWhile++;
-	push(&pila, RES, yytext, a);
+	push(&pila2, RES, yytext, a);
 	printf("%s\n",a[0]);
 	//crear etiqueta ensamblador
+	fputs(a[0], finalEnsambler);
+	fputs(": \n", finalEnsambler);
 }
 
-void fin_assign(){
-	struct semantic_record* assin = retrieve(pila,TOKEN);
-	struct semantic_record* val;
-	int b = 0;
-	if(retrieve(pila,DATAO) != NULL){
-		val = retrieve(pila,DATAO);
-	}
-	else{
-		val = top(pila);
-		pila = pop2(&pila);
-		b = 1;
-	}
-	while(retrieve(pila, ID) != NULL){
-		struct semantic_record* identificador = retrieveDelete(pila,ID);
-		struct symbolT* smb = topSymbol(&symbolStck);
-		if(!(lookup(smb, identificador->name)) == 1){
-			printf("%s","Error semántico, ");
-			printf("%s",identificador->name);
-			printf("%s\n"," no ha sido declarado antes, este error solo será reportado 1 vez por cada variable");
-			insert(&smb, "error",identificador->name);
-			symbolStck = popSymbol(&symbolStck);
-			pushSymbol(&symbolStck, smb);
-		}
-		printf("%s ",identificador->name);
-		printf("%s ",assin->name);
-		printf("%s\n",val->name);
-		free(identificador);
-	}
-	pila = clearStack(pila);
-	if(b == 1)free(val);
-}
-
-void endIFdec(){
-	struct semantic_record* a = retrieve(pila,RES);
-	printf("%s ","JMP");
+void eval_while(){
+	/* printStack(pila); */
+	struct semantic_record* Res = top(pila);
+	struct semantic_record* a = retrieve(pila2,RES);
+	pila = pop2(&pila);
+	//pila = pop(&pila);
+	/* printStack(pila); */
+	printf("%s","CMP 0 ");
+	struct semantic_record* n = retrieve(pila,DATAO);
+	printf("%s\n",Res->name);
+	printf("%s ","JZ");
 	printf("%s\n",a->eti[1]);
+
+	//código para if ensamblador
+	fputs("\tmov eax, [", finalEnsambler);
+	fputs(Res->name, finalEnsambler);
+	fputs("]\n\tcmp eax, 0 \n", finalEnsambler);
+	fputs("\tjz  ", finalEnsambler);
+	fputs(a->eti[1] , finalEnsambler);
+	fputs("\n", finalEnsambler);
+	free(Res);
+}
+
+void end_while(){
+	struct semantic_record* a = retrieve(pila2,RES);
+	printf("%s ","JMP");
+	printf("%s\n",a->eti[0]);
+	printf("%s\n",a->eti[1]);
+	pila2 = pop(&pila2);
+	fputs("\tjmp ", finalEnsambler);
+    fputs(a->eti[0], finalEnsambler);
+    fputs("\n", finalEnsambler);
+    fputs(a->eti[1], finalEnsambler);
+	fputs(": \n", finalEnsambler);
+
 }
 
 void process_if(){
@@ -733,15 +902,24 @@ void process_if(){
 	strcpy(a[3], "");
 	/* printf("%s\n",a[0]);
 	printf("%s\n",a[1]); */
+
+
+
+	memset(buffer, 0, sizeof(buffer));
+	snprintf(buffer1, 200, "%d", lblIf);
+	strcat(buffer, yytext);
+	strcat(buffer, buffer1);
+
 	lblIf++;
-	push(&pila, RES, yytext, a);
+	push(&pila2, RES, buffer, a);
+
 	//crear etiquetas ensamblador
 }
 
 void eval_if(){
 	/* printStack(pila); */
 	struct semantic_record* Res = top(pila);
-	struct semantic_record* a = retrieve(pila,RES);
+	struct semantic_record* a = retrieve(pila2,RES);
 	pila = pop2(&pila);
 	//pila = pop(&pila);
 	/* printStack(pila); */
@@ -750,25 +928,100 @@ void eval_if(){
 	printf("%s\n",Res->name);
 	printf("%s ","JZ");
 	printf("%s\n",a->eti[0]);
+//código para if ensamblador
+	fputs("\tmov eax, [", finalEnsambler);
+	fputs(Res->name, finalEnsambler);
+	fputs("]\n\tcmp eax, 0 \n", finalEnsambler);
+	fputs("\t jz  ", finalEnsambler);
+	fputs(a->eti[0] , finalEnsambler);
+	fputs("\n", finalEnsambler);
 	free(Res);
-	//código para if ensamblador
 }
 
 void process_else(){
 	/* printf("%s\n",yytext);
 	push(&pila, RES, yytext, NULL); */
-	struct semantic_record* a = retrieve(pila,RES);
+	struct semantic_record* a = retrieve(pila2,RES);
 	printf("%s\n",a->eti[0]);
 	//crear etiquetas ensamblador
+	fputs(a->eti[0], finalEnsambler);
+	fputs(": \n", finalEnsambler);
+
 }
 
 void eval_else(){
-	struct semantic_record* a = retrieve(pila,RES);
+	struct semantic_record* a = retrieve(pila2,RES);
 	printf("%s\n",a->eti[1]);
-	pila = pop(&pila);
+	pila2 = pop(&pila2);
 	//pila = pop(&pila);
 	//etiqueta de salida
+	fputs(a->eti[1], finalEnsambler);
+	fputs(": \n", finalEnsambler);
 }
+
+void endIFdec(){
+	struct semantic_record* a = retrieve(pila2,RES);
+	printf("%s ","JMP");
+	printf("%s\n",a->eti[1]);
+    // codigo ensamblador
+    fputs("\tjmp ", finalEnsambler);
+    fputs(a->eti[1], finalEnsambler);
+    fputs("\n", finalEnsambler);
+}
+
+
+void fin_assign(){
+
+	struct semantic_record* assin = retrieve(pila,TOKEN);
+	struct semantic_record* val;
+	int b = 0;
+	if(retrieve(pila,DATAO) != NULL){
+		val = retrieve(pila,DATAO);
+	}
+	else{
+		printStack(pila);
+		val = top(pila);
+		pila = pop2(&pila);
+		printStack(pila);
+		b = 1;
+	}
+	while(retrieve(pila, ID) != NULL){
+		struct semantic_record* identificador = retrieveDelete(pila,ID);
+		struct symbolT* smb = topSymbol(&symbolStck);
+		if(!(lookup(smb, identificador->name)) == 1){
+			printf("%s","Error semántico, ");
+			printf("%s",identificador->name);
+			printf("%s\n"," no ha sido declarado antes, este error solo será reportado 1 vez por cada variable");
+			insert(&smb, "error",identificador->name);
+			symbolStck = popSymbol(&symbolStck);
+			pushSymbol(&symbolStck, smb);
+		}
+
+		char oper1 [100];
+        char oper2 [100];
+        strcpy(oper1, identificador->name);
+
+
+		if (!isdigit(val->name[0]) ){
+			  strcpy(oper2, "[");
+	          strcat(oper2, val->name);
+	          strcat(oper2, "]");
+		}
+		else {
+			strcpy(oper2, val->name);
+		}
+
+		// guardamos el valor en el identificador
+		storeVal(oper1 , oper2);
+		printf("%s ",identificador->name);
+		printf("%s ",assin->name);
+		printf("%s\n",val->name);
+		free(identificador);
+	}
+	pila = clearStack(pila);
+	if(b == 1)free(val);
+}
+
 
 void eval_binary(){
 	struct semantic_record* OP1 = top(pila);
@@ -777,27 +1030,65 @@ void eval_binary(){
 	pila = pop2(&pila);
 	struct semantic_record* OP2 = top(pila);
 	pila = pop2(&pila);
-
 	//crear funcion que crea temporales
 	createTemp();
 	if(OP1->type == ERROR){
-		push(&pila,ERROR,temporal, NULL);
+		push(&pila,ERROR,temporal,NULL);
 		return;
 	}
 	else if(OP2->type == ERROR){
-		push(&pila,ERROR,temporal, NULL);
+		push(&pila,ERROR,temporal,NULL);
 		return;
 	}
 	else{
-		push(&pila,DATAO,temporal, NULL);
+		push(&pila,DATAO,temporal,NULL);
 	}
-
 	if(!strcmp(OPERATOR->name,"-")||!strcmp(OPERATOR->name,"/")){
 		struct semantic_record* temp = OP1;
 		OP1 = OP2;
 		OP2 = temp;
 	}
+	//insertar el temp;
+    writeTempEnsambler();
 	//generar codigo ensamblador para OP1 OPERATOR OUTPUT2 = TEMP1
+	//Manejo de varaibles para ensamblador
+    char oper1 [100];
+    char oper2 [100];
+    if(!isdigit(OP1->name[0]) ) {
+          strcpy(oper1, "[");
+          strcat(oper1, OP1->name);
+          strcat(oper1, "]");
+	}
+	else{
+		strcpy(oper1, OP1->name);
+	}
+
+	if (!isdigit(OP2->name[0]) ){
+		  strcpy(oper2, "[");
+          strcat(oper2, OP2->name);
+          strcat(oper2, "]");
+
+	}
+	else {
+		strcpy(oper2, OP2->name);
+	}
+
+	switch (OPERATOR->name[0]){
+		case '+':
+			suma(oper1, oper2);
+
+		break;
+		case '-':
+			resta(oper1, oper2);
+		break;
+		case '*':
+			multiplicacion(oper1, oper2);
+
+		break;
+		case '/':
+			division(oper1, oper2);
+		break;
+	}
 	printf("%s = ",temporal);
 	printf("%s ",OP1->name);
 	printf("%s ",OPERATOR->name);
@@ -826,20 +1117,23 @@ void eval_unary(){
 	pila = pop2(&pila);
 
 	//crear funcion que crea temporales
-	createTemp();
+	//createTemp();
 	if(OP1->type == ERROR){
 		push(&pila,ERROR,temporal, NULL);
 		return;
-	}
-	else{
-		push(&pila,DATAO,temporal, NULL);
 	}
 
 	if(OP1->type == TOKEN){
 		//generar codigo ensamblador para a++
 		// el OPERATOR contiene el id
 		// el OP1 contiene el ++
-		printf("%s = ",temporal);
+		if (!strcmp(OP1->name ,"++")){
+			sumaUno(OPERATOR->name);
+		}else{
+			restaUno(OPERATOR->name);
+		}
+		push(&pila,DATAO,OPERATOR->name, NULL);
+		printf("%s = ",OPERATOR->name);
 		printf("%s ",OPERATOR->name);
 		printf("%s\n",OP1->name);
 	}
@@ -847,13 +1141,20 @@ void eval_unary(){
 		//generar codigo ensamblador para ++a
 		// el OPERATOR contiene el ++
 		// el OP1 contiene el id
-		printf("%s = ",temporal);
+        if (!strcmp(OPERATOR->name ,"++")){
+        	sumaUno(OP1->name);
+		}else{
+			restaUno(OP1->name);
+		}
+		push(&pila,DATAO,OP1->name, NULL);
+		printf("%s = ",OP1->name);
 		printf("%s ",OPERATOR->name);
 		printf("%s\n",OP1->name);
 	}
 	free(OP1);
 	free(OPERATOR);
 }
+
 
 void process_literal(){
 	push(&pila, DATAO, yytext, NULL);
@@ -882,7 +1183,8 @@ void process_id(){
 		struct semantic_record* identificador = top(pila);
 		printf("%s","Error semántico, ");
 		printf("%s",identificador->name);
-		printf("%s\n"," no ha sido declarado antes, este error solo será reportado 1 vez por cada variable");
+		printf("%s"," no ha sido declarado antes, este error solo será reportado 1 vez por cada variable. ");
+		printf("En la línea: %d\n\n", yylineno);
 		insert(&smb, "error",identificador->name);
 		symbolStck = popSymbol(&symbolStck);
 		pushSymbol(&symbolStck, smb);
@@ -900,12 +1202,15 @@ void guardar_tipo(){
 void fin_decl(){
 	struct semantic_record* tipo = retrieve(pila,TIPO);
 	while(top(pila)->type==ID){
-		struct semantic_record* identificador = retrieve(pila,ID);
+		struct semantic_record* identificador = retrieve(pila,ID);  // es este
 		struct symbolT* smb = topSymbol(&symbolStck);
 		if(lookup(smb, identificador->name) == 1){
-			printf("Error semántico, %s ya ha sido declarado antes.\n", identificador->name);
+			printf("Error semántico, %s ya ha sido declarado antes. ", identificador->name);
+			printf("En la línea: %d\n\n", yylineno);
 			exit(1);
 		}
+		// inserto el delcare de la variable  le asigno identificador
+		writeValEnsambler(identificador->name);
 		insert(&smb, tipo->name,identificador->name);
 		symbolStck = popSymbol(&symbolStck);
 		pushSymbol(&symbolStck, smb);
@@ -915,29 +1220,48 @@ void fin_decl(){
 	pila = clearStack(pila);
 }
 
+
 void fin_declas(){
-	if(retrieve(pila,DATAO) != NULL){
-		struct semantic_record* tipo = retrieve(pila,TIPO);
-		struct semantic_record* assin = retrieve(pila,TOKEN);
-		struct semantic_record* val = retrieve(pila,DATAO);
-		while(retrieve(pila, ID) != NULL){
-			struct semantic_record* identificador = retrieveDelete(pila,ID);
-			struct symbolT* smb = topSymbol(&symbolStck);
-			if(lookup(smb, identificador->name) == 1){
-				printf("Error semántico, %s ya ha sido declarado antes.\n", identificador->name);
-				exit(1);
-			}
-			insert(&smb, tipo->name,identificador->name);
-			symbolStck = popSymbol(&symbolStck);
-			pushSymbol(&symbolStck, smb);
-			printf("%s ",identificador->name);
-			printf("%s ",assin->name);
-			printf("%s\n",val->name);
-			free(identificador);
+	struct semantic_record* tipo = retrieve(pila,TIPO);
+	struct semantic_record* assin = retrieve(pila,TOKEN);
+	struct semantic_record* val = retrieve(pila,DATAO);  // le asigno este val
+	while(retrieve(pila, ID) != NULL){
+		struct semantic_record* identificador = retrieveDelete(pila,ID);  //  este es el identificador
+		struct symbolT* smb = topSymbol(&symbolStck);
+		if(lookup(smb, identificador->name) == 1){
+			printf("Error semántico, %s ya ha sido declarado antes. ", identificador->name);
+			printf("En la línea: %d\n\n", yylineno);
+			exit(1);
 		}
-		as = 0;
-		pila = clearStack(pila);
+		/// insert crear un declare del identificador  asignar el valor que esta en val
+		writeValEnsambler(identificador);
+		char oper1 [100];
+        char oper2 [100];
+        strcpy(oper1, identificador->name);
+
+
+		if (!isdigit(val->name[0]) ){
+			  strcpy(oper2, "[");
+	          strcat(oper2, val->name);
+	          strcat(oper2, "]");
+		}
+		else {
+			strcpy(oper2, val->name);
+		}
+
+		// guardamos el valor en el identificador
+		storeVal(oper1 , oper2);
+
+		insert(&smb, tipo->name,identificador->name);
+		symbolStck = popSymbol(&symbolStck);
+		pushSymbol(&symbolStck, smb);
+		printf("%s ",identificador->name);
+		printf("%s ",assin->name);
+		printf("%s\n",val->name);
+		free(identificador);
 	}
+	as = 0;
+	pila = clearStack(pila);
 }
 
 void open_scope(){
@@ -969,4 +1293,104 @@ void yyerror(char *s){
 		printf("%s", "\n\n");
 	}
 	errores++;
+}
+
+
+
+
+
+/*
+ Funciones de ensamblador
+*/
+
+void writeValEnsambler(char* val){
+		fputs(val , declares);
+		fputs("  resb 2048 \n", declares);
+}
+
+
+void writeTempEnsambler(){
+		fputs(temporal, declares);
+		fputs("  resb 2048 \n", declares);
+}
+
+void storeVal(char* OP1 ,  char* OP2){
+	fputs("\tmov eax, ", finalEnsambler);
+	fputs(OP2 , finalEnsambler);
+	fputs("\n\tmov [", finalEnsambler);
+	fputs(OP1, finalEnsambler);
+	fputs("] , eax \n ", finalEnsambler);
+}
+
+void suma (char* OP1 ,  char* OP2){
+	fputs("\tmov eax, ", finalEnsambler);
+	fputs(OP1, finalEnsambler);
+	fputs("\n\tmov ebx, ", finalEnsambler);
+	fputs(OP2, finalEnsambler);
+	fputs("\n\tadd eax, ebx\n ", finalEnsambler);
+	fputs("\tmov [", finalEnsambler);
+	fputs(temporal, finalEnsambler);
+    fputs("] ,eax \n", finalEnsambler);
+}
+
+
+
+void resta (char* OP1 ,  char* OP2){
+	fputs("\tmov eax, ", finalEnsambler);
+	fputs(OP1, finalEnsambler);
+	fputs("\n\tmov ebx, ", finalEnsambler);
+	fputs(OP2, finalEnsambler);
+	fputs("\n\tsub eax, ebx\n ", finalEnsambler);
+	fputs("\tmov [", finalEnsambler);
+	fputs(temporal, finalEnsambler);
+    fputs("] ,eax \n", finalEnsambler);
+}
+
+
+void multiplicacion(char* OP1 ,  char* OP2){
+	fputs("\tmov eax, ", finalEnsambler);
+	fputs(OP1, finalEnsambler);
+	fputs("\n\tmov ebx, ", finalEnsambler);
+	fputs(OP2, finalEnsambler);
+	fputs("\n\tmul ebx\n ", finalEnsambler);
+	fputs("\tmov [", finalEnsambler);
+	fputs(temporal, finalEnsambler);
+    fputs("] ,eax \n", finalEnsambler);
+}
+
+void division(char* OP1 ,  char* OP2){
+	fputs("\tmov eax, ", finalEnsambler);
+	fputs(OP1, finalEnsambler);
+	fputs("\n\tmov ebx, ", finalEnsambler);
+	fputs(OP2, finalEnsambler);
+	fputs("\n\tdiv ebx\n ", finalEnsambler);
+	fputs("\tmov [", finalEnsambler);
+	fputs(temporal, finalEnsambler);
+    fputs("] ,eax \n", finalEnsambler);
+}
+
+
+
+void sumaUno (char * OP1){
+	fputs("\tmov eax, [", finalEnsambler);
+	fputs(OP1, finalEnsambler);
+	fputs("] \n\tmov ebx, ", finalEnsambler);
+	fputs("1", finalEnsambler);
+	fputs("\n\tadd eax, ebx\n ", finalEnsambler);
+	fputs("\tmov [", finalEnsambler);
+	fputs(OP1, finalEnsambler);
+    fputs("] ,eax \n", finalEnsambler);
+}
+
+
+
+void restaUno(char * OP1){
+	fputs("\tmov eax, [", finalEnsambler);
+	fputs(OP1, finalEnsambler);
+	fputs("] \n\tmov ebx, ", finalEnsambler);
+	fputs("1", finalEnsambler);
+	fputs("\n\tsub eax, ebx\n ", finalEnsambler);
+	fputs("\tmov [", finalEnsambler);
+	fputs(OP1, finalEnsambler);
+    fputs("] ,eax \n", finalEnsambler);
 }

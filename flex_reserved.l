@@ -1,6 +1,9 @@
 %{
 FILE *fileImput;
 FILE *fileOutput;
+FILE *declares;
+FILE * finalEnsambler;
+FILE * mergedFile;
 int key = 0;
 int op = 0;
 int sp = 0;
@@ -19,7 +22,9 @@ int beamer = 0;
 FILE *fileOut;
 char linea[700];
 char direccion[300];
-int column = 0;
+char direccion2[300];
+char direccion3[300];
+char direccion4[300];int column = 0;
 
 char idActual[200];
 
@@ -451,10 +456,22 @@ void defines(){
     fclose(fileOutput);
 }
 
+
 void compile(){
+char ch;
     printf("%s","Parsing:\n\n");
     /* FLEX */
+
     getcwd(direccion, sizeof(direccion));
+    getcwd(direccion2, sizeof(direccion2));
+    getcwd(direccion3, sizeof(direccion3));
+    getcwd(direccion4, sizeof(direccion4));
+
+    declares   =  fopen("declares.txt","w");
+    fputs("section .bss \n ", declares);
+    finalEnsambler =  fopen("ensambler.txt","w");
+    fputs("section .data \n  \t menos db 45 \n \t dosPuntos db 58 \n section .text \n \t global _start \n_start: \n", finalEnsambler);
+
     strcat( direccion,"/prepo.c");
     yyin = fopen(direccion, "r");
     fileOut = fopen("FINAL.txt","w");
@@ -469,6 +486,37 @@ void compile(){
         printf("%s\n","Proceso de parsing finalizo satisfactoriamente sin errores.");
     }
     fclose(fileOut);
+    fclose(declares);
+    fclose(finalEnsambler);
+
+    strcat( direccion2,"/declares.txt");
+    strcat( direccion3,"/ensambler.txt");
+    strcat( direccion4,"/file.asm");
+
+
+
+    declares = fopen(direccion2, "r");
+    finalEnsambler = fopen(direccion3, "r");
+    mergedFile = fopen(direccion4, "w");
+
+    while((ch = fgetc(declares)) != EOF) fputc(ch,mergedFile);
+
+    while((ch = fgetc(finalEnsambler)) != EOF) fputc(ch,mergedFile);
+    haltProgram();
+    fclose(declares);
+    fclose(finalEnsambler);
+    fclose(mergedFile);
+
+   // remove("declares.txt");
+   // remove("ensambler.txt");
+   // ejecutarFile();
+}
+
+void haltProgram(){
+    fputs("\tmov  ebx, 0 \n" , mergedFile);
+    fputs("\tmov  eax, 1 \n" , mergedFile);
+    fputs("\tint  80h\n" , mergedFile);
+    fputs("\tret \n" , mergedFile);
 }
 
 int main(int argc, char *argv[]){
@@ -489,9 +537,9 @@ int main(int argc, char *argv[]){
         includes(argv[1]);
         defines();
         compile();
+        ejecutarFile();
         remove("FINAL.txt");
         remove("OUTPUT.txt");
-        //printStack(pila);
     }
     else if (argc == 3){
         if(!strcmp(argv[2],"-B")){
@@ -536,4 +584,37 @@ int main(int argc, char *argv[]){
         printf("\t\t%s\n", "lexscan programa.c -B");
     }
     return 1;
+}
+
+
+void ejecutarFile(){
+  int flag=0;
+    printf("Procesando...\n");
+    printf("The program result is: \n");
+/* COMPILAR PARA 32
+nasm -f elf32 myprog.asm
+ld -melf_i386 -o myprog myprog.o
+
+COMPILAR PARA 64 EN RUNNER DE NASM
+*/
+   char FILENAME[] = "file"; //-->PONER NOMBRE DEL ARCHIVO ACÁ
+   char str[350];
+   strcpy(str, "nasm -f elf32 ");
+   strcat(str, FILENAME);
+   strcat(str, ".asm");
+   strcat(str, " && ld -melf_i386 -o ");
+   strcat(str, FILENAME);
+   strcat(str, " ");
+   strcat(str, FILENAME);
+   strcat(str, ".o");
+   strcat(str, " && ./");
+   strcat(str, FILENAME);
+
+   flag = system(str);
+   printf("\n");
+   if (!flag){
+     printf("Proceso terminado exitosamente\n");
+   }
+   else {printf("Erro en ejecucion de archivo\n");}
+
 }

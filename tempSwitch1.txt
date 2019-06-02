@@ -1,0 +1,5 @@
+L_CMPSW1:
+	mov eax, [a]
+	cmp eax, a
+	jz  lblCase11
+Exit_Switch1:

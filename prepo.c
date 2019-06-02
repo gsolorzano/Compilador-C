@@ -1,5 +1,6 @@
 ☼
 void main(){
-for(int a = 0; a;){int c = 5;}
+int a = 6;
+c = 8;
 }
  
