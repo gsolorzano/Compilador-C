@@ -1,4 +1,6 @@
 void main(){
-    int a;
-    if(a){a=5;}
+    int a = 5;
+    a = a++;
+    a = --a;
+    a = 5*5;
 }

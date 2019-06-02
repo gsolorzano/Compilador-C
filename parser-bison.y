@@ -20,6 +20,8 @@ char temporal[200];
 int tempAct = 0;
 
 int lblIf = 1;
+int lblWhile = 1;
+int lblDoWhile = 1;
 
 int numContxt = 1;
 
@@ -477,8 +479,8 @@ rparen
 	;
 
 iteration_statement
-	: WHILE '(' expression rparen statement
-	| DO statement WHILE '(' expression rparen ';'
+	: WHILE {process_while();}'(' expression rparen {eval_while();} statement {end_while();}
+	| DO {process_dowhile();}statement WHILE '(' expression rparen {eval_Dowhile();}';' {end_Dowhile();}
 	| FOR '(' expression_statement expression_statement rparen statement
 	| FOR '(' expression_statement expression_statement expression rparen statement
 	| FOR '(' declaration expression_statement rparen statement
@@ -515,6 +517,97 @@ declaration_list
 	;
 
 %%
+
+void end_Dowhile(){
+	struct semantic_record* a = retrieve(pila,RES);
+	printf("%s\n",a->eti[1]);
+	pila = pop(&pila);
+}
+
+void eval_Dowhile(){
+	/* printStack(pila); */
+	struct semantic_record* Res = top(pila);
+	struct semantic_record* a = retrieve(pila,RES);
+	pila = pop2(&pila);
+	//pila = pop(&pila);
+	/* printStack(pila); */
+	printf("%s","CMP 0 ");
+	struct semantic_record* n = retrieve(pila,DATAO);
+	printf("%s\n",Res->name);
+	printf("%s ","JNZ");
+	printf("%s\n",a->eti[0]);
+	free(Res);
+	//código para if ensamblador
+}
+
+void process_dowhile(){
+	char a[3][200];
+	char buffer [200];
+	char buffer1 [200];
+	memset(buffer, 0, sizeof(buffer));
+	snprintf(buffer1, 200, "%d", lblDoWhile);
+	strcat(buffer, "Exp_Dowhile");
+	strcat(buffer, buffer1);
+	strcpy(a[0], buffer);
+	memset(buffer, 0, sizeof(buffer));
+	snprintf(buffer1, 200, "%d", lblDoWhile);
+	strcat(buffer, "Exit_Dowhile");
+	strcat(buffer, buffer1);
+	strcpy(a[1], buffer);
+	strcpy(a[2], "");
+	lblDoWhile++;
+	push(&pila, RES, yytext, a);
+	printStack(pila);
+	printf("%s\n",a[0]);
+	//crear etiqueta ensamblador
+}
+
+void end_while(){
+	struct semantic_record* a = retrieve(pila,RES);
+	printf("%s ","JMP");
+	printf("%s\n",a->eti[0]);
+	printf("%s\n",a->eti[1]);
+	pila = pop(&pila);
+}
+
+void eval_while(){
+	/* printStack(pila); */
+	struct semantic_record* Res = top(pila);
+	struct semantic_record* a = retrieve(pila,RES);
+	pila = pop2(&pila);
+	//pila = pop(&pila);
+	/* printStack(pila); */
+	printf("%s","CMP 0 ");
+	struct semantic_record* n = retrieve(pila,DATAO);
+	printf("%s\n",Res->name);
+	printf("%s ","JZ");
+	printf("%s\n",a->eti[1]);
+	free(Res);
+	//código para if ensamblador
+}
+
+void process_while(){
+	char a[3][200];
+	char buffer [200];
+	char buffer1 [200];
+	memset(buffer, 0, sizeof(buffer));
+	snprintf(buffer1, 200, "%d", lblWhile);
+	strcat(buffer, "Exp_While");
+	strcat(buffer, buffer1);
+	strcpy(a[0], buffer);
+	memset(buffer, 0, sizeof(buffer));
+	snprintf(buffer1, 200, "%d", lblWhile);
+	strcat(buffer, "Exit_while");
+	strcat(buffer, buffer1);
+	strcpy(a[1], buffer);
+	strcpy(a[2], "");
+	/* printf("%s\n",a[0]);
+	printf("%s\n",a[1]); */
+	lblWhile++;
+	push(&pila, RES, yytext, a);
+	printf("%s\n",a[0]);
+	//crear etiqueta ensamblador
+}
 
 void fin_assign(){
 	struct semantic_record* assin = retrieve(pila,TOKEN);
@@ -668,6 +761,9 @@ void eval_unary(){
 	if(OP1->type == ERROR){
 		push(&pila,ERROR,temporal, NULL);
 		return;
+	}
+	else{
+		push(&pila,DATAO,temporal, NULL);
 	}
 
 	if(OP1->type == TOKEN){
