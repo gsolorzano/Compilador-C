@@ -28,7 +28,7 @@ void pushSymbol(struct tableRegister** root, struct symbolT* symbol)
     struct tableRegister* tableRegister = newSymbol(symbol);
     tableRegister->next = *root;
     *root = tableRegister;
-    printf("Context: pushed to Symbol Stack\n");
+    // printf("Context: pushed to Symbol Stack\n");
 }
 
 struct tableRegister* popSymbol(struct tableRegister** root)
@@ -37,7 +37,7 @@ struct tableRegister* popSymbol(struct tableRegister** root)
         return NULL;
     struct tableRegister* temp = *root;
     *root = (*root)->next;
-    printf("Context: popped\n");
+    // printf("Context: popped\n");
     free(temp);
     return *root;
 }

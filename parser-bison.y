@@ -19,9 +19,11 @@ int as = 0;
 char temporal[200];
 int tempAct = 0;
 
+int lblIf = 1;
+
 int numContxt = 1;
 
-enum tok{ID, TIPO, ERROR, DATAO, TOKEN};
+enum tok{ID, TIPO, ERROR, DATAO, TOKEN, RES};
 struct semantic_record* pila = NULL;
 
 struct symbolT* symbolTable = NULL;
@@ -166,7 +168,7 @@ assignment_expression
 	;
 
 assignment_operator
-	: '=' {push(&pila, TOKEN, "=");}
+	: '=' {push(&pila, TOKEN, "=", NULL);}
 	| MUL_ASSIGN
 	| DIV_ASSIGN
 	| MOD_ASSIGN
@@ -215,7 +217,7 @@ init_declarator_list
 
 init_declarator
 	: declarator {printf("\n");}
-	| declarator '=' {as = 1; push(&pila, TOKEN, "=");} initializer
+	| declarator '=' {as = 1; push(&pila, TOKEN, "=", NULL);} initializer
 	;
 
 storage_class_specifier
@@ -547,37 +549,62 @@ void fin_assign(){
 }
 
 void endIFdec(){
-	printf("%s\n","JMP exit_if");
+	struct semantic_record* a = retrieve(pila,RES);
+	printf("%s ","JMP");
+	printf("%s\n",a->eti[1]);
 }
 
 void process_if(){
-	push(&pila, DATAO, yytext);
+	char a[3][200];
+	char buffer [200];
+	char buffer1 [200];
+	memset(buffer, 0, sizeof(buffer));
+	snprintf(buffer1, 200, "%d", lblIf);
+	strcat(buffer, "L_Else");
+	strcat(buffer, buffer1);
+	strcpy(a[0], buffer);
+	memset(buffer, 0, sizeof(buffer));
+	snprintf(buffer1, 200, "%d", lblIf);
+	strcat(buffer, "Exit_if");
+	strcat(buffer, buffer1);
+	strcpy(a[1], buffer);
+	strcpy(a[2], "");
+	/* printf("%s\n",a[0]);
+	printf("%s\n",a[1]); */
+	lblIf++;
+	push(&pila, RES, yytext, a);
 	//crear etiquetas ensamblador
 }
 
 void eval_if(){
 	/* printStack(pila); */
 	struct semantic_record* Res = top(pila);
+	struct semantic_record* a = retrieve(pila,RES);
 	pila = pop2(&pila);
 	//pila = pop(&pila);
 	/* printStack(pila); */
 	printf("%s","CMP 0 ");
+	struct semantic_record* n = retrieve(pila,DATAO);
 	printf("%s\n",Res->name);
-	printf("%s\n","JZ ELSE");
+	printf("%s ","JZ");
+	printf("%s\n",a->eti[0]);
 	free(Res);
-
 	//código para if ensamblador
 }
 
 void process_else(){
-	push(&pila, DATAO, yytext);
-	printf("%s\n","LABEL: ESLE");
+	/* printf("%s\n",yytext);
+	push(&pila, RES, yytext, NULL); */
+	struct semantic_record* a = retrieve(pila,RES);
+	printf("%s\n",a->eti[0]);
 	//crear etiquetas ensamblador
 }
 
 void eval_else(){
+	struct semantic_record* a = retrieve(pila,RES);
+	printf("%s\n",a->eti[1]);
 	pila = pop(&pila);
-	printf("%s\n","exit_if");
+	//pila = pop(&pila);
 	//etiqueta de salida
 }
 
@@ -592,15 +619,15 @@ void eval_binary(){
 	//crear funcion que crea temporales
 	createTemp();
 	if(OP1->type == ERROR){
-		push(&pila,ERROR,temporal);
+		push(&pila,ERROR,temporal, NULL);
 		return;
 	}
 	else if(OP2->type == ERROR){
-		push(&pila,ERROR,temporal);
+		push(&pila,ERROR,temporal, NULL);
 		return;
 	}
 	else{
-		push(&pila,DATAO,temporal);
+		push(&pila,DATAO,temporal, NULL);
 	}
 
 	if(!strcmp(OPERATOR->name,"-")||!strcmp(OPERATOR->name,"/")){
@@ -639,7 +666,7 @@ void eval_unary(){
 	//crear funcion que crea temporales
 	createTemp();
 	if(OP1->type == ERROR){
-		push(&pila,ERROR,temporal);
+		push(&pila,ERROR,temporal, NULL);
 		return;
 	}
 
@@ -664,11 +691,11 @@ void eval_unary(){
 }
 
 void process_literal(){
-	push(&pila, DATAO, yytext);
+	push(&pila, DATAO, yytext, NULL);
 }
 
 void process_op(){
-	push(&pila, TOKEN, yytext);
+	push(&pila, TOKEN, yytext, NULL);
 }
 
 void process_id(){
@@ -679,14 +706,14 @@ void process_id(){
 	int ban = 0;
 	while(smb->next != NULL){
 		if(!(lookup(smb->symbolT, idActual) != 1)){
-			push(&pila, ID, idActual);
+			push(&pila, ID, idActual, NULL);
 			ban = 1;
 			break;
 		}
 		smb = smb->next;
 	}
 	if(ban == 0){
-		push(&pila, ERROR, idActual);
+		push(&pila, ERROR, idActual, NULL);
 		struct semantic_record* identificador = top(pila);
 		printf("%s","Error semántico, ");
 		printf("%s",identificador->name);
@@ -698,11 +725,11 @@ void process_id(){
 }
 
 void guardar_id(){
-	push(&pila, ID, yytext);
+	push(&pila, ID, yytext, NULL);
 }
 
 void guardar_tipo(){
-	push(&pila, TIPO, yytext);
+	push(&pila, TIPO, yytext, NULL);
 }
 
 void fin_decl(){
