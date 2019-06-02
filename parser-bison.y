@@ -15,6 +15,7 @@ extern char idActual[200];
 
 int as = 0;
 
+int inFor = 0;
 
 char temporal[200];
 int tempAct = 0;
@@ -22,6 +23,7 @@ int tempAct = 0;
 int lblIf = 1;
 int lblWhile = 1;
 int lblDoWhile = 1;
+int lblFor = 1;
 
 int numContxt = 1;
 
@@ -459,7 +461,7 @@ block_item
 
 expression_statement
 	: ';'
-	| expression ';' {pila = clearStack(pila);}
+	| expression ';' {if(inFor == 0){pila = clearStack(pila);}}
 	;
 
 selection_statement
@@ -481,10 +483,15 @@ rparen
 iteration_statement
 	: WHILE {process_while();}'(' expression rparen {eval_while();} statement {end_while();}
 	| DO {process_dowhile();}statement WHILE '(' expression rparen {eval_Dowhile();}';' {end_Dowhile();}
-	| FOR '(' expression_statement expression_statement rparen statement
-	| FOR '(' expression_statement expression_statement expression rparen statement
-	| FOR '(' declaration expression_statement rparen statement
-	| FOR '(' declaration expression_statement expression rparen statement
+	| FOR {process_for();} optionsfor;
+
+optionsfor
+	: '(' expression_statement {genIn2();} optionsforIni
+	| '(' declaration {genIn2();} optionsforIni;
+
+optionsforIni
+	: expression_statement {genIn3();genIn4();} rparen statement {end_for();}
+	| expression_statement {genIn3();} expression {genIn4();} rparen statement {end_for();}
 	;
 
 jump_statement
@@ -518,6 +525,67 @@ declaration_list
 
 %%
 
+void end_for(){
+	struct semantic_record* a = retrieve(pila,RES);
+	printf("%s ","JMP");
+	printf("%s\n",a->eti[1]);
+	printf("%s\n",a->eti[3]);
+	pila = pop(&pila);
+}
+
+void genIn4(){
+	struct semantic_record* a = retrieve(pila,RES);
+	printf("%s ","JMP");
+	printf("%s\n",a->eti[0]);
+	printf("%s\n",a->eti[2]);
+}
+
+void genIn3(){
+	struct semantic_record* Res = top(pila);
+	struct semantic_record* a = retrieve(pila,RES);
+	printf("%s","CMP 0 ");
+	printf("%s\n",Res->name);
+	printf("%s ","JZ");
+	printf("%s\n",a->eti[3]);
+	printf("%s ","JMP");
+	printf("%s\n",a->eti[2]);
+	printf("%s\n",a->eti[1]);
+}
+
+void genIn2(){
+	struct semantic_record* a = retrieve(pila,RES);
+	printf("%s\n",a->eti[0]);
+}
+
+void process_for(){
+	inFor =1;
+	char a[4][200];
+	char buffer [200];
+	char buffer1 [200];
+	memset(buffer, 0, sizeof(buffer));
+	snprintf(buffer1, 200, "%d", lblFor);
+	strcat(buffer, "L_inst2");
+	strcat(buffer, buffer1);
+	strcpy(a[0], buffer);
+	memset(buffer, 0, sizeof(buffer));
+	snprintf(buffer1, 200, "%d", lblFor);
+	strcat(buffer, "L_inst3");
+	strcat(buffer, buffer1);
+	strcpy(a[1], buffer);
+	memset(buffer, 0, sizeof(buffer));
+	snprintf(buffer1, 200, "%d", lblFor);
+	strcat(buffer, "BodyLbl");
+	strcat(buffer, buffer1);
+	strcpy(a[2], buffer);
+	memset(buffer, 0, sizeof(buffer));
+	snprintf(buffer1, 200, "%d", lblFor);
+	strcat(buffer, "Exit_for");
+	strcat(buffer, buffer1);
+	strcpy(a[3], buffer);
+	lblFor++;
+	push(&pila, RES, yytext, a);
+}
+
 void end_Dowhile(){
 	struct semantic_record* a = retrieve(pila,RES);
 	printf("%s\n",a->eti[1]);
@@ -532,7 +600,6 @@ void eval_Dowhile(){
 	//pila = pop(&pila);
 	/* printStack(pila); */
 	printf("%s","CMP 0 ");
-	struct semantic_record* n = retrieve(pila,DATAO);
 	printf("%s\n",Res->name);
 	printf("%s ","JNZ");
 	printf("%s\n",a->eti[0]);
@@ -541,7 +608,7 @@ void eval_Dowhile(){
 }
 
 void process_dowhile(){
-	char a[3][200];
+	char a[4][200];
 	char buffer [200];
 	char buffer1 [200];
 	memset(buffer, 0, sizeof(buffer));
@@ -555,9 +622,9 @@ void process_dowhile(){
 	strcat(buffer, buffer1);
 	strcpy(a[1], buffer);
 	strcpy(a[2], "");
+	strcpy(a[3], "");
 	lblDoWhile++;
 	push(&pila, RES, yytext, a);
-	printStack(pila);
 	printf("%s\n",a[0]);
 	//crear etiqueta ensamblador
 }
@@ -587,7 +654,7 @@ void eval_while(){
 }
 
 void process_while(){
-	char a[3][200];
+	char a[4][200];
 	char buffer [200];
 	char buffer1 [200];
 	memset(buffer, 0, sizeof(buffer));
@@ -601,6 +668,7 @@ void process_while(){
 	strcat(buffer, buffer1);
 	strcpy(a[1], buffer);
 	strcpy(a[2], "");
+	strcpy(a[3], "");
 	/* printf("%s\n",a[0]);
 	printf("%s\n",a[1]); */
 	lblWhile++;
@@ -648,7 +716,7 @@ void endIFdec(){
 }
 
 void process_if(){
-	char a[3][200];
+	char a[4][200];
 	char buffer [200];
 	char buffer1 [200];
 	memset(buffer, 0, sizeof(buffer));
@@ -662,6 +730,7 @@ void process_if(){
 	strcat(buffer, buffer1);
 	strcpy(a[1], buffer);
 	strcpy(a[2], "");
+	strcpy(a[3], "");
 	/* printf("%s\n",a[0]);
 	printf("%s\n",a[1]); */
 	lblIf++;

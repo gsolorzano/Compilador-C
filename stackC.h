@@ -7,7 +7,7 @@ struct semantic_record
 {
     char name[200];
     int type;
-    char eti[3][200];
+    char eti[4][200];
     struct semantic_record* next;
 };
 
@@ -19,11 +19,11 @@ struct semantic_record* newNode(int type, char name[200], char eti[3][200])
     semantic_record->type = type;
     semantic_record->next = NULL;
     if(eti != NULL){
-        for(int i=0;i<3;i++)
+        for(int i=0;i<4;i++)
             strcpy(semantic_record->eti[i], eti[i]);
     }
     else{
-        for(int i=0;i<3;i++)
+        for(int i=0;i<4;i++)
             strcpy(semantic_record->eti[i], "");
     }
     return semantic_record;

@@ -1,6 +1,3 @@
 void main(){
-    int a = 5;
-    a = a++;
-    a = --a;
-    a = 5*5;
+    for(int a = 0; a;){int c = 5;}
 }
