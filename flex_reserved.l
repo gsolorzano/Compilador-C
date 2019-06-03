@@ -469,7 +469,7 @@ char ch;
 
     declares   =  fopen("declares.txt","w");
     putc('%',  declares);
-    fputs("include 'bib.asm'  \nsection .bss \n", declares);
+    fputs("include '/usr/bin/bib.asm'  \nsection .bss \n", declares);
     finalEnsambler =  fopen("ensambler.txt","w");
     fputs("section .data \n  \t menos db 45 \n \t dosPuntos db 58 \n section .text \n \t global _start \n_start: \n", finalEnsambler);
 
@@ -509,9 +509,8 @@ char ch;
     fclose(finalEnsambler);
     fclose(mergedFile);
 
-   // remove("declares.txt");
-   // remove("ensambler.txt");
-   // ejecutarFile();
+   remove("declares.txt");
+   remove("ensambler.txt");
 }
 
 void haltProgram(){

@@ -101,6 +101,10 @@ int lblFor = 1;
 int lblSwitch = 1;
 int cntSw = 0;
 
+int cntv = 0;
+char variables[100][200];
+
+
 char labelswitch[20][200] = {"lblCase1","lblCase2","lblCase3","lblCase4","lblCase5"
 							,"lblCase6","lblCase7","lblCase8","lblCase9","lblCase10"};
 
@@ -115,7 +119,7 @@ struct symbolT* symbolTable = NULL;
 
 struct tableRegister* symbolStck = NULL;
 
-#line 119 "parser-bison.tab.c" /* yacc.c:337  */
+#line 123 "parser-bison.tab.c" /* yacc.c:337  */
 # ifndef YY_NULLPTR
 #  if defined __cplusplus
 #   if 201103L <= __cplusplus
@@ -505,35 +509,35 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    69,    69,    70,    71,    72,    73,    77,    78,    79,
-      80,    81,    82,    83,    84,    85,    86,    90,    91,    95,
-      96,    96,    97,    97,    98,    99,   100,   104,   105,   106,
-     107,   108,   109,   110,   114,   115,   119,   120,   120,   121,
-     121,   122,   122,   126,   127,   127,   128,   128,   132,   133,
-     134,   138,   139,   140,   141,   142,   146,   147,   148,   152,
-     153,   157,   158,   162,   163,   167,   168,   172,   173,   177,
-     178,   178,   178,   178,   182,   183,   187,   188,   189,   190,
-     191,   192,   193,   194,   195,   196,   197,   198,   202,   203,
-     207,   211,   212,   219,   220,   221,   222,   223,   224,   225,
-     226,   230,   231,   235,   236,   236,   240,   241,   242,   243,
-     244,   245,   249,   250,   251,   252,   253,   254,   255,   256,
-     257,   258,   259,   260,   261,   262,   263,   264,   268,   269,
-     270,   274,   275,   276,   280,   281,   285,   289,   290,   291,
-     292,   296,   297,   301,   302,   303,   307,   308,   309,   310,
-     311,   315,   316,   320,   321,   325,   326,   327,   328,   332,
-     337,   338,   343,   344,   345,   346,   347,   348,   349,   350,
-     351,   352,   353,   354,   355,   359,   360,   361,   362,   366,
-     367,   372,   373,   377,   378,   382,   383,   384,   388,   389,
-     393,   394,   398,   399,   400,   404,   405,   406,   407,   408,
-     409,   410,   411,   412,   413,   414,   418,   419,   420,   424,
-     425,   426,   427,   431,   435,   436,   440,   441,   445,   446,
-     447,   448,   449,   450,   454,   455,   455,   455,   456,   456,
-     460,   460,   461,   461,   465,   466,   470,   471,   475,   476,
-     480,   480,   480,   482,   482,   486,   486,   486,   487,   491,
-     492,   496,   496,   496,   497,   497,   497,   498,   498,   501,
-     501,   502,   502,   505,   505,   506,   506,   506,   510,   511,
-     512,   513,   514,   515,   519,   520,   524,   525,   529,   530,
-     534,   535
+       0,    73,    73,    74,    75,    76,    77,    81,    82,    83,
+      84,    85,    86,    87,    88,    89,    90,    94,    95,    99,
+     100,   100,   101,   101,   102,   103,   104,   108,   109,   110,
+     111,   112,   113,   114,   118,   119,   123,   124,   124,   125,
+     125,   126,   126,   130,   131,   131,   132,   132,   136,   137,
+     138,   142,   143,   144,   145,   146,   150,   151,   152,   156,
+     157,   161,   162,   166,   167,   171,   172,   176,   177,   181,
+     182,   182,   182,   182,   186,   187,   191,   192,   193,   194,
+     195,   196,   197,   198,   199,   200,   201,   202,   206,   207,
+     211,   215,   216,   223,   224,   225,   226,   227,   228,   229,
+     230,   234,   235,   239,   240,   240,   244,   245,   246,   247,
+     248,   249,   253,   254,   255,   256,   257,   258,   259,   260,
+     261,   262,   263,   264,   265,   266,   267,   268,   272,   273,
+     274,   278,   279,   280,   284,   285,   289,   293,   294,   295,
+     296,   300,   301,   305,   306,   307,   311,   312,   313,   314,
+     315,   319,   320,   324,   325,   329,   330,   331,   332,   336,
+     341,   342,   347,   348,   349,   350,   351,   352,   353,   354,
+     355,   356,   357,   358,   359,   363,   364,   365,   366,   370,
+     371,   376,   377,   381,   382,   386,   387,   388,   392,   393,
+     397,   398,   402,   403,   404,   408,   409,   410,   411,   412,
+     413,   414,   415,   416,   417,   418,   422,   423,   424,   428,
+     429,   430,   431,   435,   439,   440,   444,   445,   449,   450,
+     451,   452,   453,   454,   458,   459,   459,   459,   460,   460,
+     464,   464,   465,   465,   469,   470,   474,   475,   479,   480,
+     484,   484,   484,   486,   486,   490,   490,   490,   491,   495,
+     496,   500,   500,   500,   501,   501,   501,   502,   502,   505,
+     505,   506,   506,   509,   509,   510,   510,   510,   514,   515,
+     516,   517,   518,   519,   523,   524,   528,   529,   533,   534,
+     538,   539
 };
 #endif
 
@@ -2261,370 +2265,406 @@ yyreduce:
     switch (yyn)
       {
   case 2:
-#line 69 "parser-bison.y" /* yacc.c:1652  */
+#line 73 "parser-bison.y" /* yacc.c:1652  */
     {process_id();}
-#line 2267 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2271 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 3:
-#line 70 "parser-bison.y" /* yacc.c:1652  */
+#line 74 "parser-bison.y" /* yacc.c:1652  */
     {process_literal();}
-#line 2273 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2277 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 13:
-#line 83 "parser-bison.y" /* yacc.c:1652  */
+#line 87 "parser-bison.y" /* yacc.c:1652  */
     {process_op();eval_unary();}
-#line 2279 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2283 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 14:
-#line 84 "parser-bison.y" /* yacc.c:1652  */
+#line 88 "parser-bison.y" /* yacc.c:1652  */
     {process_op();eval_unary();}
-#line 2285 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2289 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 20:
-#line 96 "parser-bison.y" /* yacc.c:1652  */
+#line 100 "parser-bison.y" /* yacc.c:1652  */
     {process_op();}
-#line 2291 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2295 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 21:
-#line 96 "parser-bison.y" /* yacc.c:1652  */
+#line 100 "parser-bison.y" /* yacc.c:1652  */
     {eval_unary();}
-#line 2297 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2301 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 22:
-#line 97 "parser-bison.y" /* yacc.c:1652  */
+#line 101 "parser-bison.y" /* yacc.c:1652  */
     {process_op();}
-#line 2303 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2307 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 23:
-#line 97 "parser-bison.y" /* yacc.c:1652  */
+#line 101 "parser-bison.y" /* yacc.c:1652  */
     {eval_unary();}
-#line 2309 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2313 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 37:
-#line 120 "parser-bison.y" /* yacc.c:1652  */
+#line 124 "parser-bison.y" /* yacc.c:1652  */
     {process_op();}
-#line 2315 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2319 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 38:
-#line 120 "parser-bison.y" /* yacc.c:1652  */
+#line 124 "parser-bison.y" /* yacc.c:1652  */
     {eval_binary();}
-#line 2321 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2325 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 39:
-#line 121 "parser-bison.y" /* yacc.c:1652  */
+#line 125 "parser-bison.y" /* yacc.c:1652  */
     {process_op();}
-#line 2327 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2331 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 40:
-#line 121 "parser-bison.y" /* yacc.c:1652  */
+#line 125 "parser-bison.y" /* yacc.c:1652  */
     {eval_binary();}
-#line 2333 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2337 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 41:
-#line 122 "parser-bison.y" /* yacc.c:1652  */
+#line 126 "parser-bison.y" /* yacc.c:1652  */
     {process_op();}
-#line 2339 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2343 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 42:
-#line 122 "parser-bison.y" /* yacc.c:1652  */
+#line 126 "parser-bison.y" /* yacc.c:1652  */
     {eval_binary();}
-#line 2345 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2349 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 44:
-#line 127 "parser-bison.y" /* yacc.c:1652  */
+#line 131 "parser-bison.y" /* yacc.c:1652  */
     {process_op();}
-#line 2351 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2355 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 45:
-#line 127 "parser-bison.y" /* yacc.c:1652  */
+#line 131 "parser-bison.y" /* yacc.c:1652  */
     {eval_binary();}
-#line 2357 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2361 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 46:
-#line 128 "parser-bison.y" /* yacc.c:1652  */
+#line 132 "parser-bison.y" /* yacc.c:1652  */
     {process_op();}
-#line 2363 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2367 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 47:
-#line 128 "parser-bison.y" /* yacc.c:1652  */
+#line 132 "parser-bison.y" /* yacc.c:1652  */
     {eval_binary();}
-#line 2369 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2373 "parser-bison.tab.c" /* yacc.c:1652  */
+    break;
+
+  case 52:
+#line 143 "parser-bison.y" /* yacc.c:1652  */
+    {printf("%s\n","Proceso de parsing finalizo satisfactoriamente sin errores.");exit(1);}
+#line 2379 "parser-bison.tab.c" /* yacc.c:1652  */
+    break;
+
+  case 53:
+#line 144 "parser-bison.y" /* yacc.c:1652  */
+    {printf("%s\n","Proceso de parsing finalizo satisfactoriamente sin errores.");exit(1);}
+#line 2385 "parser-bison.tab.c" /* yacc.c:1652  */
+    break;
+
+  case 54:
+#line 145 "parser-bison.y" /* yacc.c:1652  */
+    {printf("%s\n","Proceso de parsing finalizo satisfactoriamente sin errores.");exit(1);}
+#line 2391 "parser-bison.tab.c" /* yacc.c:1652  */
+    break;
+
+  case 55:
+#line 146 "parser-bison.y" /* yacc.c:1652  */
+    {printf("%s\n","Proceso de parsing finalizo satisfactoriamente sin errores.");exit(1);}
+#line 2397 "parser-bison.tab.c" /* yacc.c:1652  */
+    break;
+
+  case 57:
+#line 151 "parser-bison.y" /* yacc.c:1652  */
+    {printf("%s\n","Proceso de parsing finalizo satisfactoriamente sin errores.");exit(1);}
+#line 2403 "parser-bison.tab.c" /* yacc.c:1652  */
+    break;
+
+  case 58:
+#line 152 "parser-bison.y" /* yacc.c:1652  */
+    {printf("%s\n","Proceso de parsing finalizo satisfactoriamente sin errores.");exit(1);}
+#line 2409 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 70:
-#line 178 "parser-bison.y" /* yacc.c:1652  */
+#line 182 "parser-bison.y" /* yacc.c:1652  */
     {process_if();eval_if();}
-#line 2375 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2415 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 71:
-#line 178 "parser-bison.y" /* yacc.c:1652  */
+#line 182 "parser-bison.y" /* yacc.c:1652  */
     {process_ternary();process_assign();}
-#line 2381 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2421 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 72:
-#line 178 "parser-bison.y" /* yacc.c:1652  */
+#line 182 "parser-bison.y" /* yacc.c:1652  */
     {endIFdec();process_else();}
-#line 2387 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2427 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 73:
-#line 178 "parser-bison.y" /* yacc.c:1652  */
+#line 182 "parser-bison.y" /* yacc.c:1652  */
     {process_assign2();eval_else();}
-#line 2393 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2433 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 75:
-#line 183 "parser-bison.y" /* yacc.c:1652  */
+#line 187 "parser-bison.y" /* yacc.c:1652  */
     {fin_assign();}
-#line 2399 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2439 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 76:
-#line 187 "parser-bison.y" /* yacc.c:1652  */
+#line 191 "parser-bison.y" /* yacc.c:1652  */
     {push(&pila, TOKEN, "=", NULL);}
-#line 2405 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2445 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 92:
-#line 212 "parser-bison.y" /* yacc.c:1652  */
+#line 216 "parser-bison.y" /* yacc.c:1652  */
     {
 		if(as == 0){fin_decl();}
 		else{fin_declas();}
 			}
-#line 2414 "parser-bison.tab.c" /* yacc.c:1652  */
-    break;
-
-  case 103:
-#line 235 "parser-bison.y" /* yacc.c:1652  */
-    {printf("\n");}
-#line 2420 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2454 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 104:
-#line 236 "parser-bison.y" /* yacc.c:1652  */
+#line 240 "parser-bison.y" /* yacc.c:1652  */
     {as = 1; push(&pila, TOKEN, "=", NULL);}
-#line 2426 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2460 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 115:
-#line 252 "parser-bison.y" /* yacc.c:1652  */
+#line 256 "parser-bison.y" /* yacc.c:1652  */
     {guardar_tipo();}
-#line 2432 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2466 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 162:
-#line 343 "parser-bison.y" /* yacc.c:1652  */
+#line 347 "parser-bison.y" /* yacc.c:1652  */
     {guardar_id();}
-#line 2438 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2472 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 225:
-#line 455 "parser-bison.y" /* yacc.c:1652  */
+#line 459 "parser-bison.y" /* yacc.c:1652  */
     {process_case(cntSw);}
-#line 2444 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2478 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 226:
-#line 455 "parser-bison.y" /* yacc.c:1652  */
+#line 459 "parser-bison.y" /* yacc.c:1652  */
     {genCmpSwitch(cntSw);}
-#line 2450 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2484 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 228:
-#line 456 "parser-bison.y" /* yacc.c:1652  */
+#line 460 "parser-bison.y" /* yacc.c:1652  */
     {process_default();}
-#line 2456 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2490 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 229:
-#line 456 "parser-bison.y" /* yacc.c:1652  */
+#line 460 "parser-bison.y" /* yacc.c:1652  */
     {endCase();}
-#line 2462 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2496 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 230:
-#line 460 "parser-bison.y" /* yacc.c:1652  */
+#line 464 "parser-bison.y" /* yacc.c:1652  */
     {open_scope();pila = clearStack(pila);}
-#line 2468 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2502 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 231:
-#line 460 "parser-bison.y" /* yacc.c:1652  */
+#line 464 "parser-bison.y" /* yacc.c:1652  */
     {close_scope();}
-#line 2474 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2508 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 232:
-#line 461 "parser-bison.y" /* yacc.c:1652  */
+#line 465 "parser-bison.y" /* yacc.c:1652  */
     {open_scope();pila = clearStack(pila);}
-#line 2480 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2514 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 233:
-#line 461 "parser-bison.y" /* yacc.c:1652  */
+#line 465 "parser-bison.y" /* yacc.c:1652  */
     {close_scope();}
-#line 2486 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2520 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 239:
-#line 476 "parser-bison.y" /* yacc.c:1652  */
+#line 480 "parser-bison.y" /* yacc.c:1652  */
     {if(inFor == 0){pila = clearStack(pila);}}
-#line 2492 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2526 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 240:
-#line 480 "parser-bison.y" /* yacc.c:1652  */
+#line 484 "parser-bison.y" /* yacc.c:1652  */
     { process_if(); }
-#line 2498 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2532 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 241:
-#line 480 "parser-bison.y" /* yacc.c:1652  */
+#line 484 "parser-bison.y" /* yacc.c:1652  */
     { eval_if();}
-#line 2504 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2538 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 243:
-#line 482 "parser-bison.y" /* yacc.c:1652  */
+#line 486 "parser-bison.y" /* yacc.c:1652  */
     {fileTemp1 = fopen("tempSwitch1.txt","w");process_switch();strcpy(sw, top(pila)->name);}
-#line 2510 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2544 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 244:
-#line 482 "parser-bison.y" /* yacc.c:1652  */
+#line 486 "parser-bison.y" /* yacc.c:1652  */
     {endSwitch();}
-#line 2516 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2550 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 245:
-#line 486 "parser-bison.y" /* yacc.c:1652  */
+#line 490 "parser-bison.y" /* yacc.c:1652  */
     {endIFdec();}
-#line 2522 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2556 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 246:
-#line 486 "parser-bison.y" /* yacc.c:1652  */
+#line 490 "parser-bison.y" /* yacc.c:1652  */
     { process_else(); }
-#line 2528 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2562 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 247:
-#line 486 "parser-bison.y" /* yacc.c:1652  */
+#line 490 "parser-bison.y" /* yacc.c:1652  */
     { eval_else(); }
-#line 2534 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2568 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 248:
-#line 487 "parser-bison.y" /* yacc.c:1652  */
+#line 491 "parser-bison.y" /* yacc.c:1652  */
     {endIFdec(); process_else(); eval_else();  }
-#line 2540 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2574 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 251:
-#line 496 "parser-bison.y" /* yacc.c:1652  */
+#line 500 "parser-bison.y" /* yacc.c:1652  */
     {process_while();}
-#line 2546 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2580 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 252:
-#line 496 "parser-bison.y" /* yacc.c:1652  */
+#line 500 "parser-bison.y" /* yacc.c:1652  */
     {eval_while();}
-#line 2552 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2586 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 253:
-#line 496 "parser-bison.y" /* yacc.c:1652  */
+#line 500 "parser-bison.y" /* yacc.c:1652  */
     {end_while();}
-#line 2558 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2592 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 254:
-#line 497 "parser-bison.y" /* yacc.c:1652  */
+#line 501 "parser-bison.y" /* yacc.c:1652  */
     {process_dowhile();}
-#line 2564 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2598 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 255:
-#line 497 "parser-bison.y" /* yacc.c:1652  */
+#line 501 "parser-bison.y" /* yacc.c:1652  */
     {eval_Dowhile();}
-#line 2570 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2604 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 256:
-#line 497 "parser-bison.y" /* yacc.c:1652  */
+#line 501 "parser-bison.y" /* yacc.c:1652  */
     {end_Dowhile();}
-#line 2576 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2610 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 257:
-#line 498 "parser-bison.y" /* yacc.c:1652  */
+#line 502 "parser-bison.y" /* yacc.c:1652  */
     {process_for();}
-#line 2582 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2616 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 259:
-#line 501 "parser-bison.y" /* yacc.c:1652  */
+#line 505 "parser-bison.y" /* yacc.c:1652  */
     {genIn2();}
-#line 2588 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2622 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 261:
-#line 502 "parser-bison.y" /* yacc.c:1652  */
+#line 506 "parser-bison.y" /* yacc.c:1652  */
     {genIn2();}
-#line 2594 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2628 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 263:
-#line 505 "parser-bison.y" /* yacc.c:1652  */
+#line 509 "parser-bison.y" /* yacc.c:1652  */
     {genIn3();genIn4();}
-#line 2600 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2634 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 264:
-#line 505 "parser-bison.y" /* yacc.c:1652  */
+#line 509 "parser-bison.y" /* yacc.c:1652  */
     {end_for();}
-#line 2606 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2640 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 265:
-#line 506 "parser-bison.y" /* yacc.c:1652  */
+#line 510 "parser-bison.y" /* yacc.c:1652  */
     {genIn3();}
-#line 2612 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2646 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 266:
-#line 506 "parser-bison.y" /* yacc.c:1652  */
+#line 510 "parser-bison.y" /* yacc.c:1652  */
     {genIn4();}
-#line 2618 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2652 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
   case 267:
-#line 506 "parser-bison.y" /* yacc.c:1652  */
+#line 510 "parser-bison.y" /* yacc.c:1652  */
     {end_for();}
-#line 2624 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2658 "parser-bison.tab.c" /* yacc.c:1652  */
+    break;
+
+  case 270:
+#line 516 "parser-bison.y" /* yacc.c:1652  */
+    {process_break();}
+#line 2664 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
 
-#line 2628 "parser-bison.tab.c" /* yacc.c:1652  */
+#line 2668 "parser-bison.tab.c" /* yacc.c:1652  */
         default: break;
       }
     if (yychar_backup != yychar)
@@ -2867,15 +2907,30 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 538 "parser-bison.y" /* yacc.c:1918  */
+#line 542 "parser-bison.y" /* yacc.c:1918  */
 
+
+void process_break(){
+	char buffer [200];
+	char buffer1 [200];
+	memset(buffer, 0, sizeof(buffer));
+	snprintf(buffer1, 200, "%d", lblSwitch);
+	strcat(buffer, "Exit_Switch");
+	strcat(buffer, buffer1);
+	/* printf("JMP %s \n", buffer); */
+
+	// ensamblador
+	fputs("\tjmp ", finalEnsambler);
+	fputs(buffer, finalEnsambler);
+	fputs("\n", finalEnsambler);
+}
 
 void process_assign2(){
 	char nom[200];
 	strcpy(nom,top(pila)->name);
 	pila = pop(&pila);
 	struct semantic_record* assin = top(pila);
-	printf("%s = %s\n",assin->name,nom);
+	/* printf("%s = %s\n",assin->name,nom); */
 
 	char oper1 [100];
 	char oper2 [100];
@@ -2898,7 +2953,7 @@ void process_assign(){
 	strcpy(nom,top(pila)->name);
 	pila = pop(&pila);
 	struct semantic_record* val = top(pila);
-	printf("%s = %s\n",nom,val->name);
+	/* printf("%s = %s\n",nom,val->name); */
 	char oper1 [100];
 	char oper2 [100];
 	strcpy(oper1, nom);
@@ -2931,7 +2986,7 @@ void endSwitch(){
 	snprintf(buffer1, 200, "%d", lblSwitch);
 	strcat(buffer, "Exit_Switch");
 	strcat(buffer, buffer1);
-	printf("JMP %s \n", buffer);
+	/* printf("JMP %s \n", buffer); */
 
     // ensamblador
 	fputs("\tjmp ", finalEnsambler);
@@ -2951,10 +3006,10 @@ void endSwitch(){
 	char restoPrgrama [5000];
 	strcpy(restoPrgrama, "");
 	while((ch = fgetc(fileTemp1)) != EOF){
-      printf("%c", ch);
+      /* printf("%c", ch); */
       putc(ch,finalEnsambler);
     }
-
+	remove("tempSwitch1.txt");
 }
 
 void process_default(){
@@ -2964,7 +3019,7 @@ void process_default(){
 	snprintf(buffer1, 200, "%d", lblSwitch);
 	strcat(buffer, "Default");
 	strcat(buffer, buffer1);
-	printf("%s:\n", buffer);
+	/* printf("%s:\n", buffer); */
 
     fputs(buffer, finalEnsambler);
 	fputs(": \n", finalEnsambler);
@@ -2983,7 +3038,7 @@ void endCase(){
 	snprintf(buffer1, 200, "%d", lblSwitch);
 	strcat(buffer, "Exit_Switch");
 	strcat(buffer, buffer1);
-	printf("JMP %s \n", buffer);
+	/* printf("JMP %s \n", buffer); */
 	// ensamblador
 	fputs("\tjmp ", finalEnsambler);
 	fputs(buffer, finalEnsambler);
@@ -2997,7 +3052,7 @@ void process_case(int i){
 	snprintf(buffer1, 200, "%d", lblSwitch);
 	strcat(buffer, labelswitch[i]);
 	strcat(buffer, buffer1);
-	printf("%s:\n", buffer);
+	/* printf("%s:\n", buffer); */
 
 	fputs(buffer, finalEnsambler);
 	fputs(": \n", finalEnsambler);
@@ -3010,7 +3065,7 @@ void process_switch(){
 	snprintf(buffer1, 200, "%d", lblSwitch);
 	strcat(buffer, "L_CMPSW");
 	strcat(buffer, buffer1);
-	printf("JMP %s\n", buffer);
+	/* printf("JMP %s\n", buffer); */
 
 	//ensamblador
 
@@ -3095,7 +3150,7 @@ void process_for(){
 
 void genIn2(){
 	struct semantic_record* a = retrieve(pila2,RES);
-	printf("%s\n",a->eti[0]);
+	/* printf("%s\n",a->eti[0]); */
 	fputs(a->eti[0], finalEnsambler);
 	fputs(": \n", finalEnsambler);
 }
@@ -3103,17 +3158,24 @@ void genIn2(){
 void genIn3(){
 	struct semantic_record* Res = top(pila);
 	struct semantic_record* a = retrieve(pila2,RES);
-	printf("%s","CMP 0 ");
+	/* printf("%s","CMP 0 ");
 	printf("%s\n",Res->name);
 	printf("%s ","JZ");
 	printf("%s\n",a->eti[3]);
 	printf("%s ","JMP");
 	printf("%s\n",a->eti[2]);
-	printf("%s\n",a->eti[1]);
+	printf("%s\n",a->eti[1]); */
 
-	fputs("\tmov eax, [", finalEnsambler);
-	fputs(Res->name, finalEnsambler);
-	fputs("]\n\tcmp eax, 0 \n", finalEnsambler);
+	if (!isdigit(Res->name[0]) ){
+		fputs("\tmov eax, [", finalEnsambler);
+		  fputs(Res->name, finalEnsambler);
+		  fputs("]\n\tcmp eax, 0 \n", finalEnsambler);
+	}
+	else {
+		fputs("\tmov eax, ", finalEnsambler);
+		fputs(Res->name, finalEnsambler);
+		fputs("\n\tcmp eax, 0 \n", finalEnsambler);
+	}
 	fputs("\tjz  ", finalEnsambler);
 	fputs(a->eti[3] , finalEnsambler);
 	fputs("\n", finalEnsambler);
@@ -3126,9 +3188,9 @@ void genIn3(){
 
 void genIn4(){
 	struct semantic_record* a = retrieve(pila2,RES);
-	printf("%s ","JMP");
+	/* printf("%s ","JMP");
 	printf("%s\n",a->eti[0]);
-	printf("%s\n",a->eti[2]);
+	printf("%s\n",a->eti[2]); */
 	//ensamblador
 	fputs("\tjmp ", finalEnsambler);
     fputs(a->eti[0], finalEnsambler);
@@ -3139,9 +3201,9 @@ void genIn4(){
 
 void end_for(){
 	struct semantic_record* a = retrieve(pila2,RES);
-	printf("%s ","JMP");
+	/* printf("%s ","JMP");
 	printf("%s\n",a->eti[1]);
-	printf("%s\n",a->eti[3]);
+	printf("%s\n",a->eti[3]); */
 	pila2 = pop(&pila2);
 
 	//ensamblador
@@ -3171,7 +3233,7 @@ void process_dowhile(){
 	strcpy(a[3], "");
 	lblDoWhile++;
 	push(&pila2, RES, yytext, a);
-	printf("%s\n",a[0]);
+	/* printf("%s\n",a[0]); */
     fputs(a[0], finalEnsambler);
 	fputs(": \n", finalEnsambler);
 
@@ -3185,14 +3247,21 @@ void eval_Dowhile(){
 	pila = pop2(&pila);
 	//pila = pop(&pila);
 	/* printStack(pila); */
-	printf("%s","CMP 0 ");
+	/* printf("%s","CMP 0 ");
 	printf("%s\n",Res->name);
 	printf("%s ","JNZ");
-	printf("%s\n",a->eti[0]);
+	printf("%s\n",a->eti[0]); */
 
-	fputs("\tmov eax, [", finalEnsambler);
-	fputs(Res->name, finalEnsambler);
-	fputs("]\n\tcmp eax, 0 \n", finalEnsambler);
+	if (!isdigit(Res->name[0]) ){
+		fputs("\tmov eax, [", finalEnsambler);
+		  fputs(Res->name, finalEnsambler);
+		  fputs("]\n\tcmp eax, 0 \n", finalEnsambler);
+	}
+	else {
+		fputs("\tmov eax, ", finalEnsambler);
+		fputs(Res->name, finalEnsambler);
+		fputs("\n\tcmp eax, 0 \n", finalEnsambler);
+	}
 	fputs("\tjnz  ", finalEnsambler);
 	fputs(a->eti[0] , finalEnsambler);
 	fputs("\n", finalEnsambler);
@@ -3201,7 +3270,7 @@ void eval_Dowhile(){
 
 void end_Dowhile(){
 	struct semantic_record* a = retrieve(pila2,RES);
-	printf("%s\n",a->eti[1]);
+	/* printf("%s\n",a->eti[1]); */
 	pila2 = pop(&pila2);
 	fputs(a->eti[1], finalEnsambler);
 	fputs(": \n", finalEnsambler);
@@ -3227,7 +3296,7 @@ void process_while(){
 	printf("%s\n",a[1]); */
 	lblWhile++;
 	push(&pila2, RES, yytext, a);
-	printf("%s\n",a[0]);
+	/* printf("%s\n",a[0]); */
 	//crear etiqueta ensamblador
 	fputs(a[0], finalEnsambler);
 	fputs(": \n", finalEnsambler);
@@ -3240,16 +3309,24 @@ void eval_while(){
 	pila = pop2(&pila);
 	//pila = pop(&pila);
 	/* printStack(pila); */
-	printf("%s","CMP 0 ");
+	/* printf("%s","CMP 0 "); */
 	struct semantic_record* n = retrieve(pila,DATAO);
-	printf("%s\n",Res->name);
+	/* printf("%s\n",Res->name);
 	printf("%s ","JZ");
-	printf("%s\n",a->eti[1]);
+	printf("%s\n",a->eti[1]); */
 
 	//código para if ensamblador
-	fputs("\tmov eax, [", finalEnsambler);
-	fputs(Res->name, finalEnsambler);
-	fputs("]\n\tcmp eax, 0 \n", finalEnsambler);
+
+	if (!isdigit(Res->name[0]) ){
+		fputs("\tmov eax, [", finalEnsambler);
+		  fputs(Res->name, finalEnsambler);
+		  fputs("]\n\tcmp eax, 0 \n", finalEnsambler);
+	}
+	else {
+		fputs("\tmov eax, ", finalEnsambler);
+		fputs(Res->name, finalEnsambler);
+		fputs("\n\tcmp eax, 0 \n", finalEnsambler);
+	}
 	fputs("\tjz  ", finalEnsambler);
 	fputs(a->eti[1] , finalEnsambler);
 	fputs("\n", finalEnsambler);
@@ -3258,9 +3335,9 @@ void eval_while(){
 
 void end_while(){
 	struct semantic_record* a = retrieve(pila2,RES);
-	printf("%s ","JMP");
+	/* printf("%s ","JMP");
 	printf("%s\n",a->eti[0]);
-	printf("%s\n",a->eti[1]);
+	printf("%s\n",a->eti[1]); */
 	pila2 = pop(&pila2);
 	fputs("\tjmp ", finalEnsambler);
     fputs(a->eti[0], finalEnsambler);
@@ -3309,15 +3386,23 @@ void eval_if(){
 	pila = pop2(&pila);
 	//pila = pop(&pila);
 	/* printStack(pila); */
-	printf("%s","CMP 0 ");
+	/* printf("%s","CMP 0 "); */
 	struct semantic_record* n = retrieve(pila,DATAO);
-	printf("%s\n",Res->name);
+	/* printf("%s\n",Res->name);
 	printf("%s ","JZ");
-	printf("%s\n",a->eti[0]);
+	printf("%s\n",a->eti[0]); */
 //código para if ensamblador
-	fputs("\tmov eax, [", finalEnsambler);
-	fputs(Res->name, finalEnsambler);
-	fputs("]\n\tcmp eax, 0 \n", finalEnsambler);
+
+	if (!isdigit(Res->name[0]) ){
+		fputs("\tmov eax, [", finalEnsambler);
+		  fputs(Res->name, finalEnsambler);
+		  fputs("]\n\tcmp eax, 0 \n", finalEnsambler);
+	}
+	else {
+		fputs("\tmov eax, ", finalEnsambler);
+		fputs(Res->name, finalEnsambler);
+		fputs("\n\tcmp eax, 0 \n", finalEnsambler);
+	}
 	fputs("\t jz  ", finalEnsambler);
 	fputs(a->eti[0] , finalEnsambler);
 	fputs("\n", finalEnsambler);
@@ -3328,7 +3413,7 @@ void process_else(){
 	/* printf("%s\n",yytext);
 	push(&pila, RES, yytext, NULL); */
 	struct semantic_record* a = retrieve(pila2,RES);
-	printf("%s\n",a->eti[0]);
+	/* printf("%s\n",a->eti[0]); */
 	//crear etiquetas ensamblador
 	fputs(a->eti[0], finalEnsambler);
 	fputs(": \n", finalEnsambler);
@@ -3337,7 +3422,7 @@ void process_else(){
 
 void eval_else(){
 	struct semantic_record* a = retrieve(pila2,RES);
-	printf("%s\n",a->eti[1]);
+	/* printf("%s\n",a->eti[1]); */
 	pila2 = pop(&pila2);
 	//pila = pop(&pila);
 	//etiqueta de salida
@@ -3348,8 +3433,8 @@ void eval_else(){
 
 void endIFdec(){
 	struct semantic_record* a = retrieve(pila2,RES);
-	printf("%s ","JMP");
-	printf("%s\n",a->eti[1]);
+	/* printf("%s ","JMP");
+	printf("%s\n",a->eti[1]); */
     // codigo ensamblador
     fputs("\tjmp ", finalEnsambler);
     fputs(a->eti[1], finalEnsambler);
@@ -3400,14 +3485,14 @@ void fin_assign(){
 
 		// guardamos el valor en el identificador
 		storeVal(oper1 , oper2);
-		printf("%s ",identificador->name);
+		/* printf("%s ",identificador->name);
 		printf("%s ",assin->name);
-		printf("%s\n",val->name);
+		printf("%s\n",val->name); */
 
 		//********************************************************************
 		//Aqui va el print de identificador
-		printf("%s\n\n\n",identificador->name);
-        printf("%s\n\n\n",identificador->name);
+		/* printf("%s\n\n\n",identificador->name);
+        printf("%s\n\n\n",identificador->name); */
 		fputs("\tmov eax, [", finalEnsambler);
 	    fputs(identificador->name , finalEnsambler);
 	    fputs("]\n\tcall verificarNegativo \n", finalEnsambler);
@@ -3486,10 +3571,10 @@ void eval_binary(){
 			division(oper1, oper2);
 		break;
 	}
-	printf("%s = ",temporal);
+	/* printf("%s = ",temporal);
 	printf("%s ",OP1->name);
 	printf("%s ",OPERATOR->name);
-	printf("%s\n",OP2->name);
+	printf("%s\n",OP2->name); */
 	free(OP1);
 	free(OPERATOR);
 	free(OP2);
@@ -3530,9 +3615,9 @@ void eval_unary(){
 			restaUno(OPERATOR->name);
 		}
 		push(&pila,DATAO,OPERATOR->name, NULL);
-		printf("%s = ",OPERATOR->name);
+		/* printf("%s = ",OPERATOR->name);
 		printf("%s ",OPERATOR->name);
-		printf("%s\n",OP1->name);
+		printf("%s\n",OP1->name); */
 	}
 	else{
 		//generar codigo ensamblador para ++a
@@ -3544,9 +3629,9 @@ void eval_unary(){
 			restaUno(OP1->name);
 		}
 		push(&pila,DATAO,OP1->name, NULL);
-		printf("%s = ",OP1->name);
+		/* printf("%s = ",OP1->name);
 		printf("%s ",OPERATOR->name);
-		printf("%s\n",OP1->name);
+		printf("%s\n",OP1->name); */
 	}
 	free(OP1);
 	free(OPERATOR);
@@ -3602,12 +3687,21 @@ void fin_decl(){
 		struct semantic_record* identificador = retrieve(pila,ID);  // es este
 		struct symbolT* smb = topSymbol(&symbolStck);
 		if(lookup(smb, identificador->name) == 1){
-			printf("Error semántico, %s ya ha sido declarado antes. ", identificador->name);
-			printf("En la línea: %d\n\n", yylineno);
+			printf("Error semántico, en la línea %d. %s ya ha sido declarado antes.\n\n", yylineno, identificador->name);
 			exit(1);
 		}
 		// inserto el delcare de la variable  le asigno identificador
-		writeValEnsambler(identificador->name);
+		int band = 0;
+		for(int i = 0;i<cntv;i++){
+			if(!(strcmp(variables[i],identificador->name))){
+				band = 1;
+			}
+		}
+		if(band != 1){
+			strcpy(variables[cntv],identificador->name);
+			cntv++;
+			writeValEnsambler(identificador->name);
+		}
 		insert(&smb, tipo->name,identificador->name);
 		symbolStck = popSymbol(&symbolStck);
 		pushSymbol(&symbolStck, smb);
@@ -3626,12 +3720,19 @@ void fin_declas(){
 		struct semantic_record* identificador = retrieveDelete(pila,ID);  //  este es el identificador
 		struct symbolT* smb = topSymbol(&symbolStck);
 		if(lookup(smb, identificador->name) == 1){
-			printf("Error semántico, %s ya ha sido declarado antes. ", identificador->name);
-			printf("En la línea: %d\n\n", yylineno);
+			printf("Error semántico, en la línea %d. %s ya ha sido declarado antes.\n\n", yylineno, identificador->name);
 			exit(1);
 		}
 		/// insert crear un declare del identificador  asignar el valor que esta en val
-		writeValEnsambler(identificador);
+		int band = 0;
+		for(int i = 0;i<cntv;i++){
+			if(!(strcmp(variables[i],identificador->name))){
+				band = 1;
+			}
+		}
+		if(band != 1){
+			writeValEnsambler(identificador->name);
+		}
 		char oper1 [100];
         char oper2 [100];
         strcpy(oper1, identificador->name);
@@ -3652,14 +3753,14 @@ void fin_declas(){
 		insert(&smb, tipo->name,identificador->name);
 		symbolStck = popSymbol(&symbolStck);
 		pushSymbol(&symbolStck, smb);
-		printf("%s ",identificador->name);
+		/* printf("%s ",identificador->name);
 		printf("%s ",assin->name);
-		printf("%s\n",val->name);
+		printf("%s\n",val->name); */
 
 
 		//********************************************************************
 		//Aqui va el print de identificador
-		printf("%s\n\n\n",identificador->name);
+		/* printf("%s\n\n\n",identificador->name); */
 		fputs("\tmov eax, [", finalEnsambler);
 	    fputs(identificador->name , finalEnsambler);
 	    fputs("]\n\tcall verificarNegativo \n", finalEnsambler);

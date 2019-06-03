@@ -1,7 +1,6 @@
-%include 'bib.asm'  
+%include '/usr/bin/bib.asm'  
 section .bss 
 a  resb 2048 
-Temp1  resb 2048 
 c  resb 2048 
 section .data 
   	 menos db 45 
@@ -14,22 +13,18 @@ _start:
  	mov eax, [a]
 	call verificarNegativo 
 call iprintLF 
- 	mov eax, [a]
+ Exp_While1: 
+	mov eax, 0
 	cmp eax, 0 
-	 jz  L_Else1
-	mov eax, 4
-	mov [Temp1] , eax 
- 	jmp Exit_if1
-L_Else1: 
-	mov eax, 69
-	mov [Temp1] , eax 
- Exit_if1: 
-	mov eax, [Temp1]
+	jz  Exit_while1
+	mov eax, 1
 	mov [c] , eax 
  	mov eax, [c]
 	call verificarNegativo 
 call iprintLF 
- 	mov  ebx, 0 
+ 	jmp Exp_While1
+Exit_while1: 
+	mov  ebx, 0 
 	mov  eax, 1 
 	int  80h
 	ret 

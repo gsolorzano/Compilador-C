@@ -1,6 +1,9 @@
 ☼
 void main(){
 int a = 0 ;
-int c =  a ? 4 : 69 ;
+int c;
+while(0){
+c = 1;
+}
 }
  

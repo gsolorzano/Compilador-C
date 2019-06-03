@@ -1,5 +1,0 @@
-%include 'bib.asm'  
-section .bss 
-a  resb 2048 
-Temp1  resb 2048 
-c  resb 2048 
