@@ -2388,7 +2388,7 @@ yyreduce:
 
   case 73:
 #line 178 "parser-bison.y" /* yacc.c:1652  */
-    {process_assign2();pila = pop(&pila);eval_else();}
+    {process_assign2();eval_else();}
 #line 2393 "parser-bison.tab.c" /* yacc.c:1652  */
     break;
 
@@ -2871,33 +2871,37 @@ yyreturn:
 
 
 void process_assign2(){
-	struct semantic_record* assin = retrieve(pila,DATAO);
-	struct semantic_record* val = retrieveDelete(pila,ID);
-	printf("%s = %s\n",assin->name,val->name);
+	char nom[200];
+	strcpy(nom,top(pila)->name);
+	pila = pop(&pila);
+	struct semantic_record* assin = top(pila);
+	printf("%s = %s\n",assin->name,nom);
 
 	char oper1 [100];
 	char oper2 [100];
 	strcpy(oper1, assin->name);
 
-	if (!isdigit(val->name[0]) ){
+	if (!isdigit(nom[0]) ){
 		  strcpy(oper2, "[");
-		  strcat(oper2, val->name);
+		  strcat(oper2, nom);
 		  strcat(oper2, "]");
 	}
 	else {
-		strcpy(oper2, val->name);
+		strcpy(oper2, nom);
 	}
 
 	storeVal(oper1 , oper2);
 }
 
 void process_assign(){
-	struct semantic_record* assin = top(pila)->name;
-	struct semantic_record* val = retrieveDelete(pila,ID);
-	printf("%s = %s\n",assin->name,val->name);
+	char nom[200];
+	strcpy(nom,top(pila)->name);
+	pila = pop(&pila);
+	struct semantic_record* val = top(pila);
+	printf("%s = %s\n",nom,val->name);
 	char oper1 [100];
 	char oper2 [100];
-	strcpy(oper1, assin->name);
+	strcpy(oper1, nom);
 
 	if (!isdigit(val->name[0]) ){
 		  strcpy(oper2, "[");
@@ -2909,6 +2913,8 @@ void process_assign(){
 	}
 
 	storeVal(oper1 , oper2);
+	pila = pop(&pila);
+	push(&pila,DATAO,nom,NULL);
 }
 
 void process_ternary(){
@@ -3397,6 +3403,16 @@ void fin_assign(){
 		printf("%s ",identificador->name);
 		printf("%s ",assin->name);
 		printf("%s\n",val->name);
+
+		//********************************************************************
+		//Aqui va el print de identificador
+		printf("%s\n\n\n",identificador->name);
+        printf("%s\n\n\n",identificador->name);
+		fputs("\tmov eax, [", finalEnsambler);
+	    fputs(identificador->name , finalEnsambler);
+	    fputs("]\n\tcall verificarNegativo \n", finalEnsambler);
+	    fputs("call iprintLF \n ", finalEnsambler);
+		//********************************************************************
 		free(identificador);
 	}
 	pila = clearStack(pila);
@@ -3639,6 +3655,20 @@ void fin_declas(){
 		printf("%s ",identificador->name);
 		printf("%s ",assin->name);
 		printf("%s\n",val->name);
+
+
+		//********************************************************************
+		//Aqui va el print de identificador
+		printf("%s\n\n\n",identificador->name);
+		fputs("\tmov eax, [", finalEnsambler);
+	    fputs(identificador->name , finalEnsambler);
+	    fputs("]\n\tcall verificarNegativo \n", finalEnsambler);
+	    fputs("call iprintLF \n ", finalEnsambler);
+
+
+		//********************************************************************
+
+
 		free(identificador);
 	}
 	as = 0;

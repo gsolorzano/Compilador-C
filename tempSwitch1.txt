@@ -1,5 +1,9 @@
 L_CMPSW1:
 	mov eax, [a]
-	cmp eax, a
+	cmp eax, 1
 	jz  lblCase11
+	mov eax, [a]
+	cmp eax, 4
+	jz  lblCase21
+jmp Default1
 Exit_Switch1:

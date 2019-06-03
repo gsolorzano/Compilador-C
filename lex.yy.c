@@ -3130,7 +3130,8 @@ char ch;
     getcwd(direccion4, sizeof(direccion4));
 
     declares   =  fopen("declares.txt","w");
-    fputs("section .bss \n ", declares);
+    putc('%',  declares);
+    fputs("include 'bib.asm'  \nsection .bss \n", declares);
     finalEnsambler =  fopen("ensambler.txt","w");
     fputs("section .data \n  \t menos db 45 \n \t dosPuntos db 58 \n section .text \n \t global _start \n_start: \n", finalEnsambler);
 
@@ -3165,6 +3166,7 @@ char ch;
 
     while((ch = fgetc(finalEnsambler)) != EOF) fputc(ch,mergedFile);
     haltProgram();
+    verificacionNegativo();
     fclose(declares);
     fclose(finalEnsambler);
     fclose(mergedFile);
@@ -3179,6 +3181,23 @@ void haltProgram(){
     fputs("\tmov  eax, 1 \n" , mergedFile);
     fputs("\tint  80h\n" , mergedFile);
     fputs("\tret \n" , mergedFile);
+}
+
+
+void verificacionNegativo(){
+  fputs("\n\n\nverificarNegativo: \n" , mergedFile);
+  fputs("\tcmp eax, 0 \n" , mergedFile);
+  fputs("\tjge .return \n" , mergedFile);
+  fputs("\tpush eax \n" , mergedFile);
+  fputs("\tmov eax, 4\n" , mergedFile);
+  fputs("\tmov ebx, 1\n" , mergedFile);
+  fputs("\tmov ecx, menos\n" , mergedFile);
+  fputs("\tmov edx, 1\n" , mergedFile);
+  fputs("\tint 80h\n" , mergedFile);
+  fputs("\tpop eax \n" , mergedFile);
+  fputs("\tneg eax\n" , mergedFile);
+  fputs("\t.return:\n" , mergedFile);
+  fputs("\tret\n" , mergedFile);
 }
 
 int main(int argc, char *argv[]){
