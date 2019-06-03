@@ -175,7 +175,7 @@ logical_or_expression
 
 conditional_expression
 	: logical_or_expression
-	| logical_or_expression {eval_if();} '?' expression {endIFdec();}':' {process_else();}conditional_expression{eval_else();} {printf("if ternario\n");}
+	| logical_or_expression {process_if();eval_if();} '?' expression {process_ternary();process_assign();}':' {endIFdec();process_else();}conditional_expression{process_assign2();pila = pop(&pila);eval_else();}
 	;
 
 assignment_expression
@@ -536,6 +536,53 @@ declaration_list
 	;
 
 %%
+
+void process_assign2(){
+	struct semantic_record* assin = retrieve(pila,DATAO);
+	struct semantic_record* val = retrieveDelete(pila,ID);
+	printf("%s = %s\n",assin->name,val->name);
+
+	char oper1 [100];
+	char oper2 [100];
+	strcpy(oper1, assin->name);
+
+	if (!isdigit(val->name[0]) ){
+		  strcpy(oper2, "[");
+		  strcat(oper2, val->name);
+		  strcat(oper2, "]");
+	}
+	else {
+		strcpy(oper2, val->name);
+	}
+
+	storeVal(oper1 , oper2);
+}
+
+void process_assign(){
+	struct semantic_record* assin = top(pila)->name;
+	struct semantic_record* val = retrieveDelete(pila,ID);
+	printf("%s = %s\n",assin->name,val->name);
+	char oper1 [100];
+	char oper2 [100];
+	strcpy(oper1, assin->name);
+
+	if (!isdigit(val->name[0]) ){
+		  strcpy(oper2, "[");
+		  strcat(oper2, val->name);
+		  strcat(oper2, "]");
+	}
+	else {
+		strcpy(oper2, val->name);
+	}
+
+	storeVal(oper1 , oper2);
+}
+
+void process_ternary(){
+	createTemp();
+	push(&pila,DATAO,temporal,NULL);
+	writeTempEnsambler();
+}
 
 
 void endSwitch(){
@@ -957,6 +1004,7 @@ void eval_else(){
 	//etiqueta de salida
 	fputs(a->eti[1], finalEnsambler);
 	fputs(": \n", finalEnsambler);
+	/* printStack(pila); */
 }
 
 void endIFdec(){
@@ -979,10 +1027,10 @@ void fin_assign(){
 		val = retrieve(pila,DATAO);
 	}
 	else{
-		printStack(pila);
+		/* printStack(pila); */
 		val = top(pila);
 		pila = pop2(&pila);
-		printStack(pila);
+		/* printStack(pila); */
 		b = 1;
 	}
 	while(retrieve(pila, ID) != NULL){

@@ -1,6 +1,8 @@
 ☼
 void main(){
 int a = 6;
-c = 8;
+int b = 2;
+int z = 3;
+int c = b? a : z;
 }
  
